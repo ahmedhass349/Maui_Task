@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Windows+Web",
+    "Projects": [
+      {
+        "Path": "Maui_Task\\Maui_Task\\Maui_Task.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Maui_Task\\Maui_Task.Web\\Maui_Task.Web.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
