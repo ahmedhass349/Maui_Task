@@ -1,0 +1,225 @@
+{
+  "reportConfigHash": "20dba012",
+  "createdAtUtc": "2026-04-01T19:01:30.3723905Z",
+  "entries": [
+    {
+      "packageName": "Microsoft.Maui.Controls",
+      "packageVersion": "9.0.0",
+      "insightsName": "Microsoft.Maui.Controls",
+      "insightsCurrentVersion": "9.0.0",
+      "insightsNewVersion": "",
+      "insightsDescription": "",
+      "insightsIsCompatible": true,
+      "insightsProjects": []
+    },
+    {
+      "packageName": "Microsoft.AspNetCore.Components.WebView.Maui",
+      "packageVersion": "9.0.0",
+      "insightsName": "Microsoft.AspNetCore.Components.WebView.Maui",
+      "insightsCurrentVersion": "9.0.0",
+      "insightsNewVersion": "",
+      "insightsDescription": "",
+      "insightsIsCompatible": true,
+      "insightsProjects": []
+    },
+    {
+      "packageName": "Microsoft.Extensions.Logging.Debug",
+      "packageVersion": "9.0.0",
+      "insightsName": "Microsoft.Extensions.Logging.Debug",
+      "insightsCurrentVersion": "9.0.0",
+      "insightsNewVersion": "10.0.5",
+      "insightsDescription": "NuGet package upgrade is recommended",
+      "insightsIsCompatible": true,
+      "insightsProjects": [
+        "Maui_Task\\Maui_Task\\Maui_Task.csproj"
+      ]
+    },
+    {
+      "packageName": "Microsoft.AspNetCore.Components.Authorization",
+      "packageVersion": "9.0.0",
+      "insightsName": "Microsoft.AspNetCore.Components.Authorization",
+      "insightsCurrentVersion": "9.0.0",
+      "insightsNewVersion": "10.0.5",
+      "insightsDescription": "NuGet package upgrade is recommended",
+      "insightsIsCompatible": true,
+      "insightsProjects": [
+        "Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj"
+      ]
+    },
+    {
+      "packageName": "Microsoft.AspNetCore.Components.Web",
+      "packageVersion": "9.0.0",
+      "insightsName": "Microsoft.AspNetCore.Components.Web",
+      "insightsCurrentVersion": "9.0.0",
+      "insightsNewVersion": "10.0.5",
+      "insightsDescription": "NuGet package upgrade is recommended",
+      "insightsIsCompatible": true,
+      "insightsProjects": [
+        "Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj"
+      ]
+    },
+    {
+      "packageName": "Microsoft.AspNetCore.SignalR.Client",
+      "packageVersion": "9.0.0",
+      "insightsName": "Microsoft.AspNetCore.SignalR.Client",
+      "insightsCurrentVersion": "9.0.0",
+      "insightsNewVersion": "10.0.5",
+      "insightsDescription": "NuGet package upgrade is recommended",
+      "insightsIsCompatible": true,
+      "insightsProjects": [
+        "Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj"
+      ]
+    },
+    {
+      "packageName": "Microsoft.EntityFrameworkCore",
+      "packageVersion": "9.0.0",
+      "insightsName": "Microsoft.EntityFrameworkCore",
+      "insightsCurrentVersion": "9.0.0",
+      "insightsNewVersion": "10.0.5",
+      "insightsDescription": "NuGet package upgrade is recommended",
+      "insightsIsCompatible": true,
+      "insightsProjects": [
+        "Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj",
+        "Maui_Task\\Maui_Task.Web\\Maui_Task.Web.csproj"
+      ]
+    },
+    {
+      "packageName": "Microsoft.EntityFrameworkCore.Sqlite",
+      "packageVersion": "9.0.0",
+      "insightsName": "Microsoft.EntityFrameworkCore.Sqlite",
+      "insightsCurrentVersion": "9.0.0",
+      "insightsNewVersion": "10.0.5",
+      "insightsDescription": "NuGet package upgrade is recommended",
+      "insightsIsCompatible": true,
+      "insightsProjects": [
+        "Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj"
+      ]
+    },
+    {
+      "packageName": "Microsoft.EntityFrameworkCore.Tools",
+      "packageVersion": "9.0.0",
+      "insightsName": "Microsoft.EntityFrameworkCore.Tools",
+      "insightsCurrentVersion": "9.0.0",
+      "insightsNewVersion": "10.0.5",
+      "insightsDescription": "NuGet package upgrade is recommended",
+      "insightsIsCompatible": true,
+      "insightsProjects": [
+        "Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj"
+      ]
+    },
+    {
+      "packageName": "Microsoft.AspNetCore.Components.WebAssembly",
+      "packageVersion": "9.0.0",
+      "insightsName": "Microsoft.AspNetCore.Components.WebAssembly",
+      "insightsCurrentVersion": "9.0.0",
+      "insightsNewVersion": "10.0.5",
+      "insightsDescription": "NuGet package upgrade is recommended",
+      "insightsIsCompatible": true,
+      "insightsProjects": [
+        "Maui_Task\\Maui_Task.Web.Client\\Maui_Task.Web.Client.csproj"
+      ]
+    },
+    {
+      "packageName": "AutoMapper.Extensions.Microsoft.DependencyInjection",
+      "packageVersion": "12.0.1",
+      "insightsName": "AutoMapper.Extensions.Microsoft.DependencyInjection",
+      "insightsCurrentVersion": "12.0.1",
+      "insightsNewVersion": "",
+      "insightsDescription": "NuGet package is deprecated",
+      "insightsIsCompatible": false,
+      "insightsProjects": [
+        "Maui_Task\\Maui_Task.Web\\Maui_Task.Web.csproj"
+      ]
+    },
+    {
+      "packageName": "BCrypt.Net-Next",
+      "packageVersion": "4.1.0",
+      "insightsName": "BCrypt.Net-Next",
+      "insightsCurrentVersion": "4.1.0",
+      "insightsNewVersion": "",
+      "insightsDescription": "",
+      "insightsIsCompatible": true,
+      "insightsProjects": []
+    },
+    {
+      "packageName": "FluentValidation.AspNetCore",
+      "packageVersion": "11.3.1",
+      "insightsName": "FluentValidation.AspNetCore",
+      "insightsCurrentVersion": "11.3.1",
+      "insightsNewVersion": "",
+      "insightsDescription": "NuGet package is deprecated",
+      "insightsIsCompatible": false,
+      "insightsProjects": [
+        "Maui_Task\\Maui_Task.Web\\Maui_Task.Web.csproj"
+      ]
+    },
+    {
+      "packageName": "MailKit",
+      "packageVersion": "4.3.0",
+      "insightsName": "MailKit",
+      "insightsCurrentVersion": "4.3.0",
+      "insightsNewVersion": "",
+      "insightsDescription": "",
+      "insightsIsCompatible": true,
+      "insightsProjects": []
+    },
+    {
+      "packageName": "Microsoft.AspNetCore.Authentication.JwtBearer",
+      "packageVersion": "9.0.0",
+      "insightsName": "Microsoft.AspNetCore.Authentication.JwtBearer",
+      "insightsCurrentVersion": "9.0.0",
+      "insightsNewVersion": "10.0.5",
+      "insightsDescription": "NuGet package upgrade is recommended",
+      "insightsIsCompatible": true,
+      "insightsProjects": [
+        "Maui_Task\\Maui_Task.Web\\Maui_Task.Web.csproj"
+      ]
+    },
+    {
+      "packageName": "Microsoft.AspNetCore.Mvc.NewtonsoftJson",
+      "packageVersion": "9.0.0",
+      "insightsName": "Microsoft.AspNetCore.Mvc.NewtonsoftJson",
+      "insightsCurrentVersion": "9.0.0",
+      "insightsNewVersion": "10.0.5",
+      "insightsDescription": "NuGet package upgrade is recommended",
+      "insightsIsCompatible": true,
+      "insightsProjects": [
+        "Maui_Task\\Maui_Task.Web\\Maui_Task.Web.csproj"
+      ]
+    },
+    {
+      "packageName": "Microsoft.EntityFrameworkCore.Design",
+      "packageVersion": "9.0.0",
+      "insightsName": "Microsoft.EntityFrameworkCore.Design",
+      "insightsCurrentVersion": "9.0.0",
+      "insightsNewVersion": "10.0.5",
+      "insightsDescription": "NuGet package upgrade is recommended",
+      "insightsIsCompatible": true,
+      "insightsProjects": [
+        "Maui_Task\\Maui_Task.Web\\Maui_Task.Web.csproj"
+      ]
+    },
+    {
+      "packageName": "Swashbuckle.AspNetCore",
+      "packageVersion": "6.5.0",
+      "insightsName": "Swashbuckle.AspNetCore",
+      "insightsCurrentVersion": "6.5.0",
+      "insightsNewVersion": "",
+      "insightsDescription": "",
+      "insightsIsCompatible": true,
+      "insightsProjects": []
+    },
+    {
+      "packageName": "Microsoft.AspNetCore.Components.WebAssembly.Server",
+      "packageVersion": "9.0.0",
+      "insightsName": "Microsoft.AspNetCore.Components.WebAssembly.Server",
+      "insightsCurrentVersion": "9.0.0",
+      "insightsNewVersion": "10.0.5",
+      "insightsDescription": "NuGet package upgrade is recommended",
+      "insightsIsCompatible": true,
+      "insightsProjects": [
+        "Maui_Task\\Maui_Task.Web\\Maui_Task.Web.csproj"
+      ]
+    }
+  ]
+}

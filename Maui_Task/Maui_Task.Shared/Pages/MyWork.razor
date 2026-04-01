@@ -1,0 +1,904 @@
+@page "/my-work"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Web
+@using Maui_Task.Shared.Components
+@using Maui_Task.Shared.DTOs.Tasks
+@using Maui_Task.Shared.Helpers
+@inject Maui_Task.Shared.Services.HttpApiService Api
+
+<div class="flex h-screen overflow-hidden bg-gray-50">
+    <AppSidebar />
+
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <AppHeader />
+
+        <main class="flex-1 overflow-y-auto">
+            <div class="max-w-7xl mx-auto p-6 space-y-6">
+                <div class="flex flex-wrap items-start justify-between gap-4">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">My Work</h1>
+                        <p class="text-gray-600 mt-1">Plan and execute everything assigned to you.</p>
+                    </div>
+                    <button
+                        @onclick="() => showNewTaskCard = true"
+                        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
+                        New Task
+                    </button>
+                </div>
+
+                @if (!initialized)
+                {
+                    <div class="bg-white border border-gray-200 rounded-xl p-5 text-gray-600">Loading tasks...</div>
+                }
+                else if (!string.IsNullOrWhiteSpace(error))
+                {
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-5 text-red-700">
+                        <p>@error</p>
+                        <button @onclick="LoadData" class="mt-3 px-3 py-1.5 rounded-md bg-red-600 text-white text-sm hover:bg-red-700">Retry</button>
+                    </div>
+                }
+                else
+                {
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-white border border-gray-200 rounded-xl p-4">
+                            <p class="text-xs uppercase tracking-wide text-gray-500">Open Tasks</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-2">@OpenTasksCount</p>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4">
+                            <p class="text-xs uppercase tracking-wide text-gray-500">High Priority</p>
+                            <p class="text-2xl font-bold text-red-600 mt-2">@HighPriorityCount</p>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4">
+                            <p class="text-xs uppercase tracking-wide text-gray-500">In Review</p>
+                            <p class="text-2xl font-bold text-violet-600 mt-2">@InReviewCount</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-gray-200 rounded-xl p-4 space-y-4">
+                        <div class="border-b border-gray-100 pb-3">
+                            <div class="flex flex-wrap gap-2">
+                                @foreach (var tab in FilterTabs)
+                                {
+                                    var isActive = activeTab == tab.Key;
+                                    <button
+                                        @key="tab.Key"
+                                        @onclick="() => SetTab(tab.Key)"
+                                        class="@(isActive ? "bg-blue-100 text-blue-700 border-blue-200" : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50") border rounded-lg px-3 py-1.5 text-sm font-medium transition-colors">
+                                        @tab.Label
+                                        <span class="ml-1.5 text-xs px-1.5 py-0.5 rounded-full bg-white/80 border border-gray-200">@tab.Count</span>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <div class="flex flex-wrap gap-2">
+                                @foreach (var priority in PriorityFilters)
+                                {
+                                    var isActive = selectedPriority == priority;
+                                    <button
+                                        @onclick="() => SetPriority(priority)"
+                                        class="@(isActive ? GetPriorityButtonClass(priority) : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50") border rounded-lg px-3 py-1.5 text-sm transition-colors">
+                                        @priority
+                                    </button>
+                                }
+                            </div>
+
+                            <div class="flex flex-wrap gap-2">
+                                @foreach (var mode in ViewModes)
+                                {
+                                    var isActive = selectedView == mode;
+                                    <button
+                                        @onclick="() => selectedView = mode"
+                                        class="@(isActive ? "bg-slate-900 text-white border-slate-900" : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50") border rounded-lg px-3 py-1.5 text-sm transition-colors">
+                                        @mode
+                                    </button>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="relative w-full md:max-w-xl">
+                            <svg class="size-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            <input
+                                value="@searchQuery"
+                                @oninput="OnSearchInput"
+                                placeholder="Search title, project, assignee or description"
+                                class="w-full border border-gray-200 rounded-lg pl-9 pr-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                        </div>
+                    </div>
+
+                    @if (!VisibleTasks.Any())
+                    {
+                        <div class="bg-white border border-gray-200 rounded-xl p-8 text-center text-gray-600">
+                            No tasks match the selected filters.
+                        </div>
+                    }
+                    else if (selectedView == "Default")
+                    {
+                        @foreach (var bucket in DateBuckets)
+                        {
+                            var items = bucket.Tasks;
+                            if (!items.Any())
+                            {
+                                continue;
+                            }
+
+                            <section class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                                <header class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+                                    <h2 class="text-sm font-semibold text-gray-800">@bucket.Title</h2>
+                                    <span class="text-xs text-gray-500">@items.Count</span>
+                                </header>
+
+                                <div class="divide-y divide-gray-100">
+                                    @foreach (var task in items)
+                                    {
+                                        <article class="px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                                            <div class="min-w-0">
+                                                <p class="font-medium text-gray-900 truncate">@task.Title</p>
+                                                <p class="text-sm text-gray-500 truncate">@task.ProjectName</p>
+                                            </div>
+
+                                            <div class="flex flex-wrap items-center gap-2">
+                                                <span class="inline-flex items-center gap-1.5 text-xs text-gray-700">
+                                                    <span class="size-2 rounded-full @GetPriorityDotClass(task.Priority)"></span>
+                                                    @NormalizePriority(task.Priority)
+                                                </span>
+
+                                                <span class="text-xs px-2 py-1 rounded-full @GetStatusChipClass(task.Status)">@ToDisplayStatus(task.Status)</span>
+
+                                                <button
+                                                    @onclick="() => ToggleStar(task)"
+                                                    class="text-xs px-2 py-1 rounded-md border border-gray-200 text-gray-700 hover:bg-gray-50">
+                                                    @(task.IsStarred ? "Unstar" : "Star")
+                                                </button>
+
+                                                @if (!IsStatus(task.Status, "Review"))
+                                                {
+                                                    <button
+                                                        @onclick='() => UpdateTaskStatus(task, "Review")'
+                                                        class="text-xs px-2 py-1 rounded-md border border-violet-200 text-violet-700 hover:bg-violet-50">
+                                                        Send to Review
+                                                    </button>
+                                                }
+
+                                                @if (!IsStatus(task.Status, "Completed"))
+                                                {
+                                                    <button
+                                                        @onclick='() => UpdateTaskStatus(task, "Completed")'
+                                                        class="text-xs px-2 py-1 rounded-md border border-green-200 text-green-700 hover:bg-green-50">
+                                                        Complete
+                                                    </button>
+                                                }
+                                            </div>
+                                        </article>
+                                    }
+                                </div>
+                            </section>
+                        }
+                    }
+                    else if (selectedView == "Kanban")
+                    {
+                        <section class="grid grid-cols-1 xl:grid-cols-4 gap-4">
+                            @foreach (var column in KanbanColumns)
+                            {
+                                var tasks = GetKanbanTasks(column.StatusKey);
+                                <div
+                                    class="bg-white rounded-xl border-2 @column.BorderClass p-3 min-h-[18rem]"
+                                    @ondragover:preventDefault
+                                    @ondrop="(e) => DropOnColumn(column.StatusKey)">
+                                    <header class="mb-3 flex items-center justify-between">
+                                        <h3 class="text-sm font-semibold text-gray-800">@column.Title</h3>
+                                        <span class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">@tasks.Count</span>
+                                    </header>
+
+                                    <div class="space-y-2">
+                                        @foreach (var task in tasks)
+                                        {
+                                            <article
+                                                draggable="true"
+                                                @ondragstart="(e) => DragStart(task.Id)"
+                                                class="rounded-lg border border-gray-200 bg-white p-3 shadow-sm cursor-grab active:cursor-grabbing">
+                                                <p class="text-sm font-medium text-gray-900">@task.Title</p>
+                                                <p class="text-xs text-gray-500 mt-1">@task.ProjectName</p>
+                                                <div class="mt-2 flex items-center gap-1.5 text-xs text-gray-700">
+                                                    <span class="size-2 rounded-full @GetPriorityDotClass(task.Priority)"></span>
+                                                    @NormalizePriority(task.Priority)
+                                                </div>
+                                            </article>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </section>
+                    }
+                    else if (selectedView == "Table")
+                    {
+                        <section class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full text-sm">
+                                    <thead class="bg-gray-50 text-gray-700">
+                                        <tr>
+                                            <th class="text-left px-4 py-3 font-semibold"></th>
+                                            <th class="text-left px-4 py-3 font-semibold">
+                                                <button @onclick="() => SortBy(SortColumn.Title)" class="hover:text-gray-900">Title</button>
+                                            </th>
+                                            <th class="text-left px-4 py-3 font-semibold">
+                                                <button @onclick="() => SortBy(SortColumn.Project)" class="hover:text-gray-900">Project</button>
+                                            </th>
+                                            <th class="text-left px-4 py-3 font-semibold">
+                                                <button @onclick="() => SortBy(SortColumn.Assignee)" class="hover:text-gray-900">Assignee</button>
+                                            </th>
+                                            <th class="text-left px-4 py-3 font-semibold">
+                                                <button @onclick="() => SortBy(SortColumn.Priority)" class="hover:text-gray-900">Priority</button>
+                                            </th>
+                                            <th class="text-left px-4 py-3 font-semibold">
+                                                <button @onclick="() => SortBy(SortColumn.Status)" class="hover:text-gray-900">Status</button>
+                                            </th>
+                                            <th class="text-left px-4 py-3 font-semibold">
+                                                <button @onclick="() => SortBy(SortColumn.DueDate)" class="hover:text-gray-900">Due Date</button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody class="divide-y divide-gray-100 text-gray-700">
+                                        @foreach (var task in SortedTasks)
+                                        {
+                                            var subtasks = GetSubTasks(task);
+                                            var hasSubTasks = subtasks.Any();
+                                            var expanded = expandedRows.Contains(task.Id);
+
+                                            <tr>
+                                                <td class="px-4 py-3 align-top">
+                                                    @if (hasSubTasks)
+                                                    {
+                                                        <button @onclick="() => ToggleRow(task.Id)" class="text-xs px-2 py-1 rounded border border-gray-200 hover:bg-gray-50">
+                                                            @(expanded ? "-" : "+")
+                                                        </button>
+                                                    }
+                                                </td>
+                                                <td class="px-4 py-3 align-top">@task.Title</td>
+                                                <td class="px-4 py-3 align-top">@task.ProjectName</td>
+                                                <td class="px-4 py-3 align-top">@(string.IsNullOrWhiteSpace(task.AssigneeName) ? "Unassigned" : task.AssigneeName)</td>
+                                                <td class="px-4 py-3 align-top">
+                                                    <span class="inline-flex items-center gap-1.5">
+                                                        <span class="size-2 rounded-full @GetPriorityDotClass(task.Priority)"></span>
+                                                        @NormalizePriority(task.Priority)
+                                                    </span>
+                                                </td>
+                                                <td class="px-4 py-3 align-top"><span class="text-xs px-2 py-1 rounded-full @GetStatusChipClass(task.Status)">@ToDisplayStatus(task.Status)</span></td>
+                                                <td class="px-4 py-3 align-top">@FormatDueDate(task)</td>
+                                            </tr>
+
+                                            @if (expanded)
+                                            {
+                                                <tr class="bg-gray-50">
+                                                    <td></td>
+                                                    <td colspan="6" class="px-4 py-3">
+                                                        <p class="text-xs font-semibold text-gray-600 mb-2">Sub-tasks</p>
+                                                        <ul class="space-y-1">
+                                                            @foreach (var sub in subtasks)
+                                                            {
+                                                                <li class="text-sm text-gray-700">- @sub</li>
+                                                            }
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    }
+                    else if (selectedView == "Gantt")
+                    {
+                        <section class="bg-white border border-gray-200 rounded-xl p-4 overflow-x-auto">
+                            <div class="min-w-[900px]">
+                                <div class="grid grid-cols-12 gap-2 text-xs text-gray-500 mb-3">
+                                    @foreach (var month in MonthLabels)
+                                    {
+                                        <div class="text-center font-medium">@month</div>
+                                    }
+                                </div>
+
+                                <div class="space-y-3">
+                                    @foreach (var task in VisibleTasks.OrderBy(t => t.DueDate ?? DateTime.MaxValue))
+                                    {
+                                        var monthIndex = GetMonthIndex(task);
+                                        <div class="grid grid-cols-12 gap-2 items-center">
+                                            <div class="col-span-3 text-sm text-gray-700 truncate">@task.Title</div>
+                                            <div class="col-span-9 grid grid-cols-12 gap-1">
+                                                @for (var i = 0; i < 12; i++)
+                                                {
+                                                    if (i == monthIndex)
+                                                    {
+                                                        <div class="h-5 rounded @GetGanttBarClass(task.Priority)"></div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="h-5 rounded bg-gray-100"></div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </section>
+                    }
+                    else
+                    {
+                        <section class="grid grid-cols-1 xl:grid-cols-4 gap-4">
+                            <aside class="bg-white border border-gray-200 rounded-xl p-4 xl:col-span-1">
+                                <p class="text-sm font-semibold text-gray-800 mb-3">Mini Calendar</p>
+                                <div class="grid grid-cols-7 gap-1 text-center text-xs text-gray-500 mb-2">
+                                    @foreach (var d in new[] { "S", "M", "T", "W", "T", "F", "S" })
+                                    {
+                                        <div>@d</div>
+                                    }
+                                </div>
+                                <div class="grid grid-cols-7 gap-1">
+                                    @foreach (var day in MiniCalendarDays)
+                                    {
+                                        var hasTasks = HasTasksForDate(day);
+                                        var isCurrentMonth = day.Month == miniCalendarMonth.Month;
+                                        <div class="h-8 rounded border @(isCurrentMonth ? "border-gray-200" : "border-transparent") flex items-center justify-center text-xs @(isCurrentMonth ? "text-gray-700" : "text-gray-300") @(hasTasks ? "bg-blue-50" : "")">
+                                            @day.Day
+                                        </div>
+                                    }
+                                </div>
+                            </aside>
+
+                            <div class="bg-white border border-gray-200 rounded-xl overflow-hidden xl:col-span-3">
+                                <div class="grid grid-cols-8 border-b border-gray-200 bg-gray-50 text-xs font-semibold text-gray-700">
+                                    <div class="px-3 py-2">Time</div>
+                                    @foreach (var day in WeekDays)
+                                    {
+                                        <div class="px-3 py-2">@day.ToString("ddd dd")</div>
+                                    }
+                                </div>
+
+                                <div class="max-h-[700px] overflow-y-auto">
+                                    @foreach (var hour in CalendarHours)
+                                    {
+                                        <div class="grid grid-cols-8 border-b border-gray-100 min-h-[48px]">
+                                            <div class="px-3 py-2 text-xs text-gray-500">@FormatHour(hour)</div>
+                                            @foreach (var day in WeekDays)
+                                            {
+                                                var slotTasks = GetCalendarSlotTasks(day, hour);
+                                                <div class="px-2 py-1 border-l border-gray-100 space-y-1">
+                                                    @foreach (var task in slotTasks)
+                                                    {
+                                                        <div class="text-xs rounded px-2 py-1 border @GetCalendarTaskClass(task.Priority)">
+                                                            <p class="font-medium truncate">@task.Title</p>
+                                                            <p class="truncate">@task.ProjectName</p>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </section>
+                    }
+                }
+            </div>
+        </main>
+    </div>
+
+    @if (showNewTaskCard)
+    {
+        <div class="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-slate-900/30 backdrop-blur-sm px-4" @onclick="() => showNewTaskCard = false">
+            <div class="w-full max-w-2xl" @onclick:stopPropagation>
+                <AcademicTaskCard
+                    initialData="null"
+                    onClose="CloseNewTask"
+                    onSuccess="HandleCreateTask" />
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private bool initialized;
+    private string? error;
+    private bool showNewTaskCard;
+
+    private string selectedView = "Default";
+    private string activeTab = "Assigned to me";
+    private string selectedPriority = "All";
+    private string searchQuery = string.Empty;
+
+    private readonly List<string> ViewModes = new() { "Default", "Kanban", "Table", "Gantt", "Calendar" };
+    private readonly List<string> PriorityFilters = new() { "All", "High", "Medium", "Low" };
+    private readonly List<string> MonthLabels = new() { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+    private readonly List<int> CalendarHours = Enumerable.Range(7, 14).ToList();
+
+    private readonly List<KanbanColumn> KanbanColumns = new()
+    {
+        new("To Do", "Todo", "border-orange-200"),
+        new("In Progress", "InProgress", "border-blue-200"),
+        new("In Review", "Review", "border-violet-200"),
+        new("Completed", "Completed", "border-green-200")
+    };
+
+    private enum SortColumn { Title, Project, Assignee, Priority, Status, DueDate }
+
+    private SortColumn sortColumn = SortColumn.DueDate;
+    private bool sortAscending = true;
+    private readonly HashSet<int> expandedRows = new();
+
+    private List<TaskDto> allTasks = new();
+    private List<TaskDto> VisibleTasks = new();
+    private int? draggingTaskId;
+
+    private DateTime miniCalendarMonth = new(DateTime.Today.Year, DateTime.Today.Month, 1);
+
+    private int OpenTasksCount => VisibleTasks.Count(t => !IsStatus(t.Status, "Completed"));
+    private int HighPriorityCount => VisibleTasks.Count(t => IsPriority(t.Priority, "High") && !IsStatus(t.Status, "Completed"));
+    private int InReviewCount => VisibleTasks.Count(t => IsStatus(t.Status, "Review"));
+
+    private List<FilterTab> FilterTabs => new()
+    {
+        new("Assigned to me", allTasks.Count(t => !IsStatus(t.Status, "Completed"))),
+        new("Today", allTasks.Count(t => t.DueDate.HasValue && t.DueDate.Value.Date == DateTime.Today && !IsStatus(t.Status, "Completed"))),
+        new("Upcoming", allTasks.Count(t => t.DueDate.HasValue && t.DueDate.Value.Date > DateTime.Today && !IsStatus(t.Status, "Completed"))),
+        new("Completed", allTasks.Count(t => IsStatus(t.Status, "Completed")))
+    };
+
+    private IEnumerable<DateBucket> DateBuckets
+    {
+        get
+        {
+            var today = DateTime.Today;
+            var overdue = new List<TaskDto>();
+            var dueToday = new List<TaskDto>();
+            var thisWeek = new List<TaskDto>();
+            var later = new List<TaskDto>();
+            var completed = new List<TaskDto>();
+
+            foreach (var task in VisibleTasks.OrderBy(t => t.DueDate ?? DateTime.MaxValue))
+            {
+                if (IsStatus(task.Status, "Completed"))
+                {
+                    completed.Add(task);
+                    continue;
+                }
+
+                if (!task.DueDate.HasValue)
+                {
+                    later.Add(task);
+                    continue;
+                }
+
+                var date = task.DueDate.Value.Date;
+                if (date < today)
+                {
+                    overdue.Add(task);
+                }
+                else if (date == today)
+                {
+                    dueToday.Add(task);
+                }
+                else if (date <= today.AddDays(7))
+                {
+                    thisWeek.Add(task);
+                }
+                else
+                {
+                    later.Add(task);
+                }
+            }
+
+            return new List<DateBucket>
+            {
+                new("Overdue", overdue),
+                new("Today", dueToday),
+                new("This Week", thisWeek),
+                new("Later", later),
+                new("Completed", completed)
+            };
+        }
+    }
+
+    private List<TaskDto> SortedTasks
+    {
+        get
+        {
+            IEnumerable<TaskDto> query = VisibleTasks;
+            query = sortColumn switch
+            {
+                SortColumn.Title => sortAscending ? query.OrderBy(t => t.Title) : query.OrderByDescending(t => t.Title),
+                SortColumn.Project => sortAscending ? query.OrderBy(t => t.ProjectName) : query.OrderByDescending(t => t.ProjectName),
+                SortColumn.Assignee => sortAscending ? query.OrderBy(t => t.AssigneeName) : query.OrderByDescending(t => t.AssigneeName),
+                SortColumn.Priority => sortAscending ? query.OrderBy(t => PriorityRank(t.Priority)) : query.OrderByDescending(t => PriorityRank(t.Priority)),
+                SortColumn.Status => sortAscending ? query.OrderBy(t => NormalizeStatus(t.Status)) : query.OrderByDescending(t => NormalizeStatus(t.Status)),
+                _ => sortAscending ? query.OrderBy(t => t.DueDate ?? DateTime.MaxValue) : query.OrderByDescending(t => t.DueDate ?? DateTime.MinValue)
+            };
+            return query.ToList();
+        }
+    }
+
+    private List<DateTime> WeekDays
+    {
+        get
+        {
+            var today = DateTime.Today;
+            var offset = (int)today.DayOfWeek;
+            var start = today.AddDays(-offset);
+            return Enumerable.Range(0, 7).Select(i => start.AddDays(i)).ToList();
+        }
+    }
+
+    private List<DateTime> MiniCalendarDays
+    {
+        get
+        {
+            var first = new DateTime(miniCalendarMonth.Year, miniCalendarMonth.Month, 1);
+            var start = first.AddDays(-(int)first.DayOfWeek);
+            return Enumerable.Range(0, 42).Select(i => start.AddDays(i)).ToList();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        initialized = false;
+        error = null;
+        try
+        {
+            var response = await Api.GetAsync<ApiResponse<IEnumerable<TaskDto>>>("/api/tasks");
+            allTasks = response?.Data?.ToList() ?? new List<TaskDto>();
+            ApplyFilters();
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            allTasks = new List<TaskDto>();
+            VisibleTasks = new List<TaskDto>();
+        }
+        finally
+        {
+            initialized = true;
+        }
+    }
+
+    private void SetTab(string tab)
+    {
+        activeTab = tab;
+        ApplyFilters();
+    }
+
+    private void SetPriority(string priority)
+    {
+        selectedPriority = priority;
+        ApplyFilters();
+    }
+
+    private void OnSearchInput(ChangeEventArgs args)
+    {
+        searchQuery = args.Value?.ToString() ?? string.Empty;
+        ApplyFilters();
+    }
+
+    private void ApplyFilters()
+    {
+        IEnumerable<TaskDto> query = allTasks;
+
+        query = activeTab switch
+        {
+            "Today" => query.Where(t => t.DueDate.HasValue && t.DueDate.Value.Date == DateTime.Today && !IsStatus(t.Status, "Completed")),
+            "Upcoming" => query.Where(t => t.DueDate.HasValue && t.DueDate.Value.Date > DateTime.Today && !IsStatus(t.Status, "Completed")),
+            "Completed" => query.Where(t => IsStatus(t.Status, "Completed")),
+            _ => query.Where(t => !IsStatus(t.Status, "Completed"))
+        };
+
+        if (!string.Equals(selectedPriority, "All", StringComparison.OrdinalIgnoreCase))
+        {
+            query = query.Where(t => IsPriority(t.Priority, selectedPriority));
+        }
+
+        if (!string.IsNullOrWhiteSpace(searchQuery))
+        {
+            var q = searchQuery.Trim().ToLowerInvariant();
+            query = query.Where(t =>
+                (t.Title?.ToLowerInvariant().Contains(q) ?? false) ||
+                (t.ProjectName?.ToLowerInvariant().Contains(q) ?? false) ||
+                (t.AssigneeName?.ToLowerInvariant().Contains(q) ?? false) ||
+                (t.Description?.ToLowerInvariant().Contains(q) ?? false));
+        }
+
+        VisibleTasks = query.ToList();
+    }
+
+    private async Task ToggleStar(TaskDto task)
+    {
+        try
+        {
+            await Api.PatchAsync<ApiResponse<TaskDto>>($"/api/tasks/{task.Id}/star", null);
+            task.IsStarred = !task.IsStarred;
+        }
+        catch
+        {
+            // Keep UI stable if the toggle request fails.
+        }
+    }
+
+    private async Task UpdateTaskStatus(TaskDto task, string targetStatus)
+    {
+        try
+        {
+            var response = await Api.PatchAsync<ApiResponse<TaskDto>>($"/api/tasks/{task.Id}/status", new UpdateStatusRequest { Status = targetStatus });
+            var updated = response?.Data;
+            if (updated is null)
+            {
+                return;
+            }
+
+            var index = allTasks.FindIndex(t => t.Id == task.Id);
+            if (index >= 0)
+            {
+                allTasks[index] = updated;
+            }
+
+            ApplyFilters();
+        }
+        catch
+        {
+            // Ignore transient update errors and keep current state.
+        }
+    }
+
+    private void DragStart(int taskId)
+    {
+        draggingTaskId = taskId;
+    }
+
+    private async Task DropOnColumn(string targetStatus)
+    {
+        if (!draggingTaskId.HasValue)
+        {
+            return;
+        }
+
+        var task = allTasks.FirstOrDefault(t => t.Id == draggingTaskId.Value);
+        draggingTaskId = null;
+        if (task is null || IsStatus(task.Status, targetStatus))
+        {
+            return;
+        }
+
+        await UpdateTaskStatus(task, targetStatus);
+    }
+
+    private List<TaskDto> GetKanbanTasks(string statusKey)
+    {
+        return VisibleTasks
+            .Where(t => IsStatus(t.Status, statusKey))
+            .OrderBy(t => t.DueDate ?? DateTime.MaxValue)
+            .ToList();
+    }
+
+    private int GetMonthIndex(TaskDto task)
+    {
+        if (!task.DueDate.HasValue)
+        {
+            return DateTime.Today.Month - 1;
+        }
+        return Math.Clamp(task.DueDate.Value.Month - 1, 0, 11);
+    }
+
+    private List<TaskDto> GetCalendarSlotTasks(DateTime day, int hour)
+    {
+        return VisibleTasks
+            .Where(t => t.DueDate.HasValue)
+            .Where(t => t.DueDate!.Value.Date == day.Date)
+            .Where(t => t.DueDate!.Value.Hour == hour)
+            .ToList();
+    }
+
+    private bool HasTasksForDate(DateTime date)
+    {
+        return VisibleTasks.Any(t => t.DueDate.HasValue && t.DueDate.Value.Date == date.Date);
+    }
+
+    private string FormatHour(int hour)
+    {
+        return DateTime.Today.AddHours(hour).ToString("h tt");
+    }
+
+    private void SortBy(SortColumn column)
+    {
+        if (sortColumn == column)
+        {
+            sortAscending = !sortAscending;
+            return;
+        }
+
+        sortColumn = column;
+        sortAscending = true;
+    }
+
+    private void ToggleRow(int taskId)
+    {
+        if (!expandedRows.Add(taskId))
+        {
+            expandedRows.Remove(taskId);
+        }
+    }
+
+    private List<string> GetSubTasks(TaskDto task)
+    {
+        if (string.IsNullOrWhiteSpace(task.Description))
+        {
+            return new List<string>();
+        }
+
+        var lines = task.Description
+            .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(l => l.Trim())
+            .Where(l => l.StartsWith("- [", StringComparison.OrdinalIgnoreCase) || l.StartsWith("* ", StringComparison.OrdinalIgnoreCase))
+            .Select(l => l.Replace("- [ ]", string.Empty).Replace("- [x]", string.Empty, StringComparison.OrdinalIgnoreCase).Replace("* ", string.Empty).Trim())
+            .Where(l => !string.IsNullOrWhiteSpace(l))
+            .ToList();
+
+        return lines;
+    }
+
+    private static bool IsStatus(string? status, string normalizedTarget)
+    {
+        return string.Equals(NormalizeStatus(status), NormalizeStatus(normalizedTarget), StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsPriority(string? priority, string expected)
+    {
+        return string.Equals(NormalizePriority(priority), NormalizePriority(expected), StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string NormalizeStatus(string? status)
+    {
+        return (status ?? string.Empty).Trim().ToLowerInvariant() switch
+        {
+            "todo" => "todo",
+            "to do" => "todo",
+            "inprogress" => "inprogress",
+            "in progress" => "inprogress",
+            "review" => "review",
+            "in review" => "review",
+            "completed" => "completed",
+            _ => (status ?? string.Empty).Trim().ToLowerInvariant()
+        };
+    }
+
+    private static string NormalizePriority(string? priority)
+    {
+        return (priority ?? string.Empty).Trim().ToLowerInvariant() switch
+        {
+            "high" => "High",
+            "medium" => "Medium",
+            "low" => "Low",
+            _ => "Medium"
+        };
+    }
+
+    private static string ToDisplayStatus(string? status)
+    {
+        return NormalizeStatus(status) switch
+        {
+            "todo" => "To Do",
+            "inprogress" => "In Progress",
+            "review" => "In Review",
+            "completed" => "Completed",
+            _ => string.IsNullOrWhiteSpace(status) ? "Unknown" : status
+        };
+    }
+
+    private static int PriorityRank(string? priority)
+    {
+        return NormalizePriority(priority) switch
+        {
+            "High" => 0,
+            "Medium" => 1,
+            "Low" => 2,
+            _ => 1
+        };
+    }
+
+    private static string GetPriorityDotClass(string? priority)
+    {
+        return NormalizePriority(priority) switch
+        {
+            "High" => "bg-red-500",
+            "Medium" => "bg-violet-500",
+            "Low" => "bg-teal-500",
+            _ => "bg-gray-400"
+        };
+    }
+
+    private static string GetStatusChipClass(string? status)
+    {
+        return NormalizeStatus(status) switch
+        {
+            "todo" => "bg-orange-100 text-orange-700",
+            "inprogress" => "bg-blue-100 text-blue-700",
+            "review" => "bg-violet-100 text-violet-700",
+            "completed" => "bg-green-100 text-green-700",
+            _ => "bg-gray-100 text-gray-700"
+        };
+    }
+
+    private static string GetPriorityButtonClass(string priority)
+    {
+        return priority switch
+        {
+            "High" => "bg-red-600 text-white border-red-600",
+            "Medium" => "bg-violet-600 text-white border-violet-600",
+            "Low" => "bg-teal-600 text-white border-teal-600",
+            _ => "bg-slate-900 text-white border-slate-900"
+        };
+    }
+
+    private static string GetGanttBarClass(string? priority)
+    {
+        return NormalizePriority(priority) switch
+        {
+            "High" => "bg-red-500",
+            "Medium" => "bg-violet-500",
+            "Low" => "bg-teal-500",
+            _ => "bg-gray-400"
+        };
+    }
+
+    private static string GetCalendarTaskClass(string? priority)
+    {
+        return NormalizePriority(priority) switch
+        {
+            "High" => "bg-red-50 border-red-200 text-red-700",
+            "Medium" => "bg-violet-50 border-violet-200 text-violet-700",
+            "Low" => "bg-teal-50 border-teal-200 text-teal-700",
+            _ => "bg-gray-50 border-gray-200 text-gray-700"
+        };
+    }
+
+    private static string FormatDueDate(TaskDto task)
+    {
+        if (task.DueDate.HasValue)
+        {
+            return task.DueDate.Value.ToString("MMM dd, yyyy");
+        }
+
+        if (!string.IsNullOrWhiteSpace(task.DueDateLabel))
+        {
+            return task.DueDateLabel;
+        }
+
+        return "No due date";
+    }
+
+    private void CloseNewTask()
+    {
+        showNewTaskCard = false;
+    }
+
+    private async Task HandleCreateTask(TaskDto _)
+    {
+        showNewTaskCard = false;
+        await LoadData();
+    }
+
+    private sealed record FilterTab(string Label, int Count)
+    {
+        public string Key => Label;
+    }
+
+    private sealed record DateBucket(string Title, List<TaskDto> Tasks);
+    private sealed record KanbanColumn(string Title, string StatusKey, string BorderClass);
+}

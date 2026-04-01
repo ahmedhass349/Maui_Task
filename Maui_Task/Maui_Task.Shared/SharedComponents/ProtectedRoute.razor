@@ -1,0 +1,37 @@
+@using Microsoft.AspNetCore.Components
+@inject Maui_Task.Shared.Services.AuthenticationService Auth
+@inject NavigationManager Nav
+
+@if (isLoading)
+{
+    <p>Loading...</p>
+}
+else if (!isAuthenticated)
+{
+    <p>Redirecting to login...</p>
+}
+else
+{
+    @ChildContent
+}
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    private bool isLoading = true;
+    private bool isAuthenticated = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await Auth.InitializeAsync();
+            isAuthenticated = !string.IsNullOrEmpty(Auth.Token);
+            if (!isAuthenticated)
+            {
+                Nav.NavigateTo("/login", true);
+            }
+        }
+        catch { isAuthenticated = false; }
+        finally { isLoading = false; }
+    }
+}

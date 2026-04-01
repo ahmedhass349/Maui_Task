@@ -1,0 +1,64 @@
+@implements IDisposable
+
+<AppHeader />
+
+<NotificationToast
+	IsVisible="_showToast"
+	Title="_toastTitle"
+	Message="_toastMessage"
+	Icon="_toastIcon"
+	OnClose="HideToast" />
+
+@code {
+	[CascadingParameter]
+	public NotificationContext? NotificationContext { get; set; }
+
+	private bool _showToast;
+	private string _toastTitle = string.Empty;
+	private string _toastMessage = string.Empty;
+	private string _toastIcon = "bell";
+
+	protected override void OnInitialized()
+	{
+		if (NotificationContext == null)
+		{
+			return;
+		}
+
+		NotificationContext.OnUnreadCountChanged += HandleUnreadCountChanged;
+		NotificationContext.OnNotificationReceived += HandleNotificationReceived;
+	}
+
+	private void HandleUnreadCountChanged(int unreadCount)
+	{
+		_ = InvokeAsync(StateHasChanged);
+	}
+
+	private void HandleNotificationReceived(Maui_Task.Shared.DTOs.Notifications.NotificationDto notification)
+	{
+		_toastTitle = notification.Title;
+		_toastMessage = notification.Message;
+		_toastIcon = string.IsNullOrWhiteSpace(notification.Type) ? "bell" : notification.Type;
+		_showToast = true;
+
+		_ = InvokeAsync(StateHasChanged);
+	}
+
+	private Task HideToast()
+	{
+		_showToast = false;
+		StateHasChanged();
+		return Task.CompletedTask;
+	}
+
+	public void Dispose()
+	{
+		if (NotificationContext == null)
+		{
+			return;
+		}
+
+		NotificationContext.OnUnreadCountChanged -= HandleUnreadCountChanged;
+		NotificationContext.OnNotificationReceived -= HandleNotificationReceived;
+	}
+}

@@ -1,0 +1,8 @@
+wwwroot\secureStorage.js
+wwwroot\appsettings.Development.json
+wwwroot\appsettings.json
+Layout\ReconnectModal.razor.js
+C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Web.Client\wwwroot\secureStorage.js
+C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Web.Client\wwwroot\appsettings.Development.json
+C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Web.Client\wwwroot\appsettings.json
+C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Web.Client\Layout\ReconnectModal.razor.js

@@ -1,2 +1,3 @@
-2026/03/28-16:02:36.183 3cc0 Creating DB C:\Users\Ahmed Abdelbarr\source\repos\Maui_Task\Maui_Task\Maui_Task\bin\Debug\net10.0-windows10.0.19041.0\win-x64\Maui_Task.exe.WebView2\EBWebView\Default\Local Storage\leveldb since it was missing.
-2026/03/28-16:02:36.269 3cc0 Reusing MANIFEST C:\Users\Ahmed Abdelbarr\source\repos\Maui_Task\Maui_Task\Maui_Task\bin\Debug\net10.0-windows10.0.19041.0\win-x64\Maui_Task.exe.WebView2\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
+2026/04/02-01:18:56.435 6f40 Reusing MANIFEST C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task\bin\Debug\net10.0-windows10.0.19041.0\win-x64\Maui_Task.exe.WebView2\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
+2026/04/02-01:18:56.445 6f40 Recovering log #3
+2026/04/02-01:18:56.451 6f40 Reusing old log C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task\bin\Debug\net10.0-windows10.0.19041.0\win-x64\Maui_Task.exe.WebView2\EBWebView\Default\Local Storage\leveldb/000003.log 

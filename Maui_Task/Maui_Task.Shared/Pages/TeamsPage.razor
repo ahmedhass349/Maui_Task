@@ -1,0 +1,86 @@
+@page "/teams-legacy"
+@using Maui_Task.Shared.DTOs.Teams
+@using Maui_Task.Shared.DTOs.Auth
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<h3>Teams</h3>
+<div class="controls">
+    <button @onclick="Load">Refresh</button>
+    <button @onclick="Create">New Team</button>
+</div>
+
+@if (loading)
+{
+    <p>Loading teams...</p>
+}
+else if (teams.Count == 0)
+{
+    <p>No teams found.</p>
+}
+else
+{
+    <ul class="teams-list">
+        @foreach (var t in teams)
+        {
+            <li class="team-item">
+                <div class="header">
+                    <a class="team-link" href="/teams/edit/@t.Id"><strong>@t.Name</strong></a>
+                    <div class="actions">
+                        <button @onclick="() => ToggleMembers(t.Id)">Members</button>
+                        <button @onclick="() => Edit(t.Id)">Edit</button>
+                    </div>
+                </div>
+                @if (expandedTeam == t.Id)
+                {
+                    <div class="members">
+                        @if (membersLoading)
+                        {
+                            <p>Loading members...</p>
+                        }
+                        else if (members.Count == 0)
+                        {
+                            <p>No members.</p>
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var m in members)
+                                {
+                                    <li>@m.FullName</li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                }
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<TeamDto> teams = new();
+    private List<Maui_Task.Shared.DTOs.Auth.UserDto> members = new();
+    private bool loading = false;
+    private bool membersLoading = false;
+    private int expandedTeam = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task ToggleMembers(int teamId)
+    {
+        if (expandedTeam == teamId) { expandedTeam = 0; members.Clear(); return; }
+        expandedTeam = teamId;
+        membersLoading = true;
+        try { members = await Http.GetFromJsonAsync<List<Maui_Task.Shared.DTOs.Auth.UserDto>>($"api/teams/{teamId}/members") ?? new(); }
+        catch { members = new(); }
+        membersLoading = false;
+    }
+
+    private void Edit(int id) => Nav.NavigateTo($"/teams/edit/{id}");
+    private void Create() => Nav.NavigateTo("/teams/edit/0");
+    private async Task Load() { loading = true; try { teams = await Http.GetFromJsonAsync<List<TeamDto>>("api/teams") ?? new(); } catch { teams = new(); } loading = false; }
+}

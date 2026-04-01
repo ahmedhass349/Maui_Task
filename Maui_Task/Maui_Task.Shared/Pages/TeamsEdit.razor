@@ -1,0 +1,84 @@
+@page "/teams/edit/{id:int}"
+@attribute [Authorize]
+@using Maui_Task.Shared.DTOs.Teams
+@using Maui_Task.Shared.DTOs.Auth
+@inject Maui_Task.Shared.Services.HttpApiService Api
+@inject NavigationManager Nav
+
+<h3>@(id == 0 ? "Create Team" : "Edit Team")</h3>
+
+@if (loading)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="card" style="padding:12px;max-width:720px;">
+        <div class="form-group">
+            <label>Name</label>
+            <input class="form-control" @bind="team.Name" />
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-control" @bind="team.Description"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Owner</label>
+            <select class="form-control" @bind="team.OwnerId">
+                <option value="0">-- select owner --</option>
+                @foreach (var u in users)
+                {
+                    <option value="@u.Id">@u.FullName (@u.Email)</option>
+                }
+            </select>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:12px;">
+            <button class="btn btn-primary" @onclick="Save">Save</button>
+            <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public int id { get; set; }
+
+    private TeamDto team = new();
+    private List<UserDto> users = new();
+    private bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+        try
+        {
+            users = await Api.GetAsync<List<UserDto>>("api/users") ?? new();
+            if (id > 0)
+            {
+                var loaded = await Api.GetAsync<TeamDto>($"api/teams/{id}");
+                if (loaded != null) team = loaded;
+            }
+        }
+        catch { }
+        finally { loading = false; }
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            if (id == 0)
+            {
+                await Api.PostAsync<TeamDto>("api/teams", team);
+            }
+            else
+            {
+                await Api.PutAsync<TeamDto>($"api/teams/{id}", team);
+            }
+            Nav.NavigateTo("/teams");
+        }
+        catch { }
+    }
+
+    private void Cancel() => Nav.NavigateTo("/teams");
+}

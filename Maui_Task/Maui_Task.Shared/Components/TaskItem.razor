@@ -1,0 +1,31 @@
+@using Maui_Task.Shared.DTOs.Tasks
+@using Microsoft.AspNetCore.Components
+
+<div class="task-item card" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+    <div>
+        <div style="font-weight:600">@Task.Title</div>
+        @if (!string.IsNullOrWhiteSpace(Task.Description))
+        {
+            <div class="muted small">@Task.Description</div>
+        }
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+        @if (Task.DueDate.HasValue)
+        {
+            <div class="muted small">@Task.DueDate.Value.ToString("yyyy-MM-dd")</div>
+        }
+        <button class="btn btn-secondary" @onclick="OnEdit">Edit</button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public TaskDto Task { get; set; } = new();
+    [Parameter] public EventCallback<int> EditClicked { get; set; }
+
+    private Task OnEdit() => EditClicked.InvokeAsync(Task.Id);
+}
+<style>
+.task-item { padding:0.5rem; border:1px solid #eee; border-radius:4px; margin-bottom:0.5rem; }
+.task-item .title { font-weight:600 }
+.task-item .meta { color:#666; font-size:0.9rem }
+</style>

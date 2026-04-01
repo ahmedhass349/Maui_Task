@@ -1,0 +1,503 @@
+@page "/notifications"
+@attribute [Authorize]
+@using Maui_Task.Shared.DTOs.Notifications
+@using Maui_Task.Shared.Helpers
+@using System.Globalization
+@inject Maui_Task.Shared.Services.HttpApiService Api
+
+<PageTitle>Notifications</PageTitle>
+
+<div class="p-6 space-y-4">
+    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+            <h1 class="text-2xl font-semibold text-slate-900">Notifications</h1>
+            <p class="text-sm text-slate-500">Review alerts, mark items read, and manage in bulk.</p>
+        </div>
+        <button class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                @onclick="LoadNotifications"
+                disabled="@IsBusy">
+            Refresh
+        </button>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <div class="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">@ErrorMessage</div>
+    }
+
+    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm space-y-4">
+        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div class="inline-flex rounded-lg border border-slate-200 p-1">
+                <button class="rounded-md px-3 py-1.5 text-sm font-medium @(ActiveTab == NotificationTab.All ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-100")"
+                        @onclick="() => SetTab(NotificationTab.All)">
+                    All (@AllCount)
+                </button>
+                <button class="rounded-md px-3 py-1.5 text-sm font-medium @(ActiveTab == NotificationTab.Unread ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-100")"
+                        @onclick="() => SetTab(NotificationTab.Unread)">
+                    Unread (@UnreadCount)
+                </button>
+            </div>
+
+            <div class="w-full md:w-80">
+                <input class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                       placeholder="Search notifications..."
+                       @bind="SearchText"
+                       @bind:event="oninput" />
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <label class="inline-flex items-center gap-2 text-sm text-slate-600">
+                <input type="checkbox"
+                       class="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-500"
+                       checked="@AreAllVisibleSelected"
+                       @onchange="ToggleSelectAllVisible" />
+                Select all on this page
+            </label>
+
+            <div class="flex flex-wrap gap-2">
+                <button class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                        @onclick="MarkAllAsRead"
+                        disabled="@(IsBusy || UnreadCount == 0)">
+                    Mark all read
+                </button>
+                <button class="rounded-lg border border-red-300 bg-white px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                        @onclick="DeleteSelected"
+                        disabled="@(IsBusy || SelectedIds.Count == 0)">
+                    Delete Selected (@SelectedIds.Count)
+                </button>
+                <button class="rounded-lg border border-red-300 bg-white px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                        @onclick="DeleteAll"
+                        disabled="@(IsBusy || AllCount == 0)">
+                    Delete All
+                </button>
+            </div>
+        </div>
+
+        @if (PagedGroups.Count == 0)
+        {
+            <div class="rounded-lg border border-dashed border-slate-300 px-4 py-8 text-center text-sm text-slate-500">
+                No notifications match your current filters.
+            </div>
+        }
+        else
+        {
+            <div class="space-y-4">
+                @foreach (var group in PagedGroups)
+                {
+                    <section class="space-y-2">
+                        <h2 class="text-xs font-semibold uppercase tracking-wide text-slate-500">@group.Label</h2>
+
+                        @foreach (var n in group.Items)
+                        {
+                            <article class="flex items-start gap-3 rounded-xl border border-slate-200 p-3 @(n.IsRead ? "bg-white" : "bg-sky-50")">
+                                <input type="checkbox"
+                                       class="mt-1 h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-500"
+                                       checked="@SelectedIds.Contains(n.Id)"
+                                       @onchange="e => ToggleSelection(n.Id, e.Value)" />
+
+                                <div class="mt-1 h-2.5 w-2.5 rounded-full @(n.IsRead ? "bg-transparent border border-slate-300" : "bg-sky-500")"></div>
+
+                                <div class="flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-slate-100 text-slate-700" title="@n.Type">
+                                    @GetTypeIcon(n.Type)
+                                </div>
+
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex flex-wrap items-start justify-between gap-2">
+                                        <div>
+                                            <h3 class="font-semibold text-slate-900">@n.Title</h3>
+                                            <p class="text-sm text-slate-600">@n.Message</p>
+                                        </div>
+                                        <time class="text-xs text-slate-500" datetime="@n.CreatedAt.ToString("o", CultureInfo.InvariantCulture)">
+                                            @GetDisplayTime(n)
+                                        </time>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-none flex-col gap-2 sm:flex-row">
+                                    @if (!n.IsRead)
+                                    {
+                                        <button class="rounded-md border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                                                @onclick="() => MarkAsRead(n.Id)">
+                                            Read
+                                        </button>
+                                    }
+                                    <button class="rounded-md border border-red-300 px-2.5 py-1 text-xs font-medium text-red-700 hover:bg-red-50"
+                                            @onclick="() => DeleteOne(n.Id)">
+                                        Delete
+                                    </button>
+                                </div>
+                            </article>
+                        }
+                    </section>
+                }
+            </div>
+        }
+
+        <footer class="flex flex-col gap-3 border-t border-slate-200 pt-3 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-wrap items-center gap-2">
+                <span class="rounded border border-slate-300 px-1.5 py-0.5 font-medium text-slate-600">/</span>
+                <span>Search</span>
+                <span class="rounded border border-slate-300 px-1.5 py-0.5 font-medium text-slate-600">Shift+A</span>
+                <span>Select all visible</span>
+                <span class="rounded border border-slate-300 px-1.5 py-0.5 font-medium text-slate-600">Del</span>
+                <span>Delete selected</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button class="rounded-md border border-slate-300 px-2 py-1 text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                        @onclick="PreviousPage"
+                        disabled="@(CurrentPage <= 1)">
+                    Prev
+                </button>
+                <span>Page @CurrentPage of @TotalPages</span>
+                <button class="rounded-md border border-slate-300 px-2 py-1 text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                        @onclick="NextPage"
+                        disabled="@(CurrentPage >= TotalPages)">
+                    Next
+                </button>
+            </div>
+        </footer>
+    </div>
+</div>
+
+@code {
+    private readonly List<NotificationDto> NotificationsList = new();
+    private readonly HashSet<int> SelectedIds = new();
+    private string? ErrorMessage;
+    private bool IsBusy;
+    private string SearchText = string.Empty;
+    private NotificationTab ActiveTab = NotificationTab.All;
+    private const int PageSize = 10;
+    private int CurrentPage = 1;
+
+    private int AllCount => NotificationsList.Count;
+    private int UnreadCount => NotificationsList.Count(n => !n.IsRead);
+
+    private IEnumerable<NotificationDto> FilteredNotifications
+    {
+        get
+        {
+            IEnumerable<NotificationDto> query = NotificationsList;
+            if (ActiveTab == NotificationTab.Unread)
+            {
+                query = query.Where(n => !n.IsRead);
+            }
+
+            if (!string.IsNullOrWhiteSpace(SearchText))
+            {
+                var term = SearchText.Trim();
+                query = query.Where(n =>
+                    n.Title.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                    n.Message.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                    n.Type.Contains(term, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return query.OrderByDescending(n => n.CreatedAt);
+        }
+    }
+
+    private List<NotificationDto> CurrentPageItems
+    {
+        get
+        {
+            var skip = (CurrentPage - 1) * PageSize;
+            return FilteredNotifications.Skip(skip).Take(PageSize).ToList();
+        }
+    }
+
+    private List<NotificationGroup> PagedGroups
+        => CurrentPageItems
+            .GroupBy(GetGroupLabel)
+            .Select(g => new NotificationGroup(g.Key, g.ToList()))
+            .ToList();
+
+    private int TotalPages
+    {
+        get
+        {
+            var count = FilteredNotifications.Count();
+            return Math.Max(1, (int)Math.Ceiling(count / (double)PageSize));
+        }
+    }
+
+    private bool AreAllVisibleSelected
+    {
+        get
+        {
+            if (CurrentPageItems.Count == 0)
+            {
+                return false;
+            }
+
+            return CurrentPageItems.All(n => SelectedIds.Contains(n.Id));
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadNotifications();
+    }
+
+    private async Task LoadNotifications()
+    {
+        ErrorMessage = null;
+        IsBusy = true;
+        try
+        {
+            var result = await Api.GetAsync<ApiResponse<IEnumerable<NotificationDto>>>("/api/notifications");
+            NotificationsList.Clear();
+            if (result?.Success == true && result.Data != null)
+            {
+                NotificationsList.AddRange(result.Data.OrderByDescending(n => n.CreatedAt));
+            }
+
+            SelectedIds.Clear();
+            EnsureValidPage();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private void SetTab(NotificationTab tab)
+    {
+        ActiveTab = tab;
+        CurrentPage = 1;
+        SelectedIds.Clear();
+    }
+
+    private void ToggleSelection(int id, object? value)
+    {
+        var isChecked = value as bool? == true;
+        if (isChecked)
+        {
+            SelectedIds.Add(id);
+        }
+        else
+        {
+            SelectedIds.Remove(id);
+        }
+    }
+
+    private void ToggleSelectAllVisible(ChangeEventArgs args)
+    {
+        var isChecked = args.Value as bool? == true;
+        if (isChecked)
+        {
+            foreach (var item in CurrentPageItems)
+            {
+                SelectedIds.Add(item.Id);
+            }
+        }
+        else
+        {
+            foreach (var item in CurrentPageItems)
+            {
+                SelectedIds.Remove(item.Id);
+            }
+        }
+    }
+
+    private async Task MarkAsRead(int id)
+    {
+        ErrorMessage = null;
+        try
+        {
+            await Api.PatchAsync<ApiResponse<string>>($"/api/notifications/{id}/read", null);
+            var local = NotificationsList.FirstOrDefault(n => n.Id == id);
+            if (local != null)
+            {
+                local.IsRead = true;
+                local.ReadAt = DateTime.UtcNow;
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+    }
+
+    private async Task MarkAllAsRead()
+    {
+        ErrorMessage = null;
+        IsBusy = true;
+        try
+        {
+            await Api.PatchAsync<ApiResponse<string>>("/api/notifications/read-all", null);
+            foreach (var notification in NotificationsList)
+            {
+                notification.IsRead = true;
+                notification.ReadAt ??= DateTime.UtcNow;
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async Task DeleteOne(int id)
+    {
+        ErrorMessage = null;
+        try
+        {
+            await Api.DeleteAsync($"/api/notifications/{id}");
+            NotificationsList.RemoveAll(n => n.Id == id);
+            SelectedIds.Remove(id);
+            EnsureValidPage();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+    }
+
+    private async Task DeleteSelected()
+    {
+        if (SelectedIds.Count == 0)
+        {
+            return;
+        }
+
+        ErrorMessage = null;
+        IsBusy = true;
+        try
+        {
+            var ids = SelectedIds.ToList();
+            foreach (var id in ids)
+            {
+                await Api.DeleteAsync($"/api/notifications/{id}");
+                NotificationsList.RemoveAll(n => n.Id == id);
+                SelectedIds.Remove(id);
+            }
+
+            EnsureValidPage();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async Task DeleteAll()
+    {
+        ErrorMessage = null;
+        IsBusy = true;
+        try
+        {
+            await Api.DeleteAsync("/api/notifications");
+            NotificationsList.Clear();
+            SelectedIds.Clear();
+            CurrentPage = 1;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private void PreviousPage()
+    {
+        if (CurrentPage > 1)
+        {
+            CurrentPage--;
+        }
+    }
+
+    private void NextPage()
+    {
+        if (CurrentPage < TotalPages)
+        {
+            CurrentPage++;
+        }
+    }
+
+    private void EnsureValidPage()
+    {
+        if (CurrentPage > TotalPages)
+        {
+            CurrentPage = TotalPages;
+        }
+
+        if (CurrentPage < 1)
+        {
+            CurrentPage = 1;
+        }
+    }
+
+    private static string GetGroupLabel(NotificationDto notification)
+    {
+        var localDate = notification.CreatedAt.ToLocalTime().Date;
+        var today = DateTime.Now.Date;
+        if (localDate == today)
+        {
+            return "Today";
+        }
+
+        if (localDate == today.AddDays(-1))
+        {
+            return "Yesterday";
+        }
+
+        return notification.CreatedAt.ToLocalTime().ToString("dddd, dd MMM yyyy", CultureInfo.CurrentCulture);
+    }
+
+    private static string GetDisplayTime(NotificationDto notification)
+    {
+        if (!string.IsNullOrWhiteSpace(notification.TimeAgo))
+        {
+            return notification.TimeAgo;
+        }
+
+        return notification.CreatedAt.ToLocalTime().ToString("dd MMM yyyy HH:mm", CultureInfo.CurrentCulture);
+    }
+
+    private static string GetTypeIcon(string? type)
+    {
+        return (type ?? string.Empty).Trim().ToLowerInvariant() switch
+        {
+            "success" => "✓",
+            "warning" => "!",
+            "error" => "⚠",
+            "task" => "T",
+            "message" => "M",
+            _ => "•"
+        };
+    }
+
+    private enum NotificationTab
+    {
+        All,
+        Unread
+    }
+
+    private sealed class NotificationGroup
+    {
+        public NotificationGroup(string label, List<NotificationDto> items)
+        {
+            Label = label;
+            Items = items;
+        }
+
+        public string Label { get; }
+        public List<NotificationDto> Items { get; }
+    }
+}

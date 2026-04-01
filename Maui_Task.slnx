@@ -3,4 +3,5 @@
   <Project Path="Maui_Task/Maui_Task.Web.Client/Maui_Task.Web.Client.csproj" />
   <Project Path="Maui_Task/Maui_Task.Web/Maui_Task.Web.csproj" />
   <Project Path="Maui_Task/Maui_Task/Maui_Task.csproj" />
+  <Project Path="Maui_Task.Tests/Maui_Task.Tests.csproj" />
 </Solution>

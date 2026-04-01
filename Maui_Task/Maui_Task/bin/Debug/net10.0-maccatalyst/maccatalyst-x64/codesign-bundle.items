@@ -12,7 +12,7 @@
       <CodesignDisableTimestamp>true</CodesignDisableTimestamp>
       <CodesignKeychain></CodesignKeychain>
       <CodesignUseHardenedRuntime></CodesignUseHardenedRuntime>
-      <SourceProjectPath>C:\Users\Ahmed Abdelbarr\source\repos\Maui_Task\Maui_Task\Maui_Task</SourceProjectPath>
+      <SourceProjectPath>C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task</SourceProjectPath>
     </_CodesignBundle>
   </ItemGroup>
 </Project>

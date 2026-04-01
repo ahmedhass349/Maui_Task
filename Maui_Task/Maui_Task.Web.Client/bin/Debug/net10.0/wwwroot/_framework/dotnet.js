@@ -5,7 +5,7 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
   "mainAssemblyName": "Maui_Task.Web.Client",
   "applicationEnvironment": "Development",
   "resources": {
-    "hash": "sha256-VmczDabdeakDaFX58xiX1fX+NVyIKoxvMJsjVCx0pPE=",
+    "hash": "sha256-+QDTvaSsMlVx0qsd0Eyg5S3axV56XCf6E04qWzZqFC4=",
     "jsModuleNative": [
       {
         "name": "dotnet.native.ykrnppwhq2.js"
@@ -71,6 +71,12 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
         "cache": "force-cache"
       },
       {
+        "virtualPath": "Microsoft.AspNetCore.Components.Authorization.wasm",
+        "name": "Microsoft.AspNetCore.Components.Authorization.8nosel0t6a.wasm",
+        "integrity": "sha256-PBIqzGAcxharI1aBBwfr+4Rjy9K7jc66VMkW7032kWs=",
+        "cache": "force-cache"
+      },
+      {
         "virtualPath": "Microsoft.AspNetCore.Components.Forms.wasm",
         "name": "Microsoft.AspNetCore.Components.Forms.au92kshad9.wasm",
         "integrity": "sha256-rk1EVOse3i6uXcKoua15buyKg1mSrNlf2wFTOm2iH20=",
@@ -89,15 +95,99 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
         "cache": "force-cache"
       },
       {
+        "virtualPath": "Microsoft.AspNetCore.Connections.Abstractions.wasm",
+        "name": "Microsoft.AspNetCore.Connections.Abstractions.gx3cy0qpgy.wasm",
+        "integrity": "sha256-5OCTSzJFEVEQ/Nxcxuq9ae500DAo8Ecusqf2Gmb2tgw=",
+        "cache": "force-cache"
+      },
+      {
+        "virtualPath": "Microsoft.AspNetCore.Http.Connections.Client.wasm",
+        "name": "Microsoft.AspNetCore.Http.Connections.Client.zws9279pqg.wasm",
+        "integrity": "sha256-XXdF+PJzbCmSuiISO4isLRwm/qPMvu5ofwdgUFslk+M=",
+        "cache": "force-cache"
+      },
+      {
+        "virtualPath": "Microsoft.AspNetCore.Http.Connections.Common.wasm",
+        "name": "Microsoft.AspNetCore.Http.Connections.Common.m7t2rgrlw3.wasm",
+        "integrity": "sha256-YiseVC8LI4pexykbErhXCZvxIpnymvkZkH0xd0FEYBA=",
+        "cache": "force-cache"
+      },
+      {
         "virtualPath": "Microsoft.AspNetCore.Metadata.wasm",
         "name": "Microsoft.AspNetCore.Metadata.begmnasal1.wasm",
         "integrity": "sha256-feTahvOhYuLDIgSFkwXDSewTMyzsM7M9tmjKWEjxeBI=",
         "cache": "force-cache"
       },
       {
+        "virtualPath": "Microsoft.AspNetCore.SignalR.Client.wasm",
+        "name": "Microsoft.AspNetCore.SignalR.Client.d18xxkkarh.wasm",
+        "integrity": "sha256-8ffUr/iiSNFz3xnT8YrtvYStiV248PKv1C1uTFE2bNc=",
+        "cache": "force-cache"
+      },
+      {
+        "virtualPath": "Microsoft.AspNetCore.SignalR.Client.Core.wasm",
+        "name": "Microsoft.AspNetCore.SignalR.Client.Core.avpgbw8tup.wasm",
+        "integrity": "sha256-9hGi1YZJTE0LUVbuMpy6tIOgB9RQqG7E0YRv6fodetY=",
+        "cache": "force-cache"
+      },
+      {
+        "virtualPath": "Microsoft.AspNetCore.SignalR.Common.wasm",
+        "name": "Microsoft.AspNetCore.SignalR.Common.7hxk6qnjge.wasm",
+        "integrity": "sha256-hXshQAIoUi/cAYRScADGCpmCi0lNoayhiYLZTZBVDSw=",
+        "cache": "force-cache"
+      },
+      {
+        "virtualPath": "Microsoft.AspNetCore.SignalR.Protocols.Json.wasm",
+        "name": "Microsoft.AspNetCore.SignalR.Protocols.Json.m83tn4pt1r.wasm",
+        "integrity": "sha256-WnNAiEoVl1LOmmYvG0faGIspvWoKpdeywvd8y4nGglE=",
+        "cache": "force-cache"
+      },
+      {
+        "virtualPath": "Microsoft.Data.Sqlite.wasm",
+        "name": "Microsoft.Data.Sqlite.x1ue4fk1bz.wasm",
+        "integrity": "sha256-W9B8j7C9KNaaUuSwlSk1RrPanA1pa+CPhIbXEZIozSU=",
+        "cache": "force-cache"
+      },
+      {
         "virtualPath": "Microsoft.DotNet.HotReload.WebAssembly.Browser.wasm",
         "name": "Microsoft.DotNet.HotReload.WebAssembly.Browser.hrhwg3a64c.wasm",
         "integrity": "sha256-7T3xXhofp38yBmdv6CI7STwXMpOeEHm6J4GkYs//NlU=",
+        "cache": "force-cache"
+      },
+      {
+        "virtualPath": "Microsoft.EntityFrameworkCore.wasm",
+        "name": "Microsoft.EntityFrameworkCore.0jmstfwrox.wasm",
+        "integrity": "sha256-DPqJ1DzXzrBqnQPsrgR9OnIxPPzoflY9qheOifzx9QQ=",
+        "cache": "force-cache"
+      },
+      {
+        "virtualPath": "Microsoft.EntityFrameworkCore.Abstractions.wasm",
+        "name": "Microsoft.EntityFrameworkCore.Abstractions.hh6uz1x9px.wasm",
+        "integrity": "sha256-q4zA1/RTaWqHRKKrqV0ttFp41RVnhQxzDOMAO/k2D10=",
+        "cache": "force-cache"
+      },
+      {
+        "virtualPath": "Microsoft.EntityFrameworkCore.Relational.wasm",
+        "name": "Microsoft.EntityFrameworkCore.Relational.ujnp3lyh53.wasm",
+        "integrity": "sha256-hgVe+Wskn0/RBgvSXBEkL7UHUyZX6c5Ap82nx8HNUFs=",
+        "cache": "force-cache"
+      },
+      {
+        "virtualPath": "Microsoft.EntityFrameworkCore.Sqlite.wasm",
+        "name": "Microsoft.EntityFrameworkCore.Sqlite.z8tte6wfr7.wasm",
+        "integrity": "sha256-U5/qH45CHSdBMdGuV2O0mxF/k6z8BGL1dnLKYRA3E0E=",
+        "cache": "force-cache"
+      },
+      {
+        "virtualPath": "Microsoft.Extensions.Caching.Abstractions.wasm",
+        "name": "Microsoft.Extensions.Caching.Abstractions.vvlexwbaez.wasm",
+        "integrity": "sha256-tSgl59bRmnTPPQth2CIhnneNwCQELWZttk6S2c6Syb0=",
+        "cache": "force-cache"
+      },
+      {
+        "virtualPath": "Microsoft.Extensions.Caching.Memory.wasm",
+        "name": "Microsoft.Extensions.Caching.Memory.6z3ajjz4f1.wasm",
+        "integrity": "sha256-Xn7sOZZjP5fk879A/w1ejyt8tzsXqeBhqefdPMsnzpM=",
         "cache": "force-cache"
       },
       {
@@ -143,6 +233,12 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
         "cache": "force-cache"
       },
       {
+        "virtualPath": "Microsoft.Extensions.DependencyModel.wasm",
+        "name": "Microsoft.Extensions.DependencyModel.nmhn3r6huw.wasm",
+        "integrity": "sha256-AXhoj5J5gu6L1Ho8kPVeOST1DbzvkjqDfmuBrQVhZVM=",
+        "cache": "force-cache"
+      },
+      {
         "virtualPath": "Microsoft.Extensions.Diagnostics.wasm",
         "name": "Microsoft.Extensions.Diagnostics.tgzcelqpkb.wasm",
         "integrity": "sha256-c5/EPk8uh1q87GmX5HVLC/UUvbz8i1Maljl/W8etqSQ=",
@@ -152,6 +248,12 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
         "virtualPath": "Microsoft.Extensions.Diagnostics.Abstractions.wasm",
         "name": "Microsoft.Extensions.Diagnostics.Abstractions.hq61ozpvxa.wasm",
         "integrity": "sha256-p1PIrEspjlWTZhuuDFe2zNFctb6Snm3PPP0l1lLRGlM=",
+        "cache": "force-cache"
+      },
+      {
+        "virtualPath": "Microsoft.Extensions.Features.wasm",
+        "name": "Microsoft.Extensions.Features.2kh5m48z72.wasm",
+        "integrity": "sha256-3nGTUgnRHeW0dU43Hcja82PhaZZ6+nMop9Smvd8v5j0=",
         "cache": "force-cache"
       },
       {
@@ -218,6 +320,24 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
         "virtualPath": "Microsoft.JSInterop.WebAssembly.wasm",
         "name": "Microsoft.JSInterop.WebAssembly.9udcqny0aq.wasm",
         "integrity": "sha256-EQfaQose2do/RGDJFP6YWTTeOWA2gufnJurZZZh2XLU=",
+        "cache": "force-cache"
+      },
+      {
+        "virtualPath": "SQLitePCLRaw.batteries_v2.wasm",
+        "name": "SQLitePCLRaw.batteries_v2.vh9uet5yp4.wasm",
+        "integrity": "sha256-bUL22xPcTDXGgCAJmi59APb3Vn5OsBBoX0rPDSfHcTI=",
+        "cache": "force-cache"
+      },
+      {
+        "virtualPath": "SQLitePCLRaw.core.wasm",
+        "name": "SQLitePCLRaw.core.xkz8xl2v4t.wasm",
+        "integrity": "sha256-34SMrsayL0bhoZ4JGGWjN0gYAqZotemwzF8evivgz8Q=",
+        "cache": "force-cache"
+      },
+      {
+        "virtualPath": "SQLitePCLRaw.provider.e_sqlite3.wasm",
+        "name": "SQLitePCLRaw.provider.e_sqlite3.cidb3ql7by.wasm",
+        "integrity": "sha256-3EuT9kGxKjK50Qkss/AuRYuEc5IbUEhy3mC1Zid492w=",
         "cache": "force-cache"
       },
       {
@@ -1242,28 +1362,28 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
       },
       {
         "virtualPath": "Maui_Task.Shared.wasm",
-        "name": "Maui_Task.Shared.0xkuahau00.wasm",
-        "integrity": "sha256-ZBNtRcuBwK8Vkxp6gXdS1nW8UOjNXz3zIVQeJy8t3is=",
+        "name": "Maui_Task.Shared.hyidkodc50.wasm",
+        "integrity": "sha256-x5oiws0dYbfUzVyU1cWDQAvGXdS7ULun3AAJoralbAw=",
         "cache": "force-cache"
       },
       {
         "virtualPath": "Maui_Task.Web.Client.wasm",
-        "name": "Maui_Task.Web.Client.ycomvxdp8v.wasm",
-        "integrity": "sha256-0tdlu3iiiYVx17U2GukJtyd7s26S6bafqZWFCK6nUZc=",
+        "name": "Maui_Task.Web.Client.g50r5rmd51.wasm",
+        "integrity": "sha256-hEpAEhGBxgZEPXF768yj1LDC8zC/I/4eJ2hO5u3mlYc=",
         "cache": "force-cache"
       }
     ],
     "pdb": [
       {
         "virtualPath": "Maui_Task.Shared.pdb",
-        "name": "Maui_Task.Shared.65iwrz5o15.pdb",
-        "integrity": "sha256-JiXq8QK3viaa6dMm7VQEmC2vGCspgowsS9UEY5tUFNQ=",
+        "name": "Maui_Task.Shared.pius9zglhw.pdb",
+        "integrity": "sha256-fyHDEnIDxtzcdYw5yUaKd/AjkLvF/J6XKyXCI0/2dBE=",
         "cache": "force-cache"
       },
       {
         "virtualPath": "Maui_Task.Web.Client.pdb",
-        "name": "Maui_Task.Web.Client.krokukew14.pdb",
-        "integrity": "sha256-oLcPc9D1BPf3VWXwcNqXqS1fDcRH8DiUKeLnqSaXBg4=",
+        "name": "Maui_Task.Web.Client.xfls5c0whm.pdb",
+        "integrity": "sha256-jTC1nmfPkIprSw3XbEsxxr/7GuJpi7VWk9S22yPCQ8U=",
         "cache": "force-cache"
       }
     ],
@@ -1307,6 +1427,7 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
         "System.Net.Http.WasmEnableStreamingResponse": true,
         "System.Net.SocketsHttpHandler.Http3Support": false,
         "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+        "System.Reflection.NullabilityInfoContext.IsSupported": true,
         "System.Resources.ResourceManager.AllowCustomResourceTypes": false,
         "System.Resources.UseSystemResourceKeys": true,
         "System.Runtime.CompilerServices.RuntimeFeature.IsDynamicCodeSupported": true,

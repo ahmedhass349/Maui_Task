@@ -1,0 +1,57 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\obj\\Debug\\net9.0\\scopedcss\\projectbundle\\Maui_Task.Shared.bundle.scp.css",
+      "PackagePath": "staticwebassets\\Maui_Task.Shared.7yw729yx1h.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\css\\tailwind.min.css",
+      "PackagePath": "staticwebassets\\css\\tailwind.min.css"
+    },
+    {
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\icons.svg",
+      "PackagePath": "staticwebassets\\icons.svg"
+    },
+    {
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.Maui_Task.Shared.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.Maui_Task.Shared.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.build.Maui_Task.Shared.props",
+      "PackagePath": "build\\Maui_Task.Shared.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildMultiTargeting.Maui_Task.Shared.props",
+      "PackagePath": "buildMultiTargeting\\Maui_Task.Shared.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildTransitive.Maui_Task.Shared.props",
+      "PackagePath": "buildTransitive\\Maui_Task.Shared.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

@@ -1,0 +1,408 @@
+@page "/message"
+@attribute [Authorize]
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using Maui_Task.Shared.DTOs.Messages
+@using Maui_Task.Shared.DTOs.Auth
+@using Maui_Task.Shared.Helpers
+@inject Maui_Task.Shared.Services.HttpApiService Api
+
+<PageTitle>Messages</PageTitle>
+
+<div class="h-[calc(100vh-120px)] w-full p-4 md:p-6">
+    <div class="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+            <div>
+                <h1 class="text-2xl font-semibold text-slate-900">Messages</h1>
+                <p class="text-sm text-slate-500">@FilteredContacts.Count() conversation(s)</p>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+        {
+            <div class="mx-4 mt-4 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                @ErrorMessage
+            </div>
+        }
+
+        <div class="grid h-full min-h-0 grid-cols-1 md:grid-cols-[320px_1fr]">
+            <aside class="flex min-h-0 flex-col border-r border-slate-200 bg-slate-50/60">
+                <div class="p-4">
+                    <label for="contact-search" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Search</label>
+                    <input id="contact-search"
+                           type="text"
+                           @bind="SearchText"
+                           @bind:event="oninput"
+                           placeholder="Search contacts..."
+                           class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none ring-blue-500 transition focus:ring-2" />
+                </div>
+
+                <div class="min-h-0 flex-1 overflow-y-auto px-2 pb-3">
+                    @if (IsLoadingContacts)
+                    {
+                        <div class="px-3 py-8 text-sm text-slate-500">Loading contacts...</div>
+                    }
+                    else if (!FilteredContacts.Any())
+                    {
+                        <div class="px-3 py-8 text-sm text-slate-500">No conversations found.</div>
+                    }
+                    else
+                    {
+                        @foreach (var contact in FilteredContacts)
+                        {
+                            var isActive = SelectedContact?.Id == contact.Id;
+                            <button type="button"
+                                    class="mb-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition @(isActive ? "bg-blue-100" : "hover:bg-slate-100")"
+                                    @onclick="() => SelectContactAsync(contact)">
+                                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-200 text-sm font-semibold text-slate-700">
+                                    @GetContactInitials(contact)
+                                </div>
+
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <p class="truncate text-sm font-semibold text-slate-900">@contact.Name</p>
+                                        <p class="shrink-0 text-xs text-slate-500">@FormatRelativeTime(contact.LastMessageTime)</p>
+                                    </div>
+                                    <p class="truncate text-xs text-slate-600">@GetContactPreview(contact)</p>
+                                </div>
+
+                                @if (contact.UnreadCount > 0)
+                                {
+                                    <span class="inline-flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full bg-blue-500 px-2 text-xs font-semibold text-white">
+                                        @contact.UnreadCount
+                                    </span>
+                                }
+                            </button>
+                        }
+                    }
+                </div>
+            </aside>
+
+            <section class="flex min-h-0 flex-col bg-white">
+                @if (SelectedContact is null)
+                {
+                    <div class="flex h-full items-center justify-center px-6 text-center">
+                        <div class="max-w-sm">
+                            <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-slate-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76V12A8.25 8.25 0 0110.5 3.75h3A8.25 8.25 0 0121.75 12v.76a2.25 2.25 0 01-.66 1.59l-1.64 1.64a2.25 2.25 0 01-1.59.66h-7.72a2.25 2.25 0 01-1.59-.66l-1.64-1.64a2.25 2.25 0 00-1.59-.66H4.5A2.25 2.25 0 012.25 12.76z" />
+                                </svg>
+                            </div>
+                            <h2 class="text-lg font-semibold text-slate-900">Select a conversation to start chatting</h2>
+                            <p class="mt-1 text-sm text-slate-500">Choose a contact from the left panel.</p>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <header class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 text-sm font-semibold text-slate-700">
+                                @GetContactInitials(SelectedContact)
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-slate-900">@SelectedContact.Name</p>
+                                <div class="flex items-center gap-2 text-xs text-slate-500">
+                                    <span class="inline-block h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                                    <span>Online</span>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div class="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+                        @if (IsLoadingConversation)
+                        {
+                            <div class="py-8 text-center text-sm text-slate-500">Loading messages...</div>
+                        }
+                        else if (!Conversation.Any())
+                        {
+                            <div class="py-8 text-center text-sm text-slate-500">No messages yet. Send the first message.</div>
+                        }
+                        else
+                        {
+                            @foreach (var message in Conversation)
+                            {
+                                var isSent = IsSentByCurrentUser(message);
+                                <div class="mb-3 flex @(isSent ? "justify-end" : "justify-start")">
+                                    <div class="max-w-[80%] rounded-2xl px-4 py-2 text-sm @(isSent ? "bg-blue-500 text-white" : "bg-slate-200 text-slate-900")">
+                                        <p class="whitespace-pre-wrap break-words">@message.Body</p>
+                                        <p class="mt-1 text-[11px] @(isSent ? "text-blue-100" : "text-slate-500")">@FormatRelativeTime(message.SentAt)</p>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    <EditForm Model="SendModel" OnValidSubmit="SendMessageAsync" class="border-t border-slate-200 px-4 py-3">
+                        <DataAnnotationsValidator />
+                        <div class="flex items-center gap-2">
+                            <button type="button" class="rounded-full p-2 text-slate-500 transition hover:bg-slate-100" @onclick="InsertEmoji" title="Add emoji">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0m9.9-2.121a8 8 0 11-11.314-11.314 8 8 0 0111.314 11.314z" />
+                                </svg>
+                            </button>
+
+                            <InputText @bind-Value="SendModel.Body"
+                                       @bind-Value:event="oninput"
+                                       placeholder="Type a message..."
+                                       class="flex-1 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-800 outline-none ring-blue-500 transition focus:ring-2" />
+
+                            <button type="submit"
+                                    class="rounded-full bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
+                                    disabled="@Sending || string.IsNullOrWhiteSpace(SendModel.Body)">
+                                @(Sending ? "Sending..." : "Send")
+                            </button>
+
+                            <button type="button" class="rounded-full p-2 text-slate-500 transition hover:bg-slate-100" title="Voice message">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6.75 6.75 0 006.75-6.75v-.75M5.25 11.25V12A6.75 6.75 0 0012 18.75m0 0v3m-3-3h6M12 3.75a2.25 2.25 0 00-2.25 2.25v6a2.25 2.25 0 104.5 0V6A2.25 2.25 0 0012 3.75z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </EditForm>
+                }
+            </section>
+        </div>
+    </div>
+</div>
+
+@code {
+    private readonly List<ContactDto> Contacts = new();
+    private readonly List<MessageDto> Conversation = new();
+    private ContactDto? SelectedContact;
+    private SendMessageRequest SendModel = new();
+    private int CurrentUserId;
+    private string SearchText = string.Empty;
+    private bool IsLoadingContacts;
+    private bool IsLoadingConversation;
+    private bool Sending;
+    private string? ErrorMessage;
+
+    private IEnumerable<ContactDto> FilteredContacts => Contacts
+        .Where(c => string.IsNullOrWhiteSpace(SearchText)
+            || c.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
+        .OrderByDescending(c => c.LastMessageTime);
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCurrentUserAsync();
+        await LoadContactsAsync();
+    }
+
+    private async Task LoadCurrentUserAsync()
+    {
+        try
+        {
+            var result = await Api.GetAsync<ApiResponse<UserDto>>("/api/auth/me");
+            if (result?.Success == true && result.Data is not null)
+            {
+                CurrentUserId = result.Data.Id;
+            }
+        }
+        catch
+        {
+            // Sent/received fallback still works using selected contact when this call fails.
+            CurrentUserId = 0;
+        }
+    }
+
+    private async Task LoadContactsAsync()
+    {
+        IsLoadingContacts = true;
+        ErrorMessage = null;
+        try
+        {
+            var result = await Api.GetAsync<ApiResponse<IEnumerable<ContactDto>>>("/api/messages/contacts");
+            Contacts.Clear();
+            if (result?.Success == true && result.Data != null)
+            {
+                Contacts.AddRange(result.Data);
+            }
+            else
+            {
+                ErrorMessage = result?.Message ?? "Failed to load contacts.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsLoadingContacts = false;
+        }
+    }
+
+    private async Task SelectContactAsync(ContactDto contact)
+    {
+        ErrorMessage = null;
+        SelectedContact = contact;
+        SendModel = new SendMessageRequest { ReceiverId = contact.Id, Body = string.Empty };
+
+        var selected = Contacts.FirstOrDefault(c => c.Id == contact.Id);
+        if (selected is not null)
+        {
+            selected.UnreadCount = 0;
+        }
+
+        await LoadConversationAsync(contact.Id);
+    }
+
+    private async Task LoadConversationAsync(int contactId)
+    {
+        IsLoadingConversation = true;
+        ErrorMessage = null;
+        try
+        {
+            var result = await Api.GetAsync<ApiResponse<IEnumerable<MessageDto>>>($"/api/messages/{contactId}");
+            Conversation.Clear();
+            if (result?.Success == true && result.Data != null)
+            {
+                Conversation.AddRange(result.Data.OrderBy(m => m.SentAt));
+            }
+            else
+            {
+                ErrorMessage = result?.Message ?? "Failed to load conversation.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsLoadingConversation = false;
+        }
+    }
+
+    private async Task SendMessageAsync()
+    {
+        if (SelectedContact is null || string.IsNullOrWhiteSpace(SendModel.Body))
+        {
+            return;
+        }
+
+        Sending = true;
+        ErrorMessage = null;
+        try
+        {
+            SendModel.ReceiverId = SelectedContact.Id;
+            var result = await Api.PostAsync<ApiResponse<MessageDto>>("/api/messages", SendModel);
+            if (result?.Success == true && result.Data != null)
+            {
+                Conversation.Add(result.Data);
+                Conversation.Sort((a, b) => a.SentAt.CompareTo(b.SentAt));
+
+                var index = Contacts.FindIndex(c => c.Id == SelectedContact.Id);
+                if (index >= 0)
+                {
+                    Contacts[index].LastMessage = result.Data.Body;
+                    Contacts[index].LastMessageTime = result.Data.SentAt;
+                }
+
+                SendModel = new SendMessageRequest
+                {
+                    ReceiverId = SelectedContact.Id,
+                    Body = string.Empty
+                };
+            }
+            else
+            {
+                ErrorMessage = result?.Message ?? "Failed to send message.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            Sending = false;
+        }
+    }
+
+    private static string GetContactPreview(ContactDto contact)
+    {
+        if (string.IsNullOrWhiteSpace(contact.LastMessage))
+        {
+            return "No messages yet";
+        }
+
+        return contact.LastMessage;
+    }
+
+    private static string GetContactInitials(ContactDto contact)
+    {
+        if (!string.IsNullOrWhiteSpace(contact.Initials))
+        {
+            return contact.Initials;
+        }
+
+        if (string.IsNullOrWhiteSpace(contact.Name))
+        {
+            return "?";
+        }
+
+        var parts = contact.Name
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .Take(2)
+            .Select(p => char.ToUpperInvariant(p[0]));
+
+        var initials = new string(parts.ToArray());
+        return string.IsNullOrWhiteSpace(initials) ? "?" : initials;
+    }
+
+    private bool IsSentByCurrentUser(MessageDto message)
+    {
+        if (CurrentUserId > 0)
+        {
+            return message.SenderId == CurrentUserId;
+        }
+
+        return SelectedContact is not null && message.SenderId != SelectedContact.Id;
+    }
+
+    private static string FormatRelativeTime(DateTime value)
+    {
+        if (value == default)
+        {
+            return "now";
+        }
+
+        var utc = value.Kind == DateTimeKind.Unspecified
+            ? DateTime.SpecifyKind(value, DateTimeKind.Utc)
+            : value.ToUniversalTime();
+
+        var delta = DateTime.UtcNow - utc;
+        if (delta.TotalSeconds < 60)
+        {
+            return "just now";
+        }
+
+        if (delta.TotalMinutes < 60)
+        {
+            return $"{Math.Max(1, (int)delta.TotalMinutes)}m ago";
+        }
+
+        if (delta.TotalHours < 24)
+        {
+            return $"{(int)delta.TotalHours}h ago";
+        }
+
+        if (delta.TotalDays < 7)
+        {
+            return $"{(int)delta.TotalDays}d ago";
+        }
+
+        return value.ToLocalTime().ToString("MMM d");
+    }
+
+    private void InsertEmoji()
+    {
+        SendModel.Body = string.IsNullOrWhiteSpace(SendModel.Body)
+            ? "🙂"
+            : $"{SendModel.Body} 🙂";
+    }
+}

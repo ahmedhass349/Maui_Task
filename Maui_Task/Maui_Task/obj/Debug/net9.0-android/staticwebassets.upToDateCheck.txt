@@ -1,0 +1,4 @@
+wwwroot\app.css
+wwwroot\index.html
+C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task\wwwroot\app.css
+C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task\wwwroot\index.html

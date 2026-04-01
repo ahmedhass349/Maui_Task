@@ -1,0 +1,253 @@
+@inject NavigationManager Nav
+@inject TaskFlowAuthStateProvider AuthState
+@inject Maui_Task.Shared.Services.AuthenticationService AuthService
+@inject Maui_Task.Shared.Services.HttpApiService Api
+@implements IDisposable
+
+<header class="app-header">
+    <div class="app-header__spacer"></div>
+
+    <div class="app-header__search">
+        <div class="search-box">
+            <span class="search-box__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#787486" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+            </span>
+            <input type="text" class="search-box__input" placeholder="Search for report..."
+                   aria-label="Search" @bind="SearchQuery" @bind:event="oninput" />
+        </div>
+    </div>
+
+    <div class="app-header__actions">
+
+        <div class="header-dropdown" id="notif-dropdown">
+            <button class="header-icon-btn" aria-label="Notifications" @onclick="ToggleNotifications">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                     stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+                @if (UnreadNotifCount > 0)
+                {
+                    <span class="badge">@(UnreadNotifCount > 9 ? "9+" : UnreadNotifCount.ToString())</span>
+                }
+            </button>
+            @if (ShowNotifications)
+            {
+                <div class="dropdown-panel dropdown-panel--right">
+                    <div class="dropdown-panel__header">
+                        <span class="dropdown-panel__title">Notifications</span>
+                        @if (UnreadNotifCount > 0)
+                        {
+                            <button class="dropdown-panel__action" @onclick="MarkAllNotifsRead">Mark all read</button>
+                        }
+                    </div>
+                    <div class="dropdown-panel__body">
+                        @if (!CurrentNotifications.Any())
+                        {
+                            <p class="dropdown-panel__empty">No notifications</p>
+                        }
+                        @foreach (var n in CurrentNotifications.Take(5))
+                        {
+                            <div class="dropdown-item @(n.IsRead ? "" : "dropdown-item--unread")">
+                                <div class="dropdown-item__avatar dropdown-item__avatar--blue">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                                </div>
+                                <div class="dropdown-item__body">
+                                    <p class="dropdown-item__title">@n.Title</p>
+                                    <p class="dropdown-item__sub">@n.Message</p>
+                                    <p class="dropdown-item__time">@FormatRelativeTime(n.CreatedAt.ToString("o"))</p>
+                                </div>
+                                @if (!n.IsRead) { <span class="unread-dot"></span> }
+                            </div>
+                        }
+                    </div>
+                    <div class="dropdown-panel__footer">
+                        <a href="/notifications" class="dropdown-panel__link">View all notifications</a>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="header-dropdown" id="msg-dropdown">
+            <button class="header-icon-btn" aria-label="Messages" @onclick="ToggleMessages">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                     stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                </svg>
+                @if (UnreadMsgCount > 0)
+                {
+                    <span class="badge badge--red">@(UnreadMsgCount > 9 ? "9+" : UnreadMsgCount.ToString())</span>
+                }
+            </button>
+            @if (ShowMessages)
+            {
+                <div class="dropdown-panel dropdown-panel--right">
+                    <div class="dropdown-panel__header">
+                        <span class="dropdown-panel__title">Messages</span>
+                    </div>
+                    <div class="dropdown-panel__body">
+                        @if (!RecentContacts.Any())
+                        {
+                            <p class="dropdown-panel__empty">No messages</p>
+                        }
+                        @foreach (var c in RecentContacts.Take(5))
+                        {
+                            <div class="dropdown-item">
+                                <div class="dropdown-item__avatar">@GetInitials(c.Name)</div>
+                                <div class="dropdown-item__body">
+                                    <div class="dropdown-item__row">
+                                        <p class="dropdown-item__title">@c.Name</p>
+                                        <p class="dropdown-item__time">@FormatRelativeTime(c.LastMessageTime.ToString("o"))</p>
+                                    </div>
+                                    <p class="dropdown-item__sub">@(c.LastMessage ?? "No messages yet")</p>
+                                </div>
+                                @if (c.UnreadCount > 0) { <span class="unread-dot"></span> }
+                            </div>
+                        }
+                    </div>
+                    <div class="dropdown-panel__footer">
+                        <a href="/message" class="dropdown-panel__link">Open messages</a>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="header-dropdown" id="user-dropdown">
+            <button class="user-pill" @onclick="ToggleUser">
+                <span class="user-pill__name">@DisplayName</span>
+                <div class="user-pill__avatar">@Initials</div>
+            </button>
+            @if (ShowUser)
+            {
+                <div class="dropdown-panel dropdown-panel--right">
+                    <div class="dropdown-panel__profile">
+                        <div class="user-pill__avatar user-pill__avatar--lg">@Initials</div>
+                        <div>
+                            <p class="dropdown-panel__username">@DisplayName</p>
+                        </div>
+                    </div>
+                    <a href="/settings" class="dropdown-item dropdown-item--link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        Profile
+                    </a>
+                    <a href="/settings" class="dropdown-item dropdown-item--link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                        Settings
+                    </a>
+                    <hr class="dropdown-panel__divider" />
+                    <button class="dropdown-item dropdown-item--link" @onclick="LogoutAsync">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        Log out
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</header>
+
+@code {
+    [CascadingParameter]
+    public NotificationContext? NotificationContext { get; set; }
+
+    private string SearchQuery = "";
+    private bool ShowNotifications;
+    private bool ShowMessages;
+    private bool ShowUser;
+
+    private List<Maui_Task.Shared.DTOs.Messages.ContactDto> RecentContacts = new();
+    private int UnreadMsgCount;
+
+    private int UnreadNotifCount => NotificationContext?.UnreadCount ?? 0;
+    private IReadOnlyList<Maui_Task.Shared.DTOs.Notifications.NotificationDto> CurrentNotifications
+        => NotificationContext?.Notifications ?? new List<Maui_Task.Shared.DTOs.Notifications.NotificationDto>();
+
+    private string DisplayName => AuthState.CurrentUser?.FullName ?? "User";
+    private string Initials => string.Join("", (AuthState.CurrentUser?.FullName ?? "U")
+        .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+        .Select(w => w[0])).ToUpperInvariant();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (NotificationContext != null)
+        {
+            NotificationContext.OnUnreadCountChanged += HandleUnreadCountChanged;
+            NotificationContext.OnStateChanged += HandleStateChanged;
+            _ = NotificationContext.InitializeAsync();
+        }
+
+        try
+        {
+            var msgResp = await Api.GetAsync<Maui_Task.Shared.Helpers.ApiResponse<IEnumerable<Maui_Task.Shared.DTOs.Messages.ContactDto>>>("/api/messages/contacts");
+            if (msgResp?.Data != null)
+            {
+                RecentContacts = msgResp.Data.ToList();
+                UnreadMsgCount = RecentContacts.Sum(c => c.UnreadCount);
+            }
+        }
+        catch { }
+    }
+
+    private void HandleUnreadCountChanged(int unreadCount)
+    {
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private void HandleStateChanged()
+    {
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private void ToggleNotifications() { ShowNotifications = !ShowNotifications; ShowMessages = false; ShowUser = false; }
+    private void ToggleMessages()      { ShowMessages = !ShowMessages;           ShowNotifications = false; ShowUser = false; }
+    private void ToggleUser()          { ShowUser = !ShowUser;                   ShowNotifications = false; ShowMessages = false; }
+
+    private async Task MarkAllNotifsRead()
+    {
+        if (NotificationContext != null)
+        {
+            await NotificationContext.MarkAllAsReadAsync();
+        }
+        else
+        {
+            try { await Api.PatchAsync<object>("/api/notifications/read-all", null); }
+            catch { }
+        }
+
+        ShowNotifications = false;
+    }
+
+    private async Task LogoutAsync()
+    {
+        await AuthService.LogoutAsync();
+        AuthState.NotifyUserLoggedOut();
+        Nav.NavigateTo("/login", forceLoad: true);
+    }
+
+    private static string GetInitials(string name)
+        => string.Join("", name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(w => w[0])).ToUpperInvariant();
+
+    private static string FormatRelativeTime(string iso)
+    {
+        if (!DateTime.TryParse(iso, out var dt)) return "";
+        var diff = DateTime.UtcNow - dt.ToUniversalTime();
+        if (diff.TotalMinutes < 1)  return "Just now";
+        if (diff.TotalHours < 1)    return $"{(int)diff.TotalMinutes} min ago";
+        if (diff.TotalDays < 1)     return $"{(int)diff.TotalHours}h ago";
+        if (diff.TotalDays < 2)     return "Yesterday";
+        return $"{(int)diff.TotalDays} days ago";
+    }
+
+    public void Dispose()
+    {
+        if (NotificationContext == null)
+        {
+            return;
+        }
+
+        NotificationContext.OnUnreadCountChanged -= HandleUnreadCountChanged;
+        NotificationContext.OnStateChanged -= HandleStateChanged;
+    }
+}

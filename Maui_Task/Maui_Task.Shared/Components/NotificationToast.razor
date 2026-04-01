@@ -1,0 +1,169 @@
+@*
+    CLEANUP [Maui_Task.Shared/Components/NotificationToast.razor]:
+    - Removed: none
+    - Fixed: Verified Razor CSS escape @@keyframes is required and retained; no visual or behavioral CSS changes applied.
+    - Moved: none
+*@
+
+@implements IDisposable
+
+@if (IsVisible)
+{
+    <div class="notification-toast" role="status" aria-live="polite">
+        <div class="notification-toast__icon">@ResolveIcon()</div>
+        <div class="notification-toast__content">
+            <p class="notification-toast__title">@Title</p>
+            <p class="notification-toast__message">@Message</p>
+        </div>
+        <button type="button" class="notification-toast__close" aria-label="Close" @onclick="OnCloseClicked">x</button>
+    </div>
+}
+
+<style>
+.notification-toast {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2000;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: min(360px, calc(100vw - 2rem));
+    padding: 0.875rem 0.95rem;
+    border-radius: 12px;
+    background: #111827;
+    color: #f9fafb;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    animation: notification-toast-enter 180ms ease-out;
+}
+
+.notification-toast__icon {
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+.notification-toast__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-toast__title {
+    margin: 0;
+    font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.notification-toast__message {
+    margin: 0.25rem 0 0;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    color: #d1d5db;
+}
+
+.notification-toast__close {
+    border: 0;
+    background: transparent;
+    color: #f9fafb;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0.15rem;
+}
+
+@@keyframes notification-toast-enter {
+    from { transform: translateY(-8px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+</style>
+
+@code {
+    private CancellationTokenSource? _dismissCts;
+
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public string Message { get; set; } = string.Empty;
+    [Parameter] public string Icon { get; set; } = "bell";
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (!IsVisible)
+        {
+            CancelDismissTimer();
+            return;
+        }
+
+        StartDismissTimer();
+    }
+
+    private async Task OnCloseClicked()
+    {
+        CancelDismissTimer();
+        if (OnClose.HasDelegate)
+        {
+            await OnClose.InvokeAsync();
+        }
+    }
+
+    private void StartDismissTimer()
+    {
+        CancelDismissTimer();
+        _dismissCts = new CancellationTokenSource();
+        var token = _dismissCts.Token;
+
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await Task.Delay(TimeSpan.FromSeconds(5), token);
+                if (!token.IsCancellationRequested && OnClose.HasDelegate)
+                {
+                    await InvokeAsync(() => OnClose.InvokeAsync());
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        }, token);
+    }
+
+    private void CancelDismissTimer()
+    {
+        if (_dismissCts == null)
+        {
+            return;
+        }
+
+        _dismissCts.Cancel();
+        _dismissCts.Dispose();
+        _dismissCts = null;
+    }
+
+    private string ResolveIcon()
+    {
+        var normalized = (Icon ?? string.Empty).Trim().ToLowerInvariant();
+        return normalized switch
+        {
+            "critical" => "!",
+            "high" => "!",
+            "warning" => "!",
+            "taskoverdue" => "!",
+            "success" => "ok",
+            "taskcompleted" => "ok",
+            _ => "i"
+        };
+    }
+
+    public void Dispose()
+    {
+        CancelDismissTimer();
+    }
+}

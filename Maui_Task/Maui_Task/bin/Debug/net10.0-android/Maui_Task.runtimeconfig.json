@@ -24,6 +24,7 @@
       "System.Linq.Enumerable.IsSizeOptimized": true,
       "System.Net.Http.UseNativeHttpHandler": true,
       "System.Net.SocketsHttpHandler.Http3Support": false,
+      "System.Reflection.NullabilityInfoContext.IsSupported": true,
       "System.Runtime.InteropServices.BuiltInComInterop.IsSupported": false,
       "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false,
       "System.Text.Encoding.EnableUnsafeUTF7Encoding": false,

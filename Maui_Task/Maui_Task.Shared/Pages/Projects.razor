@@ -1,0 +1,85 @@
+@page "/projects"
+@attribute [Authorize]
+@inject Maui_Task.Shared.Services.HttpApiService Api
+@inject NavigationManager Nav
+@using Maui_Task.Shared.DTOs.Projects
+@using Maui_Task.Shared.Helpers
+
+<h3>Projects</h3>
+
+<div class="controls" style="margin-bottom:10px;">
+    <button class="btn btn-secondary" @onclick="Load">Refresh</button>
+    <button class="btn btn-primary" @onclick="Create">New Project</button>
+</div>
+
+@if (loading)
+{
+    <PageState State="PageState.PageStateMode.Loading" Message="Loading projects..." />
+}
+else if (!string.IsNullOrWhiteSpace(error))
+{
+    <PageState State="PageState.PageStateMode.Error" Message="@error" OnRetry="Load" />
+}
+else if (projects.Count == 0)
+{
+    <PageState State="PageState.PageStateMode.Empty" Message="No projects found." />
+}
+else
+{
+    <div class="project-list">
+        @foreach (var p in projects)
+        {
+            <div class="project-card">
+                <div class="name"><a class="project-link" href="/projects/edit/@p.Id">@p.Name</a></div>
+                <div class="small muted">Owner: @p.OwnerName</div>
+                <div class="small muted">Tasks: @p.TasksCompleted / @p.TasksTotal</div>
+                <div class="actions">
+                    <button class="btn btn-secondary" @onclick="() => Open(p.Id)">Open</button>
+                    <button class="btn btn-primary" @onclick="() => Edit(p.Id)">Edit</button>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<ProjectDto> projects = new();
+    private bool loading = true;
+    private string? error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        loading = true;
+        error = null;
+        try
+        {
+            var response = await Api.GetAsync<ApiResponse<IEnumerable<ProjectDto>>>("/api/projects");
+            projects = response?.Data?.ToList() ?? new();
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            projects = new();
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    private void Open(int id) => Nav.NavigateTo($"/projects/{id}");
+    private void Create() => Nav.NavigateTo("/projects/edit/0");
+    private void Edit(int id) => Nav.NavigateTo($"/projects/edit/{id}");
+}
+
+<style>
+.project-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:0.6rem }
+.project-card { padding:0.6rem; border:1px solid #eee; border-radius:6px; cursor:pointer }
+.project-card .name { font-weight:600 }
+.project-card .meta { color:#666; font-size:0.9rem }
+</style>

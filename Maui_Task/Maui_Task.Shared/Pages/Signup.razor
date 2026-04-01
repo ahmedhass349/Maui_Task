@@ -1,0 +1,82 @@
+@page "/signup"
+@attribute [AllowAnonymous]
+@using Maui_Task.Shared.DTOs.Auth
+@using Maui_Task.Shared.Helpers
+@inject NavigationManager NavigationManager
+@inject Maui_Task.Shared.Services.AuthenticationService AuthService
+@inject TaskFlowAuthStateProvider AuthState
+
+<PageTitle>Sign Up</PageTitle>
+
+<div class="max-w-xl p-6">
+    <h1 class="text-2xl font-semibold">Create account</h1>
+
+    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <p class="text-sm text-red-700 mt-3">@ErrorMessage</p>
+    }
+
+    <EditForm Model="@Model" OnValidSubmit="HandleSignup" class="mt-4 grid gap-3">
+        <DataAnnotationsValidator />
+
+        <InputText @bind-Value="Model.FullName" class="border rounded px-3 py-2" placeholder="Full name" />
+        <ValidationMessage For="() => Model.FullName" />
+
+        <InputText @bind-Value="Model.Email" class="border rounded px-3 py-2" placeholder="Email" />
+        <ValidationMessage For="() => Model.Email" />
+
+        <InputText @bind-Value="Model.Password" type="password" class="border rounded px-3 py-2" placeholder="Password" />
+        <ValidationMessage For="() => Model.Password" />
+
+        <InputText @bind-Value="Model.ConfirmPassword" type="password" class="border rounded px-3 py-2" placeholder="Confirm password" />
+        <ValidationMessage For="() => Model.ConfirmPassword" />
+
+        <InputText @bind-Value="Model.Company" class="border rounded px-3 py-2" placeholder="Company (optional)" />
+        <InputText @bind-Value="Model.Country" class="border rounded px-3 py-2" placeholder="Country (optional)" />
+        <InputText @bind-Value="Model.Phone" class="border rounded px-3 py-2" placeholder="Phone (optional)" />
+        <InputText @bind-Value="Model.Timezone" class="border rounded px-3 py-2" placeholder="Timezone (optional)" />
+
+        <button type="submit" class="bg-black text-white rounded px-4 py-2 mt-2" disabled="@IsSubmitting">
+            @(IsSubmitting ? "Creating account..." : "Create account")
+        </button>
+    </EditForm>
+
+    <button class="text-sm underline mt-4" @onclick='() => NavigationManager.NavigateTo("/login")'>Back to login</button>
+</div>
+
+@code {
+    private RegisterRequest Model = new();
+    private bool IsSubmitting;
+    private string? ErrorMessage;
+
+    private async Task HandleSignup()
+    {
+        ErrorMessage = null;
+        IsSubmitting = true;
+        try
+        {
+            var result = await AuthService.LoginAsync<ApiResponse<AuthResponse>>("/api/auth/register", Model);
+            if (result?.Success == true && result.Data != null && !string.IsNullOrWhiteSpace(result.Data.Token))
+            {
+                await AuthService.SetTokenAsync(result.Data.Token);
+                if (!string.IsNullOrWhiteSpace(result.Data.RefreshToken))
+                {
+                    await AuthService.SetRefreshTokenAsync(result.Data.RefreshToken);
+                }
+                AuthState.NotifyUserLoggedIn(result.Data);
+                NavigationManager.NavigateTo("/", true);
+                return;
+            }
+
+            ErrorMessage = result?.Message ?? "Registration failed.";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
+    }
+}

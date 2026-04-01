@@ -1,0 +1,26 @@
+@if (State == PageStateMode.Loading)
+{
+    <div class="text-sm text-gray-600">@Message</div>
+}
+else if (State == PageStateMode.Error)
+{
+    <div class="text-sm text-red-700 grid gap-2">
+        <span>@Message</span>
+        @if (OnRetry.HasDelegate)
+        {
+            <button class="border rounded px-3 py-1 w-fit" @onclick="OnRetry">Retry</button>
+        }
+    </div>
+}
+else if (State == PageStateMode.Empty)
+{
+    <div class="text-sm text-gray-600">@Message</div>
+}
+
+@code {
+    public enum PageStateMode { Loading, Error, Empty }
+
+    [Parameter] public PageStateMode State { get; set; }
+    [Parameter] public string Message { get; set; } = string.Empty;
+    [Parameter] public EventCallback OnRetry { get; set; }
+}

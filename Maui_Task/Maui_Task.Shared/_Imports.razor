@@ -1,11 +1,22 @@
-﻿@using System.Net.Http
+﻿@*
+	CLEANUP [Maui_Task.Shared/_Imports.razor]:
+	- Removed: @using Maui_Task because no Shared component/page uses symbols from the MAUI root namespace.
+	- Fixed: Reduced global import noise and potential namespace ambiguity.
+	- Moved: none
+*@
+
+@using System.Net.Http
 @using System.Net.Http.Json
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Web
 @using static Microsoft.AspNetCore.Components.Web.RenderMode
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using Microsoft.JSInterop
-@using Maui_Task
 @using Maui_Task.Shared
 @using Maui_Task.Shared.Layout
+@using Maui_Task.Shared.SharedComponents
+@using Maui_Task.Shared.Components
+@using Maui_Task.Shared.Services
+@using Microsoft.AspNetCore.Authorization

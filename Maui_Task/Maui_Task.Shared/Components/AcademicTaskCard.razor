@@ -1,0 +1,86 @@
+@using Maui_Task.Shared.DTOs.Tasks
+@using Maui_Task.Shared.Helpers
+@inject Maui_Task.Shared.Services.HttpApiService Api
+
+<div class="bg-white rounded-lg border p-4 grid gap-3">
+    <h3 class="text-lg font-semibold">@(initialData is null ? "Create task" : "Edit task")</h3>
+
+    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <p class="text-sm text-red-700">@ErrorMessage</p>
+    }
+
+    <EditForm Model="@Model" OnValidSubmit="Save" class="grid gap-2">
+        <DataAnnotationsValidator />
+        <InputText @bind-Value="Model.Title" class="border rounded px-3 py-2" placeholder="Title" />
+        <InputTextArea @bind-Value="Model.Description" class="border rounded px-3 py-2" placeholder="Description" />
+
+        <div class="flex gap-2 justify-end mt-2">
+            <button type="button" class="border rounded px-3 py-2" @onclick="onClose">Cancel</button>
+            <button type="submit" class="bg-black text-white rounded px-3 py-2" disabled="@Saving">
+                @(Saving ? "Saving..." : "Save")
+            </button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter] public TaskDto? initialData { get; set; }
+    [Parameter] public EventCallback onClose { get; set; }
+    [Parameter] public EventCallback<TaskDto> onSuccess { get; set; }
+
+    private bool Saving;
+    private string? ErrorMessage;
+    private CreateTaskRequest Model = new();
+
+    protected override void OnParametersSet()
+    {
+        Model = new CreateTaskRequest
+        {
+            Title = initialData?.Title ?? string.Empty,
+            Description = initialData?.Description,
+            Priority = ParsePriority(initialData?.Priority),
+            Status = ParseStatus(initialData?.Status)
+        };
+    }
+
+    private static Maui_Task.Shared.Data.Entities.TaskPriority ParsePriority(string? value)
+    {
+        return Enum.TryParse<Maui_Task.Shared.Data.Entities.TaskPriority>(value, true, out var parsed)
+            ? parsed
+            : Maui_Task.Shared.Data.Entities.TaskPriority.Medium;
+    }
+
+    private static Maui_Task.Shared.Data.Entities.TaskStatus ParseStatus(string? value)
+    {
+        return Enum.TryParse<Maui_Task.Shared.Data.Entities.TaskStatus>(value, true, out var parsed)
+            ? parsed
+            : Maui_Task.Shared.Data.Entities.TaskStatus.Todo;
+    }
+
+    private async Task Save()
+    {
+        Saving = true;
+        ErrorMessage = null;
+        try
+        {
+            var result = await Api.PostAsync<ApiResponse<TaskDto>>("/api/tasks", Model);
+            if (result?.Success == true && result.Data != null)
+            {
+                await onSuccess.InvokeAsync(result.Data);
+                await onClose.InvokeAsync();
+                return;
+            }
+
+            ErrorMessage = result?.Message ?? "Failed to save task.";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            Saving = false;
+        }
+    }
+}

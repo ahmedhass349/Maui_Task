@@ -1,0 +1,44 @@
+@using Maui_Task.Shared.DTOs.Tasks
+
+<div class="kanban-board">
+    <div class="kanban-col">
+        <h5>To Do</h5>
+        <ul>
+            @foreach (var t in VisibleTasks.Where(x => x.Status == "Todo"))
+            {
+                <li>@t.Title</li>
+            }
+        </ul>
+    </div>
+    <div class="kanban-col">
+        <h5>In Progress</h5>
+        <ul>
+            @foreach (var t in VisibleTasks.Where(x => x.Status == "InProgress"))
+            {
+                <li>@t.Title</li>
+            }
+        </ul>
+    </div>
+    <div class="kanban-col">
+        <h5>Review</h5>
+        <ul>
+            @foreach (var t in VisibleTasks.Where(x => x.Status == "Review"))
+            {
+                <li>@t.Title</li>
+            }
+        </ul>
+    </div>
+    <div class="kanban-col">
+        <h5>Completed</h5>
+        <ul>
+            @foreach (var t in VisibleTasks.Where(x => x.Status == "Completed"))
+            {
+                <li>@t.Title</li>
+            }
+        </ul>
+    </div>
+</div>
+
+@code {
+    [Parameter] public List<TaskDto> VisibleTasks { get; set; } = new();
+}

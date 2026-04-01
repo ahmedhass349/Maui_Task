@@ -1,4 +1,0 @@
-C:\Users\Ahmed Abdelbarr\source\repos\Maui_Task\Maui_Task\Maui_Task.Shared\obj\Debug\net10.0\staticwebassets.build.json
-C:\Users\Ahmed Abdelbarr\source\repos\Maui_Task\Maui_Task\Maui_Task.Shared\obj\Debug\net10.0\staticwebassets.build.json
-C:\Users\Ahmed Abdelbarr\source\repos\Maui_Task\Maui_Task\Maui_Task.Shared\obj\Debug\net10.0\staticwebassets.build.json
-C:\Users\Ahmed Abdelbarr\source\repos\Maui_Task\Maui_Task\Maui_Task.Shared\obj\Debug\net10.0\staticwebassets.build.json

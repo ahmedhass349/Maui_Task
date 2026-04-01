@@ -1,0 +1,213 @@
+@page "/login"
+@attribute [AllowAnonymous]
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Routing
+@using Maui_Task.Shared.Services
+@using Maui_Task.Shared.DTOs.Auth
+@inject NavigationManager NavigationManager
+@inject Maui_Task.Shared.Services.AuthenticationService AuthService
+@inject TaskFlowAuthStateProvider AuthState
+
+<CascadingValue Value="this">
+    <div class="min-h-screen bg-white flex">
+        <!-- Left Side - Login Form -->
+        <div class="flex-1 flex flex-col min-h-screen relative">
+            <!-- Logo -->
+            <div class="pt-[54px] pl-[55px]">
+                <TaskFlowLogo />
+            </div>
+
+            <!-- Form -->
+            <div class="flex-1 flex flex-col justify-center px-8 mx-auto w-full max-w-[460px] mt-[-200px]">
+                
+                <!-- Server error banner -->
+                @if (!string.IsNullOrEmpty(AuthError))
+                {
+                    <div class="mb-[24px] rounded-[4px] border border-red-300 bg-red-50 px-[12px] py-[10px]">
+                        <p class="text-[14px] text-red-700">@AuthError</p>
+                    </div>
+                }
+
+                <EditForm Model="@LoginModel" OnValidSubmit="@HandleLogin">
+                    <DataAnnotationsValidator />
+                    
+                    <!-- Email -->
+                    <div class="mb-[24px]">
+                        <div class="relative rounded-[4px] w-[345px] @(FieldErrors.ContainsKey("Email") ? "ring-1 ring-red-500" : "")">
+                            <div class="absolute border border-solid inset-0 pointer-events-none rounded-[4px] @(FieldErrors.ContainsKey("Email") ? "border-red-500" : "border-[rgba(0,0,0,0.23)]")" />
+                            <div class="px-[12px]">
+                                <InputText @bind-Value="LoginModel.Email" 
+                                          placeholder="Email Address *" 
+                                          class="w-full py-[16px] bg-transparent font-normal text-base text-foreground tracking-[0.15px] leading-6 outline-none placeholder:text-muted-foreground" 
+                                          disabled="@IsSubmitting" />
+                            </div>
+                        </div>
+                        @if (FieldErrors.ContainsKey("Email"))
+                        {
+                            <p class="mt-1 text-xs text-red-600 pl-0.5">@FieldErrors["Email"]</p>
+                        }
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-[24px]">
+                        <div class="relative rounded-[4px] w-[345px] @(FieldErrors.ContainsKey("Password") ? "ring-1 ring-red-500" : "")">
+                            <div class="absolute border border-solid inset-0 pointer-events-none rounded-[4px] @(FieldErrors.ContainsKey("Password") ? "border-red-500" : "border-[rgba(0,0,0,0.23)]")" />
+                            <div class="px-[12px]">
+                                <InputText @bind-Value="LoginModel.Password" 
+                                          type="password" 
+                                          placeholder="Password *" 
+                                          class="w-full py-[16px] bg-transparent font-normal text-base text-foreground tracking-[0.15px] leading-6 outline-none placeholder:text-muted-foreground" 
+                                          disabled="@IsSubmitting" />
+                            </div>
+                        </div>
+                        @if (FieldErrors.ContainsKey("Password"))
+                        {
+                            <p class="mt-1 text-xs text-red-600 pl-0.5">@FieldErrors["Password"]</p>
+                        }
+                    </div>
+
+                    <!-- Login button + Forgot password row -->
+                    <div class="flex items-center gap-[16px] mb-[32px]">
+                        <button type="submit"
+                                disabled="@IsSubmitting"
+                                class="bg-brand text-white rounded-[4px] px-[22px] py-[8px] shadow-[0px_3px_1px_-2px_rgba(0,0,0,0.2),0px_2px_2px_0px_rgba(0,0,0,0.14),0px_1px_5px_0px_rgba(0,0,0,0.12)] flex items-center gap-[8px] cursor-pointer hover:bg-brand-hover transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+                            <span class="font-medium text-[15px] leading-[26px] tracking-[0.46px] uppercase text-white/87">
+                                @(IsSubmitting ? "Signing in..." : "Login")
+                            </span>
+                            @if (!IsSubmitting)
+                            {
+                                <svg aria-hidden="true" width="18" height="22" viewBox="0 0 16 16" fill="none">
+                                    <path d="M8 0L6.59 1.41L12.17 7H0V9H12.17L6.59 14.59L8 16L16 8L8 0Z" fill="white" />
+                                </svg>
+                            }
+                            @if (IsSubmitting)
+                            {
+                                <div class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                            }
+                        </button>
+                        <NavLink href="/forgot-password" 
+                                class="font-medium text-sm leading-[1.57] text-foreground tracking-[0.1px] hover:underline">
+                            Forgot your password?
+                        </NavLink>
+                    </div>
+
+                     <!-- Create New Account button -->
+                    <div class="relative">
+                        <button type="button"
+                            @onclick='() => NavigationManager.NavigateTo("/signup")'
+                                disabled="@IsSubmitting"
+                                class="bg-black text-white rounded-[4px] px-[22px] py-[8px] w-[344px] shadow-[0px_3px_1px_-2px_rgba(0,0,0,0.2),0px_2px_2px_0px_rgba(0,0,0,0.14),0px_1px_5px_0px_rgba(0,0,0,0.12)] cursor-pointer hover:bg-[#333] transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+                            <span class="font-medium text-[15px] leading-[26px] tracking-[0.46px] uppercase text-white/87">
+                                create new account
+                            </span>
+                        </button>
+                        <!-- Beta badge -->
+                        <div class="absolute -top-[12px] right-[-8px] bg-[#b0407c] text-white font-medium text-xs leading-[20px] tracking-[0.14px] px-[6.5px] rounded-[64px] text-center">
+                            Beta
+                        </div>
+                    </div>
+                </EditForm>
+            </div>
+
+            <!-- Footer -->
+            <div class="pb-[20px] pl-[55px]">
+                <AuthFooter />
+            </div>
+        </div>
+
+        <!-- Right Side - Promotion (desktop only) -->
+        <div class="hidden lg:block w-[58%] relative min-h-screen">
+            <div class="absolute inset-0 overflow-hidden">
+                <PromotionBg />
+            </div>
+            <div class="absolute inset-0 flex items-center justify-center overflow-hidden">
+                <div class="relative w-[468px] h-[469px]">
+                    <LoginPromotion />
+                </div>
+            </div>
+        </div>
+    </div>
+</CascadingValue>
+
+@code {
+    private LoginRequest LoginModel = new LoginRequest();
+    private Dictionary<string, string> FieldErrors = new Dictionary<string, string>();
+    private string? AuthError;
+    private bool IsSubmitting = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthService.InitializeAsync();
+        if (!string.IsNullOrWhiteSpace(AuthService.Token))
+        {
+            NavigationManager.NavigateTo("/", true);
+        }
+    }
+
+    private async Task HandleLogin()
+    {
+        FieldErrors.Clear();
+        AuthError = null;
+        
+        // Client-side validation
+        var errors = ValidateLoginForm(LoginModel.Email, LoginModel.Password);
+        if (errors.Count > 0)
+        {
+            FieldErrors = errors;
+            return;
+        }
+
+        IsSubmitting = true;
+        try
+        {
+            var result = await AuthService.LoginAsync<AuthResponse>("/api/auth/login", LoginModel);
+            if (result != null && !string.IsNullOrWhiteSpace(result.Token))
+            {
+                await AuthService.SetTokenAsync(result.Token);
+                if (!string.IsNullOrWhiteSpace(result.RefreshToken))
+                {
+                    await AuthService.SetRefreshTokenAsync(result.RefreshToken);
+                }
+                AuthState.NotifyUserLoggedIn(result);
+                NavigationManager.NavigateTo("/", true);
+            }
+            else
+            {
+                AuthError = "Invalid credentials.";
+            }
+        }
+        catch (Exception ex)
+        {
+            AuthError = ex.Message;
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
+    }
+
+    private Dictionary<string, string> ValidateLoginForm(string email, string password)
+    {
+        var errors = new Dictionary<string, string>();
+
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            errors["Email"] = "Email is required";
+        }
+        else if (!System.Text.RegularExpressions.Regex.IsMatch(email, @"^[^\s@]+@[^\s@]+\.[^\s@]+$"))
+        {
+            errors["Email"] = "Please enter a valid email address";
+        }
+
+        if (string.IsNullOrEmpty(password))
+        {
+            errors["Password"] = "Password is required";
+        }
+        else if (password.Length < 6)
+        {
+            errors["Password"] = "Password must be at least 6 characters";
+        }
+
+        return errors;
+    }
+}

@@ -1,0 +1,180 @@
+@page "/settings"
+@attribute [Authorize]
+@using Maui_Task.Shared.DTOs.Auth
+@using Maui_Task.Shared.DTOs.Settings
+@using Maui_Task.Shared.Helpers
+@inject NavigationManager Nav
+@inject Maui_Task.Shared.Services.HttpApiService Api
+@inject Maui_Task.Shared.Services.AuthenticationService Auth
+@inject TaskFlowAuthStateProvider AuthState
+
+<PageTitle>Settings</PageTitle>
+
+<div class="max-w-3xl p-6 grid gap-6">
+    <h1 class="text-2xl font-semibold">Settings</h1>
+
+    @if (!string.IsNullOrWhiteSpace(Message))
+    {
+        <p class="text-sm text-green-700">@Message</p>
+    }
+    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <p class="text-sm text-red-700">@ErrorMessage</p>
+    }
+
+    <section class="border rounded p-4 grid gap-3">
+        <h2 class="text-lg font-medium">Profile</h2>
+        <EditForm Model="@ProfileModel" OnValidSubmit="SaveProfile" class="grid gap-3">
+            <DataAnnotationsValidator />
+            <InputText @bind-Value="ProfileModel.FirstName" class="border rounded px-3 py-2" placeholder="First name" />
+            <InputText @bind-Value="ProfileModel.LastName" class="border rounded px-3 py-2" placeholder="Last name" />
+            <InputText @bind-Value="ProfileModel.Email" class="border rounded px-3 py-2" placeholder="Email" />
+            <InputText @bind-Value="ProfileModel.Company" class="border rounded px-3 py-2" placeholder="Company" />
+            <InputText @bind-Value="ProfileModel.Country" class="border rounded px-3 py-2" placeholder="Country" />
+            <InputText @bind-Value="ProfileModel.Phone" class="border rounded px-3 py-2" placeholder="Phone" />
+            <InputText @bind-Value="ProfileModel.Timezone" class="border rounded px-3 py-2" placeholder="Timezone" />
+            <button type="submit" class="bg-black text-white rounded px-4 py-2" disabled="@SavingProfile">
+                @(SavingProfile ? "Saving..." : "Save profile")
+            </button>
+        </EditForm>
+    </section>
+
+    <section class="border rounded p-4 grid gap-3">
+        <h2 class="text-lg font-medium">Password</h2>
+        <EditForm Model="@PasswordModel" OnValidSubmit="ChangePassword" class="grid gap-3">
+            <DataAnnotationsValidator />
+            <InputText @bind-Value="PasswordModel.CurrentPassword" type="password" class="border rounded px-3 py-2" placeholder="Current password" />
+            <InputText @bind-Value="PasswordModel.NewPassword" type="password" class="border rounded px-3 py-2" placeholder="New password" />
+            <InputText @bind-Value="PasswordModel.ConfirmPassword" type="password" class="border rounded px-3 py-2" placeholder="Confirm password" />
+            <button type="submit" class="bg-black text-white rounded px-4 py-2" disabled="@ChangingPassword">
+                @(ChangingPassword ? "Updating..." : "Update password")
+            </button>
+        </EditForm>
+    </section>
+
+    <section class="border rounded p-4 grid gap-3">
+        <h2 class="text-lg font-medium text-red-700">Danger Zone</h2>
+        <button class="border border-red-600 text-red-700 rounded px-4 py-2 w-fit" @onclick="DeleteAccount" disabled="@DeletingAccount">
+            @(DeletingAccount ? "Deleting account..." : "Delete account")
+        </button>
+    </section>
+</div>
+
+@code {
+    private UpdateProfileRequest ProfileModel = new();
+    private ChangePasswordRequest PasswordModel = new();
+    private bool SavingProfile;
+    private bool ChangingPassword;
+    private bool DeletingAccount;
+    private string? Message;
+    private string? ErrorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProfile();
+    }
+
+    private async Task LoadProfile()
+    {
+        try
+        {
+            var result = await Api.GetAsync<ApiResponse<ProfileDto>>("/api/settings/profile");
+            if (result?.Success == true && result.Data != null)
+            {
+                ProfileModel = new UpdateProfileRequest
+                {
+                    FirstName = result.Data.FirstName,
+                    LastName = result.Data.LastName,
+                    Email = result.Data.Email,
+                    AvatarUrl = result.Data.AvatarUrl,
+                    Company = result.Data.Company,
+                    Country = result.Data.Country,
+                    Phone = result.Data.Phone,
+                    Timezone = result.Data.Timezone
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+    }
+
+    private async Task SaveProfile()
+    {
+        Message = null;
+        ErrorMessage = null;
+        SavingProfile = true;
+        try
+        {
+            var result = await Api.PutAsync<ApiResponse<AuthResponse>>("/api/settings/profile", ProfileModel);
+            if (result?.Success == true)
+            {
+                if (!string.IsNullOrWhiteSpace(result.Data?.Token))
+                {
+                    await Auth.SetTokenAsync(result.Data.Token);
+                    AuthState.NotifyUserLoggedIn(result.Data);
+                }
+                Message = "Profile updated.";
+                return;
+            }
+            ErrorMessage = result?.Message ?? "Failed to update profile.";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            SavingProfile = false;
+        }
+    }
+
+    private async Task ChangePassword()
+    {
+        Message = null;
+        ErrorMessage = null;
+        ChangingPassword = true;
+        try
+        {
+            var result = await Api.PutAsync<ApiResponse<string>>("/api/settings/password", PasswordModel);
+            if (result?.Success == true)
+            {
+                Message = "Password updated.";
+                PasswordModel = new ChangePasswordRequest();
+                return;
+            }
+            ErrorMessage = result?.Message ?? "Failed to update password.";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            ChangingPassword = false;
+        }
+    }
+
+    private async Task DeleteAccount()
+    {
+        Message = null;
+        ErrorMessage = null;
+        DeletingAccount = true;
+        try
+        {
+            await Api.DeleteAsync("/api/settings/account");
+            await Auth.LogoutAsync();
+            AuthState.NotifyUserLoggedOut();
+            Nav.NavigateTo("/login", true);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            DeletingAccount = false;
+        }
+    }
+}

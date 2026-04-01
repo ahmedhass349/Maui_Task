@@ -1,6 +1,38 @@
-﻿<Router AppAssembly="typeof(Layout.MainLayout).Assembly" NotFoundPage="typeof(Pages.NotFound)">
-    <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
-        <FocusOnNavigate RouteData="routeData" Selector="h1" />
-    </Found>
-</Router>
+﻿@using System.Reflection
+@using Microsoft.AspNetCore.Components.Routing
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="typeof(Layout.MainLayout).Assembly" NotFoundPage="typeof(Pages.NotFound)">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="routeData" DefaultLayout="@ResolveLayout(routeData.PageType)">
+                <NotAuthorized>
+                    <RedirectToLogin />
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="routeData" Selector="h1" />
+        </Found>
+    </Router>
+</CascadingAuthenticationState>
+
+@code {
+    private static readonly HashSet<string> AuthRoutes =
+    [
+        "login",
+        "signup",
+        "forgot-password",
+        "reset-password",
+        "reset-password-sent",
+        "not-found"
+    ];
+
+    private static Type ResolveLayout(Type pageType)
+    {
+        var templates = pageType
+            .GetCustomAttributes<RouteAttribute>(inherit: true)
+            .Select(x => x.Template.Trim('/').ToLowerInvariant());
+
+        return templates.Any(t => AuthRoutes.Contains(t))
+            ? typeof(Layout.AuthLayout)
+            : typeof(Layout.MainLayout);
+    }
+}

@@ -1,0 +1,31 @@
+@using Maui_Task.Shared.DTOs.Tasks
+
+<div class="table-view">
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Project</th>
+                <th>Assignee</th>
+                <th>Due</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in VisibleTasks)
+            {
+                <tr>
+                    <td>@t.Title</td>
+                    <td>@t.ProjectName</td>
+                    <td>@t.AssigneeName</td>
+                    <td>@t.DueDateLabel</td>
+                    <td>@t.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter] public List<TaskDto> VisibleTasks { get; set; } = new();
+}

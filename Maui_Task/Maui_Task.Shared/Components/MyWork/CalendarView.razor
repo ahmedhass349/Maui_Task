@@ -1,0 +1,15 @@
+@using Maui_Task.Shared.DTOs.Tasks
+
+<div class="calendar-view">
+    <p>Calendar view (placeholder) — weekly agenda.</p>
+    <ul>
+        @foreach (var t in VisibleTasks)
+        {
+            <li>@t.Title — @t.DueDateLabel</li>
+        }
+    </ul>
+</div>
+
+@code {
+    [Parameter] public List<TaskDto> VisibleTasks { get; set; } = new();
+}

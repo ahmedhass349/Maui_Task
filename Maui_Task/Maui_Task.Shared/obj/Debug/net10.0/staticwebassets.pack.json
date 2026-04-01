@@ -1,23 +1,35 @@
 {
   "Files": [
     {
-      "Id": "C:\\Users\\Ahmed Abdelbarr\\source\\repos\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\obj\\Debug\\net10.0\\scopedcss\\projectbundle\\Maui_Task.Shared.bundle.scp.css",
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\obj\\Debug\\net10.0\\scopedcss\\projectbundle\\Maui_Task.Shared.bundle.scp.css",
       "PackagePath": "staticwebassets\\Maui_Task.Shared.7yw729yx1h.bundle.scp.css"
     },
     {
-      "Id": "C:\\Users\\Ahmed Abdelbarr\\source\\repos\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\app.css",
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\app.css",
       "PackagePath": "staticwebassets\\app.css"
     },
     {
-      "Id": "C:\\Users\\Ahmed Abdelbarr\\source\\repos\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\favicon.png",
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\css\\tailwind.min.css",
+      "PackagePath": "staticwebassets\\css\\tailwind.min.css"
+    },
+    {
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\favicon.png",
       "PackagePath": "staticwebassets\\favicon.png"
     },
     {
-      "Id": "C:\\Users\\Ahmed Abdelbarr\\source\\repos\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\icons.svg",
+      "PackagePath": "staticwebassets\\icons.svg"
+    },
+    {
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
     },
     {
-      "Id": "C:\\Users\\Ahmed Abdelbarr\\source\\repos\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
     },
     {

@@ -17,7 +17,7 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <FileLength>416</FileLength>
-      <LastWriteTime>Sat, 28 Mar 2026 13:50:53 GMT</LastWriteTime>
+      <LastWriteTime>Mon, 30 Mar 2026 22:42:19 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\app.css'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\index.html'))">
@@ -32,12 +32,12 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>0ppk57omyg</Fingerprint>
-      <Integrity>FGA+iyn9po9YM0BUO+Mn3mhxmT960aCc/xMUOan1KFI=</Integrity>
+      <Fingerprint>bl8vyedmot</Fingerprint>
+      <Integrity>P+dbxCgpGK4Mv9IzUuvfC7aM5VdOtEOlKPQ3saEvNcU=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <FileLength>783</FileLength>
-      <LastWriteTime>Sat, 28 Mar 2026 13:50:53 GMT</LastWriteTime>
+      <FileLength>868</FileLength>
+      <LastWriteTime>Wed, 01 Apr 2026 12:16:00 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\index.html'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Maui_Task.styles.css'))">
@@ -57,7 +57,7 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <FileLength>83</FileLength>
-      <LastWriteTime>Sat, 28 Mar 2026 14:00:55 GMT</LastWriteTime>
+      <LastWriteTime>Wed, 01 Apr 2026 21:27:45 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Maui_Task.styles.css'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\_framework\blazor.modules.json'))">

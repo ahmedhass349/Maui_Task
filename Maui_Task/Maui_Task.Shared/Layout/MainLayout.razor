@@ -1,23 +1,29 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
+@implements IAsyncDisposable
+@inject NotificationContext NotificationContext
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+<CascadingValue Value="NotificationContext">
+    <div class="app-shell">
+        <Sidebar />
+        <div class="app-body">
+            <Header />
+            <main class="app-content">
+                @Body
+            </main>
+            <Footer />
         </div>
+    </div>
+</CascadingValue>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+@code {
+    protected override Task OnInitializedAsync()
+    {
+        _ = NotificationContext.InitializeAsync();
+        return Task.CompletedTask;
+    }
 
-<div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
-</div>
+    public async ValueTask DisposeAsync()
+    {
+        await NotificationContext.DisposeAsync();
+    }
+}

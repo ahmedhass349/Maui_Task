@@ -1,0 +1,37 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task\\obj\\Debug\\net9.0-android\\scopedcss\\bundle\\Maui_Task.styles.css",
+      "PackagePath": "staticwebassets\\Maui_Task.styles.css"
+    },
+    {
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-android\\staticwebassets\\msbuild.Maui_Task.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-android\\staticwebassets\\msbuild.Maui_Task.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-android\\staticwebassets\\msbuild.build.Maui_Task.props",
+      "PackagePath": "build\\Maui_Task.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-android\\staticwebassets\\msbuild.buildMultiTargeting.Maui_Task.props",
+      "PackagePath": "buildMultiTargeting\\Maui_Task.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-android\\staticwebassets\\msbuild.buildTransitive.Maui_Task.props",
+      "PackagePath": "buildTransitive\\Maui_Task.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

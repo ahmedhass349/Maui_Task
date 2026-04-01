@@ -1,0 +1,68 @@
+@using Maui_Task.Shared.DTOs.Tasks
+@using System.Linq
+
+@if (VisibleTasks == null || !VisibleTasks.Any())
+{
+    <p>No tasks</p>
+}
+else
+{
+    <div class="mywork-default">
+        <h4>Grouped Tasks</h4>
+        <div class="groups">
+            <section>
+                <h5>Overdue</h5>
+                <ul>
+                    @foreach (var t in Grouped.Overdue)
+                    {
+                        <li>@t.Title — @t.DueDateLabel</li>
+                    }
+                </ul>
+            </section>
+            <section>
+                <h5>Today</h5>
+                <ul>
+                    @foreach (var t in Grouped.Today)
+                    {
+                        <li>@t.Title — @t.DueDateLabel</li>
+                    }
+                </ul>
+            </section>
+            <section>
+                <h5>This Week</h5>
+                <ul>
+                    @foreach (var t in Grouped.ThisWeek)
+                    {
+                        <li>@t.Title — @t.DueDateLabel</li>
+                    }
+                </ul>
+            </section>
+            <section>
+                <h5>Later</h5>
+                <ul>
+                    @foreach (var t in Grouped.Later)
+                    {
+                        <li>@t.Title — @t.DueDateLabel</li>
+                    }
+                </ul>
+            </section>
+            <section>
+                <h5>Completed</h5>
+                <ul>
+                    @foreach (var t in Grouped.Completed)
+                    {
+                        <li>@t.Title</li>
+                    }
+                </ul>
+            </section>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public List<TaskDto>? VisibleTasks { get; set; }
+
+    public record GroupedTasks(List<TaskDto> Overdue, List<TaskDto> Today, List<TaskDto> ThisWeek, List<TaskDto> Later, List<TaskDto> Completed);
+
+    [Parameter] public GroupedTasks Grouped { get; set; } = new GroupedTasks(new(), new(), new(), new(), new());
+}

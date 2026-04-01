@@ -1,0 +1,336 @@
+@page "/plans"
+@page "/chatbot"
+@attribute [Authorize]
+@using Maui_Task.Shared.DTOs.Chatbot
+@using Maui_Task.Shared.Helpers
+@inject Maui_Task.Shared.Services.HttpApiService Api
+
+<PageTitle>Chatbot</PageTitle>
+
+<div class="p-6 space-y-4">
+    <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <div>
+            <h1 class="text-2xl font-semibold text-slate-900">Chatbot</h1>
+            <p class="text-sm text-slate-500">Start and manage conversations with your AI assistant.</p>
+        </div>
+        <button class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                @onclick="LoadConversations"
+                disabled="@LoadingConversations">
+            Refresh
+        </button>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <div class="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">@ErrorMessage</div>
+    }
+
+    <div class="grid gap-4 lg:grid-cols-[320px_1fr]">
+        <aside class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm space-y-3">
+            <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-500">Conversations</h2>
+
+            <EditForm Model="@CreateModel" OnValidSubmit="CreateConversation" class="space-y-2">
+                <DataAnnotationsValidator />
+                <InputText @bind-Value="CreateModel.Title"
+                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                           placeholder="New conversation title" />
+                <button type="submit"
+                        class="w-full rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled="@CreatingConversation">
+                    @(CreatingConversation ? "Creating..." : "Create Conversation")
+                </button>
+            </EditForm>
+
+            <input class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                   placeholder="Search conversations..."
+                   @bind="ConversationSearch"
+                   @bind:event="oninput" />
+
+            @if (FilteredConversations.Count == 0)
+            {
+                <div class="rounded-lg border border-dashed border-slate-300 px-3 py-6 text-center text-sm text-slate-500">
+                    No conversations found.
+                </div>
+            }
+            else
+            {
+                <div class="max-h-[520px] space-y-2 overflow-auto pr-1">
+                    @foreach (var conversation in FilteredConversations)
+                    {
+                        var isActive = ActiveConversation?.Id == conversation.Id;
+                        <button class="w-full rounded-lg border px-3 py-2 text-left transition @(isActive ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white text-slate-800 hover:bg-slate-50")"
+                                @onclick="() => SelectConversation(conversation.Id)">
+                            <p class="truncate text-sm font-semibold">@conversation.Title</p>
+                            <p class="text-xs @(isActive ? "text-slate-200" : "text-slate-500")">Updated @FormatConversationTime(conversation.UpdatedAt)</p>
+                        </button>
+                    }
+                </div>
+            }
+        </aside>
+
+        <section class="flex min-h-[620px] flex-col rounded-xl border border-slate-200 bg-white shadow-sm">
+            @if (Conversations.Count == 0)
+            {
+                <div class="flex flex-1 items-center justify-center px-6 text-center">
+                    <div class="space-y-2">
+                        <h3 class="text-lg font-semibold text-slate-900">No conversations yet</h3>
+                        <p class="text-sm text-slate-500">Create your first conversation from the left panel to begin chatting.</p>
+                    </div>
+                </div>
+            }
+            else if (ActiveConversation is null)
+            {
+                <div class="flex flex-1 items-center justify-center px-6 text-center">
+                    <div class="space-y-2">
+                        <h3 class="text-lg font-semibold text-slate-900">Select a conversation</h3>
+                        <p class="text-sm text-slate-500">Pick a conversation on the left to view messages and continue chatting.</p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <header class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h2 class="text-lg font-semibold text-slate-900">@ActiveConversation.Title</h2>
+                        <p class="text-xs text-slate-500">Conversation #@ActiveConversation.Id • @ActiveConversation.Messages.Count message(s)</p>
+                    </div>
+                    <button class="rounded-lg border border-red-300 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50"
+                            @onclick="DeleteConversation">
+                        Delete Conversation
+                    </button>
+                </header>
+
+                <div class="flex-1 space-y-3 overflow-auto bg-slate-50 px-4 py-4">
+                    @if (ActiveConversation.Messages.Count == 0)
+                    {
+                        <div class="rounded-lg border border-dashed border-slate-300 bg-white px-4 py-8 text-center text-sm text-slate-500">
+                            No messages yet. Send a message to start the conversation.
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (var message in ActiveConversation.Messages.OrderBy(m => m.CreatedAt))
+                        {
+                            var isUser = string.Equals(message.Role, "user", StringComparison.OrdinalIgnoreCase);
+                            <div class="flex @(isUser ? "justify-end" : "justify-start")">
+                                <article class="max-w-[80%] rounded-2xl px-3 py-2 shadow-sm @(isUser ? "bg-slate-900 text-white" : "bg-white text-slate-800 border border-slate-200")">
+                                    <p class="whitespace-pre-wrap text-sm">@message.Text</p>
+                                    <p class="mt-1 text-right text-[11px] @(isUser ? "text-slate-300" : "text-slate-500")">
+                                        @FormatMessageMeta(message)
+                                    </p>
+                                </article>
+                            </div>
+                        }
+                    }
+                </div>
+
+                <footer class="border-t border-slate-200 p-3">
+                    <EditForm Model="@SendModel" OnValidSubmit="SendMessage" class="flex gap-2">
+                        <DataAnnotationsValidator />
+                        <InputTextArea @bind-Value="SendModel.Text"
+                                       class="min-h-[48px] flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                                       placeholder="Type your message..." />
+                        <button type="submit"
+                                class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                                disabled="@SendingMessage">
+                            @(SendingMessage ? "Sending..." : "Send")
+                        </button>
+                    </EditForm>
+                </footer>
+            }
+        </section>
+    </div>
+</div>
+
+@code {
+    private readonly List<ConversationListDto> Conversations = new();
+    private ConversationDto? ActiveConversation;
+    private CreateConversationRequest CreateModel = new();
+    private SendChatbotMessageRequest SendModel = new();
+    private string ConversationSearch = string.Empty;
+    private bool CreatingConversation;
+    private bool LoadingConversations;
+    private bool SendingMessage;
+    private string? ErrorMessage;
+
+    private List<ConversationListDto> FilteredConversations
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(ConversationSearch))
+            {
+                return Conversations
+                    .OrderByDescending(c => c.UpdatedAt)
+                    .ToList();
+            }
+
+            var search = ConversationSearch.Trim();
+            return Conversations
+                .Where(c => c.Title.Contains(search, StringComparison.OrdinalIgnoreCase))
+                .OrderByDescending(c => c.UpdatedAt)
+                .ToList();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadConversations();
+    }
+
+    private async Task LoadConversations()
+    {
+        ErrorMessage = null;
+        LoadingConversations = true;
+        try
+        {
+            var result = await Api.GetAsync<ApiResponse<IEnumerable<ConversationListDto>>>("/api/chatbot/conversations");
+            Conversations.Clear();
+            if (result?.Success == true && result.Data != null)
+            {
+                Conversations.AddRange(result.Data);
+            }
+
+            Conversations.Sort((a, b) => b.UpdatedAt.CompareTo(a.UpdatedAt));
+
+            if (ActiveConversation != null && !Conversations.Any(c => c.Id == ActiveConversation.Id))
+            {
+                ActiveConversation = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            LoadingConversations = false;
+        }
+    }
+
+    private async Task CreateConversation()
+    {
+        if (string.IsNullOrWhiteSpace(CreateModel.Title))
+        {
+            return;
+        }
+
+        ErrorMessage = null;
+        CreatingConversation = true;
+        try
+        {
+            var result = await Api.PostAsync<ApiResponse<ConversationDto>>("/api/chatbot/conversations", CreateModel);
+            if (result?.Success == true && result.Data != null)
+            {
+                CreateModel = new CreateConversationRequest();
+                await LoadConversations();
+                await SelectConversation(result.Data.Id);
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            CreatingConversation = false;
+        }
+    }
+
+    private async Task SelectConversation(int id)
+    {
+        ErrorMessage = null;
+        try
+        {
+            var result = await Api.GetAsync<ApiResponse<ConversationDto>>($"/api/chatbot/conversations/{id}");
+            if (result?.Success == true && result.Data != null)
+            {
+                ActiveConversation = result.Data;
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+    }
+
+    private async Task SendMessage()
+    {
+        if (ActiveConversation is null || string.IsNullOrWhiteSpace(SendModel.Text))
+        {
+            return;
+        }
+
+        SendingMessage = true;
+        ErrorMessage = null;
+        try
+        {
+            var payload = new SendChatbotMessageRequest { Text = SendModel.Text.Trim() };
+            var result = await Api.PostAsync<ApiResponse<ChatbotMessageDto>>($"/api/chatbot/conversations/{ActiveConversation.Id}/messages", payload);
+            if (result?.Success == true && result.Data != null)
+            {
+                ActiveConversation.Messages.Add(result.Data);
+                ActiveConversation.UpdatedAt = result.Data.CreatedAt;
+
+                var item = Conversations.FirstOrDefault(c => c.Id == ActiveConversation.Id);
+                if (item != null)
+                {
+                    item.UpdatedAt = ActiveConversation.UpdatedAt;
+                }
+
+                SendModel = new SendChatbotMessageRequest();
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            SendingMessage = false;
+        }
+    }
+
+    private async Task DeleteConversation()
+    {
+        if (ActiveConversation is null)
+        {
+            return;
+        }
+
+        ErrorMessage = null;
+        try
+        {
+            var toDelete = ActiveConversation.Id;
+            await Api.DeleteAsync($"/api/chatbot/conversations/{toDelete}");
+            Conversations.RemoveAll(c => c.Id == toDelete);
+            ActiveConversation = null;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+    }
+
+    private static string FormatConversationTime(DateTime updatedAt)
+    {
+        var local = updatedAt.ToLocalTime();
+        var today = DateTime.Now.Date;
+        if (local.Date == today)
+        {
+            return local.ToString("HH:mm");
+        }
+
+        if (local.Date == today.AddDays(-1))
+        {
+            return "Yesterday";
+        }
+
+        return local.ToString("dd MMM");
+    }
+
+    private static string FormatMessageMeta(ChatbotMessageDto message)
+    {
+        var role = string.Equals(message.Role, "user", StringComparison.OrdinalIgnoreCase) ? "You" : "Assistant";
+        return $"{role} • {message.CreatedAt.ToLocalTime():HH:mm}";
+    }
+}

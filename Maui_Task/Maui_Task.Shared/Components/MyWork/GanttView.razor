@@ -1,0 +1,15 @@
+@using Maui_Task.Shared.DTOs.Tasks
+
+<div class="gantt-view">
+    <p>Gantt view (placeholder) — shows timeline graph in prod.</p>
+    <ul>
+        @foreach (var t in VisibleTasks)
+        {
+            <li>@t.Title — @t.DueDateLabel</li>
+        }
+    </ul>
+</div>
+
+@code {
+    [Parameter] public List<TaskDto> VisibleTasks { get; set; } = new();
+}
