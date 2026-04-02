@@ -9,6 +9,7 @@
 @using Maui_Task.Shared.Components
 @inject Maui_Task.Shared.Services.HttpApiService Api
 
+<!-- REPLICATION-ANNOTATION: Replicated from Task_Flow/ReactApp/pages/Dashboard.tsx -->
 <div class="flex h-screen overflow-hidden bg-gray-50">
     <AppSidebar />
     
@@ -37,7 +38,7 @@
                     <div class="flex-1 min-w-0 space-y-6">
                         <!-- Greeting -->
                         <div>
-                            <h1 class="text-3xl font-bold text-gray-900">Welcome, @(UserName ?? "User")</h1>
+                            <h1 class="text-3xl font-bold text-gray-900">@Greeting, @(UserName ?? "User")</h1>
                             <p class="text-gray-600 mt-1">Here's what's happening with your projects today</p>
                         </div>
 
@@ -118,7 +119,7 @@
                         <!-- Main Content Grid -->
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <!-- My Work -->
-                            <DashboardCard title="My Work" iconName="check-square">
+                            <DashboardCard title="My Work" iconName="check-square" actionLabel="View all">
                                 @if (ActiveTasks == null || ActiveTasks.Count == 0)
                                 {
                                     <p class="text-sm text-gray-500 py-4 text-center">No tasks assigned yet</p>
@@ -143,7 +144,7 @@
                             </DashboardCard>
 
                             <!-- Assigned to Me -->
-                            <DashboardCard title="Assigned to Me" iconName="users">
+                            <DashboardCard title="Assigned to Me" iconName="users" actionLabel="View all">
                                 @if (ActiveTasks == null || ActiveTasks.Count == 0)
                                 {
                                     <p class="text-sm text-gray-500 py-4 text-center">Nothing assigned to you</p>
@@ -165,6 +166,11 @@
                                         }
                                     </div>
                                 }
+                            </DashboardCard>
+
+                            <!-- Agenda -->
+                            <DashboardCard title="Agenda" iconName="calendar">
+                                <p class="text-sm text-gray-500 py-4 text-center">Your calendar events will appear here</p>
                             </DashboardCard>
 
                             <!-- Recent Activity -->
@@ -197,8 +203,87 @@
                             </DashboardCard>
                         </div>
                     </div>
+
+                    <div class="flex flex-col gap-4 flex-shrink-0 pt-16">
+                        <div class="w-[372px] p-6 bg-[#171717] shadow-[0_0_6px_rgba(0,0,0,0.25)] rounded-[30px] flex flex-col gap-3.5">
+                            <div class="flex justify-between items-center">
+                                <button class="text-white flex items-center cursor-pointer" @onclick="PreviousMonth" aria-label="Previous month">&lt;</button>
+                                <span class="text-white text-xl font-medium tracking-[0.6px]">@CurrentMonthLabel</span>
+                                <button class="text-white flex items-center cursor-pointer" @onclick="NextMonth" aria-label="Next month">&gt;</button>
+                            </div>
+
+                            <div class="flex justify-center items-center gap-4">
+                                <button class="text-white/60 flex items-center cursor-pointer" @onclick="() => calYear--" aria-label="Previous year">&lt;</button>
+                                <span class="text-white/60 text-[13px] font-normal tracking-[0.39px]">@calYear</span>
+                                <button class="text-white/60 flex items-center cursor-pointer" @onclick="() => calYear++" aria-label="Next year">&gt;</button>
+                            </div>
+
+                            <div class="grid grid-cols-7">
+                                @foreach (var dayLabel in DayLabels)
+                                {
+                                    <div class="h-9 flex items-center justify-center text-white text-[13px] font-normal tracking-[0.39px]">@dayLabel</div>
+                                }
+                            </div>
+
+                            <div class="grid grid-cols-7 gap-y-1" role="grid" aria-label="Calendar dates">
+                                @foreach (var cell in CalendarCells)
+                                {
+                                    var isSelected = cell.IsCurrentMonth && cell.Day == calDay;
+                                    var hasTask = cell.IsCurrentMonth && HasTaskOnDate(cell.Day);
+                                    var dayClass = isSelected
+                                        ? "bg-[#60B8FF] text-white"
+                                        : cell.IsCurrentMonth
+                                            ? "text-white hover:bg-white/10"
+                                            : "text-white/30";
+
+                                    <button type="button"
+                                            @onclick="() => SelectDay(cell)"
+                                            class="h-9 flex items-center justify-center cursor-pointer bg-transparent border-0 p-0 relative disabled:cursor-default"
+                                            disabled="@(!cell.IsCurrentMonth)">
+                                        <div class="relative w-9 h-9 flex flex-col items-center justify-center rounded-full text-sm font-normal tracking-[0.42px] transition-colors duration-150 @dayClass">
+                                            @cell.Day
+                                            @if (hasTask)
+                                            {
+                                                <span class="w-1 h-1 rounded-full absolute bottom-1.5 @(isSelected ? "bg-white" : "bg-[#60B8FF]")"></span>
+                                            }
+                                        </div>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="w-[372px] p-6 bg-[#171717] shadow-[0_0_6px_rgba(0,0,0,0.25)] rounded-[30px] flex flex-col gap-[18px]">
+                            <div class="flex justify-between items-center">
+                                <span class="text-white text-2xl font-medium tracking-[0.72px]">Task Line</span>
+                                <div class="h-[34px] px-3.5 bg-white/[0.10] rounded-[36px] outline outline-1 outline-offset-[-1px] outline-[#616161] flex items-center">
+                                    <span class="text-white text-sm font-normal tracking-[0.42px]">@CurrentDateLabel</span>
+                                </div>
+                            </div>
+
+                            <div class="max-h-[360px] overflow-y-auto space-y-2">
+                                @if (!SelectedDayTasks.Any())
+                                {
+                                    <p class="text-sm text-slate-300">No tasks scheduled for this day.</p>
+                                }
+                                else
+                                {
+                                    @foreach (var task in SelectedDayTasks)
+                                    {
+                                        <div class="rounded-[10px] flex px-3 py-2 border @GetTaskLineClass(task.Priority)">
+                                            <div class="flex flex-col overflow-hidden w-full">
+                                                <span class="text-white text-xs font-medium truncate leading-tight tracking-[0.36px]">@task.Title</span>
+                                                <span class="text-white/60 text-[10px] truncate leading-none mt-1.5">@GetTimeLabel(task.DueDate)</span>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
             }
+
+            <Footer />
         </main>
     </div>
 </div>
@@ -210,6 +295,62 @@
      private List<Maui_Task.Shared.DTOs.Tasks.TaskDto>? ActiveTasks;
     private List<ActivityItemDto>? RecentActivity;
     private string? UserName;
+    private int calYear = DateTime.Today.Year;
+    private int calMonth = DateTime.Today.Month - 1;
+    private int calDay = DateTime.Today.Day;
+
+    private static readonly string[] DayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    private static readonly string[] MonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    private string CurrentMonthLabel => $"{MonthNames[calMonth]} {calDay}, {calYear}";
+    private string CurrentDateLabel => $"{calDay} {MonthNames[calMonth]} {calYear}";
+
+    private IEnumerable<TaskDto> SelectedDayTasks =>
+        (ActiveTasks ?? new List<TaskDto>())
+            .Where(t => t.DueDate.HasValue)
+            .Where(t => t.DueDate!.Value.Year == calYear && t.DueDate.Value.Month == calMonth + 1 && t.DueDate.Value.Day == calDay)
+            .OrderBy(t => t.DueDate)
+            .Take(8);
+
+    private IEnumerable<CalendarCell> CalendarCells
+    {
+        get
+        {
+            var first = new DateTime(calYear, calMonth + 1, 1);
+            var daysInMonth = DateTime.DaysInMonth(calYear, calMonth + 1);
+            var daysInPrevMonth = DateTime.DaysInMonth(first.AddMonths(-1).Year, first.AddMonths(-1).Month);
+            var firstWeekday = ((int)first.DayOfWeek + 6) % 7;
+
+            var cells = new List<CalendarCell>(42);
+            for (var i = firstWeekday - 1; i >= 0; i--)
+            {
+                cells.Add(new CalendarCell(daysInPrevMonth - i, false));
+            }
+
+            for (var d = 1; d <= daysInMonth; d++)
+            {
+                cells.Add(new CalendarCell(d, true));
+            }
+
+            var nextDay = 1;
+            while (cells.Count < 42)
+            {
+                cells.Add(new CalendarCell(nextDay++, false));
+            }
+
+            return cells;
+        }
+    }
+    private string Greeting
+    {
+        get
+        {
+            var hour = DateTime.Now.Hour;
+            if (hour < 12) return "Good morning";
+            if (hour < 18) return "Good afternoon";
+            return "Good evening";
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -222,29 +363,32 @@
         error = null;
         try
         {
-            // Load stats
-            var statsResponse = await Api.GetAsync<ApiResponse<DashboardStatsDto>>("api/dashboard/stats");
+            var statsTask = SafeGetAsync<ApiResponse<DashboardStatsDto>>("api/dashboard/stats");
+            var tasksTask = SafeGetAsync<ApiResponse<List<TaskDto>>>("api/tasks");
+            var activityTask = SafeGetAsync<ApiResponse<List<ActivityItemDto>>>("api/dashboard/activity");
+            var userTask = SafeGetAsync<ApiResponse<UserDto>>("api/auth/me");
+
+            await Task.WhenAll(statsTask, tasksTask, activityTask, userTask);
+
+            var statsResponse = await statsTask;
             if (statsResponse?.Success == true)
             {
                 Stats = statsResponse.Data;
             }
 
-            // Load tasks
-            var tasksResponse = await Api.GetAsync<ApiResponse<List<TaskDto>>>("api/tasks");
+            var tasksResponse = await tasksTask;
             if (tasksResponse?.Success == true)
             {
                 ActiveTasks = tasksResponse.Data?.Where(t => t.Status != "Completed").ToList();
             }
 
-            // Load activity
-            var activityResponse = await Api.GetAsync<ApiResponse<List<ActivityItemDto>>>("api/dashboard/activity");
+            var activityResponse = await activityTask;
             if (activityResponse?.Success == true)
             {
                 RecentActivity = activityResponse.Data;
             }
 
-            // Get user info
-            var userResponse = await Api.GetAsync<ApiResponse<UserDto>>("api/auth/me");
+            var userResponse = await userTask;
             if (userResponse?.Success == true)
             {
                 UserName = userResponse.Data?.FullName;
@@ -257,6 +401,18 @@
         finally
         {
             loading = false;
+        }
+    }
+
+    private async Task<T?> SafeGetAsync<T>(string uri)
+    {
+        try
+        {
+            return await Api.GetAsync<T>(uri);
+        }
+        catch
+        {
+            return default;
         }
     }
 
@@ -279,4 +435,75 @@
             _ => "bg-gray-50"
         };
     }
+
+    private bool HasTaskOnDate(int day)
+    {
+        return (ActiveTasks ?? new List<TaskDto>())
+            .Any(t => t.DueDate.HasValue
+                && t.DueDate!.Value.Year == calYear
+                && t.DueDate.Value.Month == calMonth + 1
+                && t.DueDate.Value.Day == day);
+    }
+
+    private void SelectDay(CalendarCell cell)
+    {
+        if (!cell.IsCurrentMonth)
+        {
+            return;
+        }
+
+        calDay = cell.Day;
+    }
+
+    private void PreviousMonth()
+    {
+        if (calMonth == 0)
+        {
+            calMonth = 11;
+            calYear--;
+        }
+        else
+        {
+            calMonth--;
+        }
+
+        calDay = Math.Min(calDay, DateTime.DaysInMonth(calYear, calMonth + 1));
+    }
+
+    private void NextMonth()
+    {
+        if (calMonth == 11)
+        {
+            calMonth = 0;
+            calYear++;
+        }
+        else
+        {
+            calMonth++;
+        }
+
+        calDay = Math.Min(calDay, DateTime.DaysInMonth(calYear, calMonth + 1));
+    }
+
+    private static string GetTimeLabel(DateTime? dueDate)
+    {
+        if (!dueDate.HasValue)
+        {
+            return "No due time";
+        }
+
+        return dueDate.Value.ToLocalTime().ToString("HH:mm");
+    }
+
+    private static string GetTaskLineClass(string? priority)
+    {
+        return priority switch
+        {
+            "High" => "bg-red-500/20 border-red-500/50 hover:bg-red-500/30",
+            "Medium" => "bg-yellow-500/20 border-yellow-500/50 hover:bg-yellow-500/30",
+            _ => "bg-[#60B8FF]/20 border-[#60B8FF]/50 hover:bg-[#60B8FF]/30"
+        };
+    }
+
+    private sealed record CalendarCell(int Day, bool IsCurrentMonth);
 }

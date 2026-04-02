@@ -1,20 +1,33 @@
 @if (State == PageStateMode.Loading)
 {
-    <div class="text-sm text-gray-600">@Message</div>
+    <div class="flex flex-col items-center justify-center py-24 text-gray-500">
+        <div class="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-500 mb-4"></div>
+        <p class="text-sm">@ResolveMessage("Loading...")</p>
+    </div>
 }
 else if (State == PageStateMode.Error)
 {
-    <div class="text-sm text-red-700 grid gap-2">
-        <span>@Message</span>
+    <div class="flex flex-col items-center justify-center py-24 text-gray-600">
+        <div class="bg-red-100 p-4 rounded-full mb-4">
+            <span class="text-red-500 text-xl leading-none" aria-hidden="true">!</span>
+        </div>
+        <p class="text-sm font-medium text-gray-900 mb-1">Error</p>
+        <p class="text-sm text-gray-600 mb-4 max-w-md text-center">@ResolveMessage("Something went wrong. Please try again.")</p>
         @if (OnRetry.HasDelegate)
         {
-            <button class="border rounded px-3 py-1 w-fit" @onclick="OnRetry">Retry</button>
+            <button class="px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition-colors" @onclick="OnRetry">Try again</button>
         }
     </div>
 }
 else if (State == PageStateMode.Empty)
 {
-    <div class="text-sm text-gray-600">@Message</div>
+    <div class="flex flex-col items-center justify-center py-24 text-gray-500">
+        <div class="bg-gray-100 p-4 rounded-full mb-4">
+            <span class="text-gray-400 text-xl leading-none" aria-hidden="true">i</span>
+        </div>
+        <p class="text-sm font-medium text-gray-900 mb-1">Nothing here yet</p>
+        <p class="text-sm text-gray-500 max-w-md text-center">@ResolveMessage("There are no items to show right now.")</p>
+    </div>
 }
 
 @code {
@@ -23,4 +36,9 @@ else if (State == PageStateMode.Empty)
     [Parameter] public PageStateMode State { get; set; }
     [Parameter] public string Message { get; set; } = string.Empty;
     [Parameter] public EventCallback OnRetry { get; set; }
+
+    private string ResolveMessage(string fallback)
+    {
+        return string.IsNullOrWhiteSpace(Message) ? fallback : Message;
+    }
 }

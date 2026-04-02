@@ -21,6 +21,7 @@ namespace Maui_Task.Web.Repositories
         public async Task<IEnumerable<TaskComment>> GetByTaskIdAsync(int taskId)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Include(c => c.Author)
                 .Where(c => c.TaskId == taskId)
                 .OrderByDescending(c => c.CreatedAt)
@@ -30,6 +31,7 @@ namespace Maui_Task.Web.Repositories
         public async Task<TaskComment?> GetByIdWithAuthorAsync(int commentId)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Include(c => c.Author)
                 .FirstOrDefaultAsync(c => c.Id == commentId);
         }

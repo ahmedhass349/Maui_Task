@@ -9,12 +9,17 @@
 
 @if (IsVisible)
 {
-    <div class="notification-toast" role="status" aria-live="polite">
-        <div class="notification-toast__icon">@ResolveIcon()</div>
+    <div class="notification-toast @ResolvePriorityClasses()" role="status" aria-live="polite">
+        <div class="notification-toast__icon @ResolvePriorityClasses()">@ResolveIcon()</div>
         <div class="notification-toast__content">
             <p class="notification-toast__title">@Title</p>
             <p class="notification-toast__message">@Message</p>
+            @if (!string.IsNullOrWhiteSpace(TimeAgo))
+            {
+                <p class="notification-toast__time">@TimeAgo</p>
+            }
         </div>
+        <div class="notification-toast__divider"></div>
         <button type="button" class="notification-toast__close" aria-label="Close" @onclick="OnCloseClicked">x</button>
     </div>
 }
@@ -29,24 +34,52 @@
     align-items: flex-start;
     gap: 0.75rem;
     width: min(360px, calc(100vw - 2rem));
-    padding: 0.875rem 0.95rem;
+    padding: 1rem;
     border-radius: 12px;
-    background: #111827;
-    color: #f9fafb;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    background: #ffffff;
+    border: 1px solid #94a3b8;
+    color: #111827;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.14);
     animation: notification-toast-enter 180ms ease-out;
 }
 
+.notification-toast.priority-critical,
+.notification-toast.priority-high {
+    border-color: #ea580c;
+}
+
+.notification-toast.priority-medium {
+    border-color: #2563eb;
+}
+
+.notification-toast.priority-normal {
+    border-color: #64748b;
+}
+
 .notification-toast__icon {
-    width: 1.9rem;
-    height: 1.9rem;
+    width: 2rem;
+    height: 2rem;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.15);
+    background: #64748b;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
+    color: #ffffff;
     flex-shrink: 0;
+}
+
+.notification-toast__icon.priority-critical,
+.notification-toast__icon.priority-high {
+    background: #ea580c;
+}
+
+.notification-toast__icon.priority-medium {
+    background: #2563eb;
+}
+
+.notification-toast__icon.priority-normal {
+    background: #64748b;
 }
 
 .notification-toast__content {
@@ -65,22 +98,38 @@
     margin: 0.25rem 0 0;
     font-size: 0.85rem;
     line-height: 1.35;
-    color: #d1d5db;
+    color: #6b7280;
+}
+
+.notification-toast__time {
+    margin: 0.45rem 0 0;
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+.notification-toast__divider {
+    align-self: stretch;
+    width: 1px;
+    background: #e5e7eb;
 }
 
 .notification-toast__close {
     border: 0;
     background: transparent;
-    color: #f9fafb;
+    color: #9ca3af;
     cursor: pointer;
     font-size: 1rem;
     line-height: 1;
     padding: 0.15rem;
 }
 
+.notification-toast__close:hover {
+    color: #4b5563;
+}
+
 @@keyframes notification-toast-enter {
-    from { transform: translateY(-8px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from { transform: translateX(14px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
 }
 </style>
 
@@ -91,6 +140,7 @@
     [Parameter] public string Title { get; set; } = string.Empty;
     [Parameter] public string Message { get; set; } = string.Empty;
     [Parameter] public string Icon { get; set; } = "bell";
+    [Parameter] public string? TimeAgo { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
 
     protected override void OnParametersSet()
@@ -156,9 +206,24 @@
             "high" => "!",
             "warning" => "!",
             "taskoverdue" => "!",
+            "taskduesoon" => "!",
             "success" => "ok",
             "taskcompleted" => "ok",
+            "taskcreated" => "ok",
+            "taskupdated" => "ok",
+            "taskdeleted" => "ok",
             _ => "i"
+        };
+    }
+
+    private string ResolvePriorityClasses()
+    {
+        var normalized = (Icon ?? string.Empty).Trim().ToLowerInvariant();
+        return normalized switch
+        {
+            "critical" or "high" or "warning" or "taskoverdue" or "taskduesoon" => "priority-critical",
+            "medium" => "priority-medium",
+            _ => "priority-normal"
         };
     }
 

@@ -4,11 +4,12 @@
 @inject Maui_Task.Shared.Services.HttpApiService Api
 @implements IDisposable
 
-<header class="app-header">
-    <div class="app-header__spacer"></div>
+<!-- REPLICATION-ANNOTATION: Replicated from Task_Flow/ReactApp/Components/Header.tsx -->
+<header class="app-header bg-black h-16 flex items-center px-8 gap-6">
+    <div class="app-header__spacer flex-1"></div>
 
-    <div class="app-header__search">
-        <div class="search-box">
+    <div class="app-header__search flex-1 max-w-[417px]">
+        <div class="search-box relative">
             <span class="search-box__icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#787486" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
@@ -19,10 +20,10 @@
         </div>
     </div>
 
-    <div class="app-header__actions">
+    <div class="app-header__actions flex-1 flex items-center justify-end gap-6">
 
         <div class="header-dropdown" id="notif-dropdown">
-            <button class="header-icon-btn" aria-label="Notifications" @onclick="ToggleNotifications">
+            <button class="header-icon-btn relative p-2 outline-none rounded-lg transition-colors hover:bg-white/10" aria-label="Notifications" @onclick="ToggleNotifications">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
                      stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
@@ -40,7 +41,7 @@
                         <span class="dropdown-panel__title">Notifications</span>
                         @if (UnreadNotifCount > 0)
                         {
-                            <button class="dropdown-panel__action" @onclick="MarkAllNotifsRead">Mark all read</button>
+                            <button class="dropdown-panel__action" @onclick="MarkAllNotifsRead">Mark all as read</button>
                         }
                     </div>
                     <div class="dropdown-panel__body">
@@ -48,7 +49,7 @@
                         {
                             <p class="dropdown-panel__empty">No notifications</p>
                         }
-                        @foreach (var n in CurrentNotifications.Take(5))
+                        @foreach (var n in CurrentNotifications.Take(3))
                         {
                             <div class="dropdown-item @(n.IsRead ? "" : "dropdown-item--unread")">
                                 <div class="dropdown-item__avatar dropdown-item__avatar--blue">
@@ -71,7 +72,7 @@
         </div>
 
         <div class="header-dropdown" id="msg-dropdown">
-            <button class="header-icon-btn" aria-label="Messages" @onclick="ToggleMessages">
+            <button class="header-icon-btn relative p-2 outline-none rounded-lg transition-colors hover:bg-white/10" aria-label="Messages" @onclick="ToggleMessages">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
                      stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -93,7 +94,7 @@
                         {
                             <p class="dropdown-panel__empty">No messages</p>
                         }
-                        @foreach (var c in RecentContacts.Take(5))
+                        @foreach (var c in RecentContacts.Take(3))
                         {
                             <div class="dropdown-item">
                                 <div class="dropdown-item__avatar">@GetInitials(c.Name)</div>
@@ -137,6 +138,10 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                         Settings
                     </a>
+                    <button class="dropdown-item dropdown-item--link" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                        Switch account
+                    </button>
                     <hr class="dropdown-panel__divider" />
                     <button class="dropdown-item dropdown-item--link" @onclick="LogoutAsync">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>

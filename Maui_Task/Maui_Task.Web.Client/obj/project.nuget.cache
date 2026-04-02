@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6GNBLdwHUgs=",
+  "dgSpecHash": "yLr/2PBNV7w=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Web.Client\\Maui_Task.Web.Client.csproj",
+  "projectFilePath": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Web.Client\\Maui_Task.Web.Client.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Ahmed Abdelbarr\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.5\\microsoft.aspnetcore.app.internal.assets.10.0.5.nupkg.sha512",
     "C:\\Users\\Ahmed Abdelbarr\\.nuget\\packages\\microsoft.aspnetcore.authorization\\10.0.0\\microsoft.aspnetcore.authorization.10.0.0.nupkg.sha512",

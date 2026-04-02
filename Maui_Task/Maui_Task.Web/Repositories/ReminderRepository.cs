@@ -18,6 +18,7 @@ namespace Maui_Task.Web.Repositories
         public async Task<IEnumerable<Reminder>> GetPendingAsync(DateTime upTo)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Where(r => !r.HasFired && r.FireAt <= upTo)
                 .Include(r => r.Task)
                 .Include(r => r.User)
@@ -28,6 +29,7 @@ namespace Maui_Task.Web.Repositories
         public async Task<IEnumerable<Reminder>> GetByTaskIdAsync(int taskId)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Where(r => r.TaskId == taskId)
                 .OrderBy(r => r.FireAt)
                 .ToListAsync();

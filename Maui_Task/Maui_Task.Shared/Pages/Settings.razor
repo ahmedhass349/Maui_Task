@@ -1,5 +1,6 @@
 @page "/settings"
 @attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
 @using Maui_Task.Shared.DTOs.Auth
 @using Maui_Task.Shared.DTOs.Settings
 @using Maui_Task.Shared.Helpers
@@ -10,54 +11,187 @@
 
 <PageTitle>Settings</PageTitle>
 
-<div class="max-w-3xl p-6 grid gap-6">
-    <h1 class="text-2xl font-semibold">Settings</h1>
+<div class="flex h-screen overflow-hidden bg-gray-50">
+    <AppSidebar />
 
-    @if (!string.IsNullOrWhiteSpace(Message))
-    {
-        <p class="text-sm text-green-700">@Message</p>
-    }
-    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
-    {
-        <p class="text-sm text-red-700">@ErrorMessage</p>
-    }
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <AppHeader />
 
-    <section class="border rounded p-4 grid gap-3">
-        <h2 class="text-lg font-medium">Profile</h2>
-        <EditForm Model="@ProfileModel" OnValidSubmit="SaveProfile" class="grid gap-3">
-            <DataAnnotationsValidator />
-            <InputText @bind-Value="ProfileModel.FirstName" class="border rounded px-3 py-2" placeholder="First name" />
-            <InputText @bind-Value="ProfileModel.LastName" class="border rounded px-3 py-2" placeholder="Last name" />
-            <InputText @bind-Value="ProfileModel.Email" class="border rounded px-3 py-2" placeholder="Email" />
-            <InputText @bind-Value="ProfileModel.Company" class="border rounded px-3 py-2" placeholder="Company" />
-            <InputText @bind-Value="ProfileModel.Country" class="border rounded px-3 py-2" placeholder="Country" />
-            <InputText @bind-Value="ProfileModel.Phone" class="border rounded px-3 py-2" placeholder="Phone" />
-            <InputText @bind-Value="ProfileModel.Timezone" class="border rounded px-3 py-2" placeholder="Timezone" />
-            <button type="submit" class="bg-black text-white rounded px-4 py-2" disabled="@SavingProfile">
-                @(SavingProfile ? "Saving..." : "Save profile")
-            </button>
-        </EditForm>
-    </section>
+        <main class="flex-1 overflow-y-auto">
+            <!-- REPLICATION-ANNOTATION: Replicated from Task_Flow/ReactApp/pages/Settings.tsx -->
+            <div class="max-w-6xl mx-auto px-6 py-8">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900">Settings</h1>
+                    <p class="text-gray-500 mt-1">Manage your account preferences and configuration</p>
+                </div>
 
-    <section class="border rounded p-4 grid gap-3">
-        <h2 class="text-lg font-medium">Password</h2>
-        <EditForm Model="@PasswordModel" OnValidSubmit="ChangePassword" class="grid gap-3">
-            <DataAnnotationsValidator />
-            <InputText @bind-Value="PasswordModel.CurrentPassword" type="password" class="border rounded px-3 py-2" placeholder="Current password" />
-            <InputText @bind-Value="PasswordModel.NewPassword" type="password" class="border rounded px-3 py-2" placeholder="New password" />
-            <InputText @bind-Value="PasswordModel.ConfirmPassword" type="password" class="border rounded px-3 py-2" placeholder="Confirm password" />
-            <button type="submit" class="bg-black text-white rounded px-4 py-2" disabled="@ChangingPassword">
-                @(ChangingPassword ? "Updating..." : "Update password")
-            </button>
-        </EditForm>
-    </section>
+                @if (!string.IsNullOrWhiteSpace(Message))
+                {
+                    <div class="mb-4 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">@Message</div>
+                }
+                @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+                {
+                    <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">@ErrorMessage</div>
+                }
 
-    <section class="border rounded p-4 grid gap-3">
-        <h2 class="text-lg font-medium text-red-700">Danger Zone</h2>
-        <button class="border border-red-600 text-red-700 rounded px-4 py-2 w-fit" @onclick="DeleteAccount" disabled="@DeletingAccount">
-            @(DeletingAccount ? "Deleting account..." : "Delete account")
-        </button>
-    </section>
+                <div class="flex gap-6 items-start">
+                    <nav class="w-52 flex-shrink-0 bg-white border border-gray-200 rounded-xl overflow-hidden sticky top-6">
+                        @foreach (var item in NavItems)
+                        {
+                            var active = ActiveSection == item.Key;
+                            <button
+                                @onclick='() => ActiveSection = item.Key'
+                                class="w-full text-left px-4 py-3 text-sm font-medium transition-colors border-b border-gray-100 last:border-0 @(active ? "bg-blue-50 text-blue-600" : "text-gray-600 hover:bg-gray-50")">
+                                @item.Label
+                            </button>
+                        }
+                    </nav>
+
+                    <div class="flex-1 flex flex-col gap-6">
+                        @if (ActiveSection == "profile")
+                        {
+                            <section class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                                <div class="border-b border-gray-200 px-6 py-4">
+                                    <h2 class="font-semibold text-gray-900">Personal Information</h2>
+                                </div>
+                                <div class="p-6">
+                                    <EditForm Model="@ProfileModel" OnValidSubmit="SaveProfile" class="grid grid-cols-2 gap-4">
+                                        <DataAnnotationsValidator />
+                                        <InputText @bind-Value="ProfileModel.FirstName" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="First name" />
+                                        <InputText @bind-Value="ProfileModel.LastName" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Last name" />
+                                        <InputText @bind-Value="ProfileModel.Email" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Email" />
+                                        <InputText @bind-Value="ProfileModel.Phone" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Phone" />
+                                        <InputText @bind-Value="ProfileModel.Company" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Company" />
+                                        <InputText @bind-Value="ProfileModel.Country" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Country" />
+                                        <InputText @bind-Value="ProfileModel.Timezone" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm col-span-2" placeholder="Timezone" />
+
+                                        <div class="col-span-2 flex justify-end">
+                                            <button type="submit" class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors" disabled="@SavingProfile">
+                                                @(SavingProfile ? "Saving..." : "Save changes")
+                                            </button>
+                                        </div>
+                                    </EditForm>
+                                </div>
+                            </section>
+                        }
+
+                        @if (ActiveSection == "account")
+                        {
+                            <section class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                                <div class="border-b border-gray-200 px-6 py-4">
+                                    <h2 class="font-semibold text-gray-900">Change Password</h2>
+                                </div>
+                                <div class="p-6">
+                                    <EditForm Model="@PasswordModel" OnValidSubmit="ChangePassword" class="grid gap-3 max-w-md">
+                                        <DataAnnotationsValidator />
+                                        <InputText @bind-Value="PasswordModel.CurrentPassword" type="password" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Current password" />
+                                        <InputText @bind-Value="PasswordModel.NewPassword" type="password" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="New password" />
+                                        <InputText @bind-Value="PasswordModel.ConfirmPassword" type="password" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Confirm new password" />
+                                        <div class="flex justify-end">
+                                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors" disabled="@ChangingPassword">
+                                                @(ChangingPassword ? "Updating..." : "Update password")
+                                            </button>
+                                        </div>
+                                    </EditForm>
+                                </div>
+                            </section>
+
+                            <section class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                                <div class="border-b border-gray-200 px-6 py-4">
+                                    <h2 class="font-semibold text-red-700">Danger Zone</h2>
+                                </div>
+                                <div class="p-6">
+                                    <div class="flex items-center justify-between p-4 border border-red-200 rounded-lg bg-red-50">
+                                        <div>
+                                            <p class="text-sm font-semibold text-red-700">Delete account</p>
+                                            <p class="text-xs text-red-600 mt-0.5">Permanently delete your account and all data. This cannot be undone.</p>
+                                        </div>
+                                        <button class="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors" @onclick="DeleteAccount" disabled="@DeletingAccount">
+                                            @(DeletingAccount ? "Deleting account..." : "Delete account")
+                                        </button>
+                                    </div>
+                                </div>
+                            </section>
+                        }
+
+                        @if (ActiveSection == "notifications")
+                        {
+                            <section class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                                <div class="border-b border-gray-200 px-6 py-4">
+                                    <h2 class="font-semibold text-gray-900">Notification Preferences</h2>
+                                </div>
+                                <div class="p-6 space-y-3">
+                                    @foreach (var pref in NotificationPrefs)
+                                    {
+                                        <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                                            <div>
+                                                <p class="text-sm font-medium text-gray-900">@pref.Label</p>
+                                                <p class="text-xs text-gray-500">@pref.Description</p>
+                                            </div>
+                                            <button @onclick='() => pref.Enabled = !pref.Enabled' class="relative w-11 h-6 rounded-full transition-colors @(pref.Enabled ? "bg-blue-600" : "bg-gray-200")">
+                                                <span class="absolute top-0.5 left-0.5 size-5 bg-white rounded-full shadow transition-transform @(pref.Enabled ? "translate-x-5" : "translate-x-0")"></span>
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            </section>
+                        }
+
+                        @if (ActiveSection == "appearance")
+                        {
+                            <section class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                                <div class="border-b border-gray-200 px-6 py-4">
+                                    <h2 class="font-semibold text-gray-900">Appearance</h2>
+                                </div>
+                                <div class="p-6">
+                                    <div class="grid grid-cols-3 gap-3 max-w-lg">
+                                        @foreach (var t in ThemeModes)
+                                        {
+                                            var active = Theme == t;
+                                            <button @onclick='() => Theme = t' class="py-3 border-2 rounded-xl text-sm font-medium capitalize transition-colors @(active ? "border-blue-600 bg-blue-50 text-blue-600" : "border-gray-200 text-gray-600 hover:border-gray-300")">@t</button>
+                                        }
+                                    </div>
+                                </div>
+                            </section>
+                        }
+
+                        @if (ActiveSection == "security")
+                        {
+                            <section class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                                <div class="border-b border-gray-200 px-6 py-4">
+                                    <h2 class="font-semibold text-gray-900">Security</h2>
+                                </div>
+                                <div class="p-6">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-900">Two-Factor Authentication</p>
+                                            <p class="text-xs text-gray-500">Use an authenticator app for extra protection</p>
+                                        </div>
+                                        <button @onclick='() => TwoFactorEnabled = !TwoFactorEnabled' class="relative w-11 h-6 rounded-full transition-colors @(TwoFactorEnabled ? "bg-blue-600" : "bg-gray-200")">
+                                            <span class="absolute top-0.5 left-0.5 size-5 bg-white rounded-full shadow transition-transform @(TwoFactorEnabled ? "translate-x-5" : "translate-x-0")"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </section>
+                        }
+
+                        @if (ActiveSection == "privacy")
+                        {
+                            <section class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                                <div class="border-b border-gray-200 px-6 py-4">
+                                    <h2 class="font-semibold text-gray-900">Privacy</h2>
+                                </div>
+                                <div class="p-6 space-y-2 text-sm text-gray-600">
+                                    <p>Privacy controls are coming soon.</p>
+                                </div>
+                            </section>
+                        }
+                    </div>
+                </div>
+            </div>
+            <Footer />
+        </main>
+    </div>
 </div>
 
 @code {
@@ -68,6 +202,30 @@
     private bool DeletingAccount;
     private string? Message;
     private string? ErrorMessage;
+
+    private string ActiveSection = "profile";
+    private string Theme = "light";
+    private bool TwoFactorEnabled;
+
+    private readonly List<(string Key, string Label)> NavItems =
+    [
+        ("profile", "Profile"),
+        ("account", "Account"),
+        ("notifications", "Notifications"),
+        ("appearance", "Appearance"),
+        ("security", "Security"),
+        ("privacy", "Privacy")
+    ];
+
+    private readonly List<string> ThemeModes = ["light", "dark", "system"];
+
+    private readonly List<NotificationPreference> NotificationPrefs =
+    [
+        new("Task assigned to you", "Receive an alert when a task is assigned", true),
+        new("Task completed", "Get notified when a tracked task is completed", false),
+        new("Weekly digest", "Receive a weekly summary of updates", true),
+        new("Project updates", "Notifications for major project changes", true)
+    ];
 
     protected override async Task OnInitializedAsync()
     {
@@ -176,5 +334,19 @@
         {
             DeletingAccount = false;
         }
+    }
+
+    private sealed class NotificationPreference
+    {
+        public NotificationPreference(string label, string description, bool enabled)
+        {
+            Label = label;
+            Description = description;
+            Enabled = enabled;
+        }
+
+        public string Label { get; }
+        public string Description { get; }
+        public bool Enabled { get; set; }
     }
 }

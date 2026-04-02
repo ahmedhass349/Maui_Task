@@ -1,68 +1,77 @@
+@*
+  UI REPLICATION [AppSidebar]:
+  SOURCE: Task_Flow/ReactApp/Components/Sidebar.tsx
+  TARGET: Maui_Task.Shared/Components/AppSidebar.razor
+  REPLICATED:
+    - Sidebar container, logo area, nav link ordering, collapse behavior, and active-link treatment
+    - Blazor translation note: route matching and logout remain in existing C# logic
+*@
 @inject NavigationManager Nav
 @inject TaskFlowAuthStateProvider AuthState
 @inject Maui_Task.Shared.Services.AuthenticationService AuthService
 
-<div class="sidebar @(IsCollapsed ? "sidebar--collapsed" : "")"
-     @onmouseenter="Expand" @onmouseleave="Collapse">
-
-    <div class="sidebar__logo">
+<div class="bg-white border-r border-gray-200 flex flex-col transition-all duration-300 @(IsCollapsed ? "w-16" : "w-64")"
+     @onmouseenter="Expand"
+     @onmouseleave="Collapse">
+    <div class="h-16 border-b border-gray-200 flex items-center justify-center overflow-hidden px-4">
         @if (IsCollapsed)
         {
-            <div class="sidebar__logo-icon">
-                <svg width="36" height="36" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0"  y="4"  width="10" height="10" fill="#155EEF" />
-                    <rect x="20" y="4"  width="10" height="10" fill="#155EEF" opacity="0.60"/>
-                    <rect x="10" y="14" width="10" height="10" fill="#155EEF" opacity="0.60"/>
-                    <rect x="20" y="14" width="10" height="10" fill="#155EEF" opacity="0.45"/>
-                    <rect x="30" y="14" width="10" height="10" fill="#155EEF" opacity="0.30"/>
-                    <rect x="0"  y="24" width="10" height="10" fill="#155EEF" opacity="0.60"/>
-                    <rect x="10" y="24" width="10" height="10" fill="#155EEF" opacity="0.45"/>
-                    <rect x="20" y="24" width="10" height="10" fill="#155EEF" opacity="0.30"/>
-                    <rect x="30" y="24" width="10" height="10" fill="#155EEF" opacity="0.15"/>
-                    <rect x="10" y="34" width="10" height="10" fill="#155EEF" opacity="0.30"/>
-                    <rect x="20" y="34" width="10" height="10" fill="#155EEF" opacity="0.15"/>
-                </svg>
+            <div style="width: 40px; height: 48px; position: relative; flex-shrink: 0;">
+                <div style="width: 10px; height: 10px; left: 0; top: 4px; position: absolute; background: #155EEF;"></div>
+                <div style="width: 10px; height: 10px; left: 10px; top: 4px; position: absolute; opacity: 0; background: #155EEF;"></div>
+                <div style="width: 10px; height: 10px; left: 20px; top: 4px; position: absolute; opacity: 0.60; background: #155EEF;"></div>
+                <div style="width: 10px; height: 10px; left: 30px; top: 4px; position: absolute; opacity: 0; background: #155EEF;"></div>
+                <div style="width: 10px; height: 10px; left: 0; top: 14px; position: absolute; opacity: 0; background: #155EEF;"></div>
+                <div style="width: 10px; height: 10px; left: 10px; top: 14px; position: absolute; opacity: 0.60; background: #155EEF;"></div>
+                <div style="width: 10px; height: 10px; left: 20px; top: 14px; position: absolute; opacity: 0.45; background: #155EEF;"></div>
+                <div style="width: 10px; height: 10px; left: 30px; top: 14px; position: absolute; opacity: 0.30; background: #155EEF;"></div>
+                <div style="width: 10px; height: 10px; left: 0; top: 24px; position: absolute; opacity: 0.60; background: #155EEF;"></div>
+                <div style="width: 10px; height: 10px; left: 10px; top: 24px; position: absolute; opacity: 0.45; background: #155EEF;"></div>
+                <div style="width: 10px; height: 10px; left: 20px; top: 24px; position: absolute; opacity: 0.30; background: #155EEF;"></div>
+                <div style="width: 10px; height: 10px; left: 30px; top: 24px; position: absolute; opacity: 0.15; background: #155EEF;"></div>
+                <div style="width: 10px; height: 10px; left: 0; top: 34px; position: absolute; opacity: 0; background: #155EEF;"></div>
+                <div style="width: 10px; height: 10px; left: 10px; top: 34px; position: absolute; opacity: 0.30; background: #155EEF;"></div>
+                <div style="width: 10px; height: 10px; left: 20px; top: 34px; position: absolute; opacity: 0.15; background: #155EEF;"></div>
+                <div style="width: 10px; height: 10px; left: 30px; top: 34px; position: absolute; opacity: 0; background: #155EEF;"></div>
             </div>
         }
         else
         {
-            <div class="sidebar__logo-full">
-                <span class="sidebar__logo-text">TaskFlow</span>
-            </div>
+            <TaskFlowLogo />
         }
     </div>
 
-    <nav class="sidebar__nav">
+    <nav class="flex-1 py-2">
         @foreach (var item in NavItems)
         {
             var isActive = Nav.Uri.TrimEnd('/').EndsWith(item.Path.TrimEnd('/'), StringComparison.OrdinalIgnoreCase)
                            || (item.Path == "/" && Nav.Uri.TrimEnd('/') == Nav.BaseUri.TrimEnd('/'));
+
             <a href="@item.Path"
                title="@(IsCollapsed ? item.Label : null)"
-               class="sidebar__nav-item @(isActive ? "sidebar__nav-item--active" : "")">
-                <span class="sidebar__nav-icon">@((MarkupString)item.SvgIcon)</span>
+               style="@(isActive ? "background: #E2DEFF; border-radius: 8px;" : "border-radius: 8px;")"
+               class="flex items-center gap-4 px-4 py-3 mx-2 transition-colors @(isActive ? "text-[#3C21F7]" : "text-[#878787] hover:bg-gray-100")">
+                @((MarkupString)item.SvgIcon)
                 @if (!IsCollapsed)
                 {
-                    <span class="sidebar__nav-label">@item.Label</span>
+                    <span class="text-base font-normal whitespace-nowrap" style="font-family: Inter, sans-serif;">@item.Label</span>
                 }
             </a>
         }
     </nav>
 
-    <div class="sidebar__footer">
-        <button class="sidebar__nav-item sidebar__logout" title="@(IsCollapsed ? "Log Out" : null)"
+    <div class="py-2 border-t border-gray-200">
+        <button title="@(IsCollapsed ? "Log Out" : null)"
+                class="flex items-center gap-4 px-4 py-3 mx-2 rounded-[8px] text-[#878787] hover:bg-gray-100 transition-colors w-[calc(100%-16px)] cursor-pointer"
                 @onclick="LogoutAsync">
-            <span class="sidebar__nav-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    <polyline points="16 17 21 12 16 7"/>
-                    <line x1="21" y1="12" x2="9" y2="12"/>
-                </svg>
-            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
             @if (!IsCollapsed)
             {
-                <span class="sidebar__nav-label">Log Out</span>
+                <span class="text-base font-normal whitespace-nowrap" style="font-family: Inter, sans-serif;">Log Out</span>
             }
         </button>
     </div>

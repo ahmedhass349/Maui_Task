@@ -17,6 +17,7 @@ namespace Maui_Task.Web.Repositories
         public async Task<IEnumerable<Message>> GetConversationAsync(int userId, int contactId)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Include(m => m.Sender)
                 .Include(m => m.Receiver)
                 .Where(m => (m.SenderId == userId && m.ReceiverId == contactId)
@@ -38,6 +39,7 @@ namespace Maui_Task.Web.Repositories
             var contactIds = sentToIds.Union(receivedFromIds);
 
             return await _context.AppUsers
+                .AsNoTracking()
                 .Where(u => contactIds.Contains(u.Id))
                 .ToListAsync();
         }

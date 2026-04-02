@@ -1,18 +1,17 @@
+@*
+  UI REPLICATION [MainLayoutShell]:
+  SOURCE: Task_Flow React shell pattern used by protected pages
+  TARGET: Maui_Task.Shared/Layout/MainLayout.razor
+  REPLICATED:
+    - Removed legacy template wrapper shell that conflicted with page-level Task_Flow shell markup
+    - Blazor translation note: keeps NotificationContext cascade and lifecycle behavior unchanged
+*@
 @inherits LayoutComponentBase
 @implements IAsyncDisposable
 @inject NotificationContext NotificationContext
 
 <CascadingValue Value="NotificationContext">
-    <div class="app-shell">
-        <Sidebar />
-        <div class="app-body">
-            <Header />
-            <main class="app-content">
-                @Body
-            </main>
-            <Footer />
-        </div>
-    </div>
+    @Body
 </CascadingValue>
 
 @code {

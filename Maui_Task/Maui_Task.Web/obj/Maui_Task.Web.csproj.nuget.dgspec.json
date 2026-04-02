@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Web\\Maui_Task.Web.csproj": {}
+    "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Web\\Maui_Task.Web.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj": {
+    "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj",
+        "projectUniqueName": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj",
         "projectName": "Maui_Task.Shared",
-        "projectPath": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj",
+        "projectPath": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj",
         "packagesPath": "C:\\Users\\Ahmed Abdelbarr\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\obj\\",
+        "outputPath": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -372,14 +372,14 @@
         }
       }
     },
-    "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Web\\Maui_Task.Web.csproj": {
+    "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Web\\Maui_Task.Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Web\\Maui_Task.Web.csproj",
+        "projectUniqueName": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Web\\Maui_Task.Web.csproj",
         "projectName": "Maui_Task.Web",
-        "projectPath": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Web\\Maui_Task.Web.csproj",
+        "projectPath": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Web\\Maui_Task.Web.csproj",
         "packagesPath": "C:\\Users\\Ahmed Abdelbarr\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Web\\obj\\",
+        "outputPath": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Web\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -401,8 +401,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj": {
-                "projectPath": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj"
+              "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj": {
+                "projectPath": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj"
               }
             }
           }

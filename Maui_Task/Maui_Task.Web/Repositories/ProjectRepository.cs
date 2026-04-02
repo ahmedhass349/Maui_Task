@@ -17,6 +17,7 @@ namespace Maui_Task.Web.Repositories
         public async Task<IEnumerable<Project>> GetUserProjectsAsync(int userId)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Include(p => p.Owner)
                 .Include(p => p.Members)
                     .ThenInclude(pm => pm.User)
@@ -29,6 +30,7 @@ namespace Maui_Task.Web.Repositories
         public async Task<Project?> GetProjectWithDetailsAsync(int projectId)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Include(p => p.Owner)
                 .Include(p => p.Members)
                     .ThenInclude(pm => pm.User)

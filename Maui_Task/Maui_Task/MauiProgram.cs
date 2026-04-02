@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Maui_Task.Shared.Data;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Maui_Task
 {
@@ -71,14 +72,34 @@ namespace Maui_Task
 
             var app = builder.Build();
 
-            // Initialize persisted token (blocking during startup)
+            // Initialize local auth state and local database for offline-first startup.
             try
             {
                 var auth = app.Services.GetRequiredService<Maui_Task.Shared.Services.AuthenticationService>();
-                auth.InitializeAsync().GetAwaiter().GetResult();
+                auth.InitializeAsync(allowOnlineRefresh: false).GetAwaiter().GetResult();
 
-                var db = app.Services.GetRequiredService<AppDbContext>();
-                db.Database.Migrate();
+                using var scope = app.Services.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                try
+                {
+                    db.Database.Migrate();
+                }
+                catch
+                {
+                    // Fallback for first-run/offline/locked migration scenarios.
+                    db.Database.EnsureCreated();
+                }
+
+                try
+                {
+                    db.Database.ExecuteSqlRaw("PRAGMA foreign_keys=ON;");
+                    db.Database.ExecuteSqlRaw("PRAGMA journal_mode=WAL;");
+                    db.Database.ExecuteSqlRaw("PRAGMA synchronous=NORMAL;");
+                }
+                catch
+                {
+                    // Non-fatal if PRAGMA tuning is unavailable in a specific runtime.
+                }
             }
             catch
             {

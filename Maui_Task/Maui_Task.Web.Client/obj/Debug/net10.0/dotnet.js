@@ -5,7 +5,7 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
   "mainAssemblyName": "Maui_Task.Web.Client",
   "applicationEnvironment": "Development",
   "resources": {
-    "hash": "sha256-+QDTvaSsMlVx0qsd0Eyg5S3axV56XCf6E04qWzZqFC4=",
+    "hash": "sha256-U4qUauk7/FWemMeD2/vCgpToND+kZfJI6QaV2/z8pKQ=",
     "jsModuleNative": [
       {
         "name": "dotnet.native.ykrnppwhq2.js"
@@ -1362,28 +1362,28 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
       },
       {
         "virtualPath": "Maui_Task.Shared.wasm",
-        "name": "Maui_Task.Shared.hyidkodc50.wasm",
-        "integrity": "sha256-x5oiws0dYbfUzVyU1cWDQAvGXdS7ULun3AAJoralbAw=",
+        "name": "Maui_Task.Shared.7jf8w30ao8.wasm",
+        "integrity": "sha256-o4xwZ3l/4kFmL/nnNbn/ufmA8WGkAtDSwBW4oVRk3ck=",
         "cache": "force-cache"
       },
       {
         "virtualPath": "Maui_Task.Web.Client.wasm",
-        "name": "Maui_Task.Web.Client.g50r5rmd51.wasm",
-        "integrity": "sha256-hEpAEhGBxgZEPXF768yj1LDC8zC/I/4eJ2hO5u3mlYc=",
+        "name": "Maui_Task.Web.Client.do4f6expo4.wasm",
+        "integrity": "sha256-kywpt5rXBjC5S9wZ1yGzKrVznG68lOrQyELTK6XS/gg=",
         "cache": "force-cache"
       }
     ],
     "pdb": [
       {
         "virtualPath": "Maui_Task.Shared.pdb",
-        "name": "Maui_Task.Shared.pius9zglhw.pdb",
-        "integrity": "sha256-fyHDEnIDxtzcdYw5yUaKd/AjkLvF/J6XKyXCI0/2dBE=",
+        "name": "Maui_Task.Shared.f4uswcecdr.pdb",
+        "integrity": "sha256-fzfvKwqMOb4wok3RnOJXOGU7l6B1ZzjD98d6yzV/w70=",
         "cache": "force-cache"
       },
       {
         "virtualPath": "Maui_Task.Web.Client.pdb",
-        "name": "Maui_Task.Web.Client.xfls5c0whm.pdb",
-        "integrity": "sha256-jTC1nmfPkIprSw3XbEsxxr/7GuJpi7VWk9S22yPCQ8U=",
+        "name": "Maui_Task.Web.Client.tm20v1kzkp.pdb",
+        "integrity": "sha256-q88Cj3q2moKsyjDSmZVdO3KIZZ0D3LrbFFrdyIBvMFk=",
         "cache": "force-cache"
       }
     ],

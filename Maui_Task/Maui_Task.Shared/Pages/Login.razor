@@ -8,8 +8,10 @@
 @inject Maui_Task.Shared.Services.AuthenticationService AuthService
 @inject TaskFlowAuthStateProvider AuthState
 
+<PageTitle>Login</PageTitle>
+
 <CascadingValue Value="this">
-    <div class="min-h-screen bg-white flex">
+    <div class="min-h-screen bg-white flex flex-col lg:flex-row">
         <!-- Left Side - Login Form -->
         <div class="flex-1 flex flex-col min-h-screen relative">
             <!-- Logo -->
@@ -18,7 +20,7 @@
             </div>
 
             <!-- Form -->
-            <div class="flex-1 flex flex-col justify-center px-8 mx-auto w-full max-w-[460px] mt-[-200px]">
+            <div class="flex-1 flex flex-col justify-center px-6 lg:px-8 mx-auto w-full max-w-[460px] py-10 lg:py-0">
                 
                 <!-- Server error banner -->
                 @if (!string.IsNullOrEmpty(AuthError))
@@ -28,16 +30,21 @@
                     </div>
                 }
 
-                <EditForm Model="@LoginModel" OnValidSubmit="@HandleLogin">
+                <EditForm Model="@LoginModel" OnValidSubmit="@HandleLogin" class="space-y-6">
                     <DataAnnotationsValidator />
                     
                     <!-- Email -->
-                    <div class="mb-[24px]">
-                        <div class="relative rounded-[4px] w-[345px] @(FieldErrors.ContainsKey("Email") ? "ring-1 ring-red-500" : "")">
+                    <div class="space-y-1.5">
+                        <div class="relative rounded-[4px] w-full max-w-[345px] @(FieldErrors.ContainsKey("Email") ? "ring-1 ring-red-500" : "")">
                             <div class="absolute border border-solid inset-0 pointer-events-none rounded-[4px] @(FieldErrors.ContainsKey("Email") ? "border-red-500" : "border-[rgba(0,0,0,0.23)]")" />
                             <div class="px-[12px]">
                                 <InputText @bind-Value="LoginModel.Email" 
+                                          type="email"
                                           placeholder="Email Address *" 
+                                          autocomplete="email"
+                                          autocapitalize="none"
+                                          spellcheck="false"
+                                          autofocus
                                           class="w-full py-[16px] bg-transparent font-normal text-base text-foreground tracking-[0.15px] leading-6 outline-none placeholder:text-muted-foreground" 
                                           disabled="@IsSubmitting" />
                             </div>
@@ -49,13 +56,14 @@
                     </div>
 
                     <!-- Password -->
-                    <div class="mb-[24px]">
-                        <div class="relative rounded-[4px] w-[345px] @(FieldErrors.ContainsKey("Password") ? "ring-1 ring-red-500" : "")">
+                    <div class="space-y-1.5">
+                        <div class="relative rounded-[4px] w-full max-w-[345px] @(FieldErrors.ContainsKey("Password") ? "ring-1 ring-red-500" : "")">
                             <div class="absolute border border-solid inset-0 pointer-events-none rounded-[4px] @(FieldErrors.ContainsKey("Password") ? "border-red-500" : "border-[rgba(0,0,0,0.23)]")" />
                             <div class="px-[12px]">
                                 <InputText @bind-Value="LoginModel.Password" 
                                           type="password" 
                                           placeholder="Password *" 
+                                          autocomplete="current-password"
                                           class="w-full py-[16px] bg-transparent font-normal text-base text-foreground tracking-[0.15px] leading-6 outline-none placeholder:text-muted-foreground" 
                                           disabled="@IsSubmitting" />
                             </div>
@@ -67,10 +75,10 @@
                     </div>
 
                     <!-- Login button + Forgot password row -->
-                    <div class="flex items-center gap-[16px] mb-[32px]">
+                    <div class="flex flex-wrap items-center gap-x-[16px] gap-y-3">
                         <button type="submit"
                                 disabled="@IsSubmitting"
-                                class="bg-brand text-white rounded-[4px] px-[22px] py-[8px] shadow-[0px_3px_1px_-2px_rgba(0,0,0,0.2),0px_2px_2px_0px_rgba(0,0,0,0.14),0px_1px_5px_0px_rgba(0,0,0,0.12)] flex items-center gap-[8px] cursor-pointer hover:bg-brand-hover transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+                                class="bg-brand text-white rounded-[4px] px-[22px] py-[8px] shadow-[0px_3px_1px_-2px_rgba(0,0,0,0.2),0px_2px_2px_0px_rgba(0,0,0,0.14),0px_1px_5px_0px_rgba(0,0,0,0.12)] inline-flex items-center gap-[8px] cursor-pointer hover:bg-brand-hover transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
                             <span class="font-medium text-[15px] leading-[26px] tracking-[0.46px] uppercase text-white/87">
                                 @(IsSubmitting ? "Signing in..." : "Login")
                             </span>
@@ -96,7 +104,7 @@
                         <button type="button"
                             @onclick='() => NavigationManager.NavigateTo("/signup")'
                                 disabled="@IsSubmitting"
-                                class="bg-black text-white rounded-[4px] px-[22px] py-[8px] w-[344px] shadow-[0px_3px_1px_-2px_rgba(0,0,0,0.2),0px_2px_2px_0px_rgba(0,0,0,0.14),0px_1px_5px_0px_rgba(0,0,0,0.12)] cursor-pointer hover:bg-[#333] transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+                                class="bg-black text-white rounded-[4px] px-[22px] py-[8px] w-full max-w-[344px] shadow-[0px_3px_1px_-2px_rgba(0,0,0,0.2),0px_2px_2px_0px_rgba(0,0,0,0.14),0px_1px_5px_0px_rgba(0,0,0,0.12)] cursor-pointer hover:bg-[#333] transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
                             <span class="font-medium text-[15px] leading-[26px] tracking-[0.46px] uppercase text-white/87">
                                 create new account
                             </span>
@@ -110,13 +118,13 @@
             </div>
 
             <!-- Footer -->
-            <div class="pb-[20px] pl-[55px]">
+            <div class="px-6 pb-[20px] lg:px-[55px]">
                 <AuthFooter />
             </div>
         </div>
 
         <!-- Right Side - Promotion (desktop only) -->
-        <div class="hidden lg:block w-[58%] relative min-h-screen">
+        <div class="hidden lg:block w-[58%] relative min-h-screen overflow-hidden">
             <div class="absolute inset-0 overflow-hidden">
                 <PromotionBg />
             </div>

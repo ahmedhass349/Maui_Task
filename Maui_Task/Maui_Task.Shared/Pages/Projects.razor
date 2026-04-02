@@ -1,51 +1,173 @@
 @page "/projects"
 @attribute [Authorize]
-@inject Maui_Task.Shared.Services.HttpApiService Api
-@inject NavigationManager Nav
+@using Microsoft.AspNetCore.Authorization
+@using Maui_Task.Shared.Components
 @using Maui_Task.Shared.DTOs.Projects
 @using Maui_Task.Shared.Helpers
+@inject Maui_Task.Shared.Services.HttpApiService Api
+@inject NavigationManager Nav
 
-<h3>Projects</h3>
-
-<div class="controls" style="margin-bottom:10px;">
-    <button class="btn btn-secondary" @onclick="Load">Refresh</button>
-    <button class="btn btn-primary" @onclick="Create">New Project</button>
-</div>
-
-@if (loading)
-{
-    <PageState State="PageState.PageStateMode.Loading" Message="Loading projects..." />
-}
-else if (!string.IsNullOrWhiteSpace(error))
-{
-    <PageState State="PageState.PageStateMode.Error" Message="@error" OnRetry="Load" />
-}
-else if (projects.Count == 0)
-{
-    <PageState State="PageState.PageStateMode.Empty" Message="No projects found." />
-}
-else
-{
-    <div class="project-list">
-        @foreach (var p in projects)
-        {
-            <div class="project-card">
-                <div class="name"><a class="project-link" href="/projects/edit/@p.Id">@p.Name</a></div>
-                <div class="small muted">Owner: @p.OwnerName</div>
-                <div class="small muted">Tasks: @p.TasksCompleted / @p.TasksTotal</div>
-                <div class="actions">
-                    <button class="btn btn-secondary" @onclick="() => Open(p.Id)">Open</button>
-                    <button class="btn btn-primary" @onclick="() => Edit(p.Id)">Edit</button>
+<div class="max-w-7xl mx-auto p-6 space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">Projects</h1>
+                        <p class="text-gray-600 mt-1">Manage and track all your projects</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="button" aria-label="Grid view" class='@GetIconToggleClass("grid")' @onclick='() => viewMode = "grid"'>
+                            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z" />
+                            </svg>
+                        </button>
+                        <button type="button" aria-label="List view" class='@GetIconToggleClass("list")' @onclick='() => viewMode = "list"'>
+                            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
+
+                <div class="flex items-center gap-3 flex-wrap">
+                    <button type="button" class='@GetFilterClass("all")' @onclick='() => SetFilter("all")'>All Projects</button>
+                    <button type="button" class='@GetFilterClass("starred")' @onclick='() => SetFilter("starred")'>Starred</button>
+                    <button type="button" class='@GetFilterClass("active")' @onclick='() => SetFilter("active")'>Active</button>
+                    <button type="button" class='@GetFilterClass("archived")' @onclick='() => SetFilter("archived")'>Archived</button>
+
+                    <div class="ml-auto flex items-center gap-2">
+                        <button type="button" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors" @onclick="Load">Refresh</button>
+                        <button type="button" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors" @onclick="Create">New Project</button>
+                    </div>
+                </div>
+
+                @if (loading)
+                {
+                    <div class="p-6">
+                        <p class="text-gray-600">Loading projects...</p>
+                    </div>
+                }
+                else if (!string.IsNullOrWhiteSpace(error))
+                {
+                    <div class="p-6">
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                            <p class="text-red-700">@error</p>
+                            <button @onclick="Load" class="mt-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Retry</button>
+                        </div>
+                    </div>
+                }
+                else if (!FilteredProjects.Any())
+                {
+                    <div class="text-center py-12">
+                        <div class="mx-auto w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 2a2 2 0 00-2 2v4h10V4a2 2 0 00-2-2H9z" />
+                                <path d="M4 8h16a2 2 0 012 2v8a4 4 0 01-4 4H6a4 4 0 01-4-4v-8a2 2 0 012-2z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900">No projects found</h3>
+                        <p class="text-gray-600 mt-1">Try a different filter or create a new project.</p>
+                    </div>
+                }
+                else if (viewMode == "list")
+                {
+                    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
+                        @foreach (var p in FilteredProjects)
+                        {
+                            var progress = GetProgress(p);
+                            <article class="border-b border-gray-100 px-5 py-4 last:border-b-0">
+                                <div class="flex flex-wrap items-center justify-between gap-3">
+                                    <div class="min-w-0">
+                                        <p class="font-semibold text-gray-900 truncate">@p.Name</p>
+                                        <p class="text-sm text-gray-500 truncate">@ResolveDescription(p.Description)</p>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-sm text-gray-600">
+                                        <span>@p.OwnerName</span>
+                                        <span class="text-gray-300">|</span>
+                                        <span>@p.MemberCount members</span>
+                                    </div>
+                                </div>
+                                <div class="mt-3 flex items-center justify-between gap-3">
+                                    <div class="w-full max-w-xs">
+                                        <div class="h-2 w-full rounded-full bg-gray-200">
+                                            <div class="h-2 rounded-full bg-blue-500" style="width:@($"{progress}%")"></div>
+                                        </div>
+                                        <p class="mt-1 text-xs text-gray-500">@p.TasksCompleted/@p.TasksTotal tasks completed</p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        @if (p.IsStarred)
+                                        {
+                                            <span class="text-yellow-500" aria-label="Starred">&#9733;</span>
+                                        }
+                                        <button type="button" class="px-2 py-1 text-xs rounded-md border border-gray-200 text-gray-700 hover:bg-gray-50" @onclick="() => Open(p.Id)">Open</button>
+                                        <button type="button" class="px-2 py-1 text-xs rounded-md border border-blue-200 text-blue-700 hover:bg-blue-50" @onclick="() => Edit(p.Id)">Edit</button>
+                                    </div>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach (var p in FilteredProjects)
+                        {
+                            var progress = GetProgress(p);
+                            <article class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
+                                <div class="p-6">
+                                    <div class="flex items-start justify-between mb-4">
+                                        <div class="size-12 rounded-lg bg-blue-500 flex items-center justify-center text-white">
+                                            <svg class="size-6" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M9 2a2 2 0 00-2 2v4h10V4a2 2 0 00-2-2H9z" />
+                                                <path d="M4 8h16a2 2 0 012 2v8a4 4 0 01-4 4H6a4 4 0 01-4-4v-8a2 2 0 012-2z" />
+                                            </svg>
+                                        </div>
+                                        @if (p.IsStarred)
+                                        {
+                                            <span class="text-yellow-500 text-lg" aria-label="Starred">&#9733;</span>
+                                        }
+                                    </div>
+
+                                    <h3 class="font-semibold text-gray-900 text-lg mb-1">@p.Name</h3>
+                                    <p class="text-sm text-gray-600 mb-4">@ResolveDescription(p.Description)</p>
+
+                                    <div class="mb-4">
+                                        <div class="flex items-center justify-between text-sm mb-2">
+                                            <span class="text-gray-600">Progress</span>
+                                            <span class="font-medium text-gray-900">@p.TasksCompleted/@p.TasksTotal</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-blue-500 h-2 rounded-full transition-all" style="width:@($"{progress}%")"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                                        <span class="text-sm text-gray-600">@p.MemberCount members</span>
+                                        <div class="flex items-center gap-2">
+                                            <button type="button" class="text-xs text-gray-700 hover:text-gray-900" @onclick="() => Open(p.Id)">Open</button>
+                                            <button type="button" class="text-xs text-blue-600 hover:text-blue-700" @onclick="() => Edit(p.Id)">Edit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
             </div>
-        }
-    </div>
-}
 
 @code {
     private List<ProjectDto> projects = new();
     private bool loading = true;
     private string? error;
+
+    private string selectedFilter = "all";
+    private string viewMode = "grid";
+
+    private IEnumerable<ProjectDto> FilteredProjects => selectedFilter switch
+    {
+        "starred" => projects.Where(p => p.IsStarred),
+        "active" => projects.Where(p => p.TasksTotal == 0 || p.TasksCompleted < p.TasksTotal),
+        "archived" => projects.Where(p => p.TasksTotal > 0 && p.TasksCompleted >= p.TasksTotal),
+        _ => projects
+    };
 
     protected override async Task OnInitializedAsync()
     {
@@ -72,14 +194,43 @@ else
         }
     }
 
+    private static int GetProgress(ProjectDto p)
+    {
+        if (p.TasksTotal <= 0)
+        {
+            return 0;
+        }
+
+        return Math.Clamp((int)Math.Round((double)p.TasksCompleted / p.TasksTotal * 100), 0, 100);
+    }
+
+    private static string ResolveDescription(string? description)
+    {
+        return string.IsNullOrWhiteSpace(description) ? "No description provided." : description;
+    }
+
+    private void SetFilter(string key)
+    {
+        selectedFilter = key;
+    }
+
+    private string GetFilterClass(string key)
+    {
+        var baseClass = "px-4 py-2 rounded-lg transition-colors";
+        return selectedFilter == key
+            ? $"{baseClass} bg-blue-500 text-white"
+            : $"{baseClass} bg-white border border-gray-200 text-gray-700 hover:bg-gray-50";
+    }
+
+    private string GetIconToggleClass(string key)
+    {
+        var baseClass = "p-2 border rounded-lg transition-colors";
+        return viewMode == key
+            ? $"{baseClass} bg-white border-blue-300 text-blue-600"
+            : $"{baseClass} border-gray-200 text-gray-600 hover:bg-white";
+    }
+
     private void Open(int id) => Nav.NavigateTo($"/projects/{id}");
     private void Create() => Nav.NavigateTo("/projects/edit/0");
     private void Edit(int id) => Nav.NavigateTo($"/projects/edit/{id}");
 }
-
-<style>
-.project-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:0.6rem }
-.project-card { padding:0.6rem; border:1px solid #eee; border-radius:6px; cursor:pointer }
-.project-card .name { font-weight:600 }
-.project-card .meta { color:#666; font-size:0.9rem }
-</style>

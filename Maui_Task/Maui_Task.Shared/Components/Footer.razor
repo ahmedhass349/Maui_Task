@@ -1,1 +1,90 @@
-<footer class="text-center text-xs text-gray-500 py-4">TaskFlow</footer>
+<footer class="bg-[#f7f7f7] border-t border-[#dddddd] font-['Roboto',sans-serif]">
+	<div class="max-w-7xl mx-auto px-6 py-12">
+		<div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+			@foreach (var column in Columns)
+			{
+				<div class="grid gap-4">
+					<span class="text-sm font-extrabold leading-[18px] text-[#222222]">@column.Heading</span>
+					<div class="grid gap-3.5">
+						@foreach (var link in column.Links)
+						{
+							<button type="button" class="w-fit text-left text-sm leading-[18px] text-[#222222] hover:underline">@link</button>
+						}
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+
+	<div class="border-t border-[#dddddd]">
+		<div class="max-w-7xl mx-auto px-6 py-6 flex flex-wrap items-center justify-between gap-4 text-sm leading-[18px] text-[#222222]">
+			<div class="flex flex-wrap items-center gap-3">
+				<span>&copy; @DateTime.Now.Year TaskFlow, Inc.</span>
+				@foreach (var item in BottomLinks)
+				{
+					<span aria-hidden="true">&middot;</span>
+					<button type="button" class="hover:underline">@item</button>
+				}
+			</div>
+			<div class="flex items-center gap-4 text-[15px]">
+				<a href="https://github.com" target="_blank" rel="noreferrer" aria-label="GitHub" class="flex size-8 items-center justify-center rounded-full border border-[#dddddd] bg-white hover:bg-black hover:text-white transition-colors">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.75 5.7.75 12.2c0 5.2 3.4 9.6 8.1 11.1.6.1.8-.3.8-.6v-2.2c-3.3.8-4-1.4-4-1.4-.5-1.4-1.2-1.8-1.2-1.8-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 .1 1.5.8 1.5.8.9 1.6 2.5 1.2 3.1.9.1-.7.4-1.2.7-1.5-2.6-.3-5.3-1.3-5.3-5.6 0-1.2.4-2.2 1.1-3-.1-.3-.5-1.4.1-2.8 0 0 .9-.3 3 .9.8-.2 1.7-.3 2.5-.3.8 0 1.7.1 2.5.3 2.1-1.2 3-.9 3-.9.6 1.4.2 2.5.1 2.8.7.8 1.1 1.8 1.1 3 0 4.3-2.7 5.2-5.3 5.5.4.3.7.9.7 1.9v2.7c0 .3.2.7.8.6 4.7-1.5 8.1-5.9 8.1-11.1C23.3 5.7 18.3.5 12 .5z"/></svg>
+				</a>
+				<a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter" class="flex size-8 items-center justify-center rounded-full border border-[#dddddd] bg-white hover:bg-black hover:text-white transition-colors">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2.3h3.7l-8.1 9.3L24 21.7h-6.9l-5.4-6.5-5.7 6.5H2.3l8.6-9.8L0 2.3h7l5 6 5.9-6zm-1.3 17.7h2l-13-15h-2l13 15z"/></svg>
+				</a>
+				<a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" class="flex size-8 items-center justify-center rounded-full border border-[#dddddd] bg-white hover:bg-black hover:text-white transition-colors">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.4 20.5h-3.7v-5.7c0-1.4 0-3.2-2-3.2s-2.3 1.6-2.3 3.1v5.8h-3.7V8.7h3.5v1.6h.1c.5-.9 1.8-1.9 3.7-1.9 4 0 4.7 2.6 4.7 6v6.1zM5.2 7.1c-1.2 0-2.1-1-2.1-2.1S4 2.9 5.2 2.9s2.1 1 2.1 2.1-1 2.1-2.1 2.1zM7 20.5H3.5V8.7H7v11.8zM22.2 0H1.8C.8 0 0 .8 0 1.8v20.4C0 23.2.8 24 1.8 24h20.4c1 0 1.8-.8 1.8-1.8V1.8C24 .8 23.2 0 22.2 0z"/></svg>
+				</a>
+			</div>
+		</div>
+	</div>
+</footer>
+
+@code {
+	private readonly List<FooterColumn> Columns = new()
+	{
+		new("Help & Support", new List<string>
+		{
+			"Help Center",
+			"Getting Started Guide",
+			"Video Tutorials",
+			"Contact Support",
+			"System Status",
+			"Report a Bug"
+		}),
+		new("Community", new List<string>
+		{
+			"Community Forum",
+			"Feature Requests"
+		}),
+		new("Product", new List<string>
+		{
+			"What's New",
+			"Integrations",
+			"Mobile Apps",
+			"API Documentation",
+			"Changelog",
+			"Roadmap"
+		}),
+		new("Company", new List<string>
+		{
+			"About Us",
+			"Blog",
+			"Careers",
+			"Press",
+			"Investors",
+			"Partners"
+		})
+	};
+
+	private readonly List<string> BottomLinks = new()
+	{
+		"Terms of Service",
+		"Privacy Policy",
+		"Cookie Policy",
+		"Security"
+	};
+
+	private sealed record FooterColumn(string Heading, List<string> Links);
+}

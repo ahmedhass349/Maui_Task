@@ -6,28 +6,37 @@
 @using Maui_Task.Shared.DTOs.Messages
 @using Maui_Task.Shared.DTOs.Auth
 @using Maui_Task.Shared.Helpers
+@using Maui_Task.Shared.Components
 @inject Maui_Task.Shared.Services.HttpApiService Api
 
 <PageTitle>Messages</PageTitle>
 
-<div class="h-[calc(100vh-120px)] w-full p-4 md:p-6">
-    <div class="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
-            <div>
-                <h1 class="text-2xl font-semibold text-slate-900">Messages</h1>
-                <p class="text-sm text-slate-500">@FilteredContacts.Count() conversation(s)</p>
-            </div>
-        </div>
+<div class="flex h-screen overflow-hidden bg-gray-50">
+    <AppSidebar />
 
-        @if (!string.IsNullOrWhiteSpace(ErrorMessage))
-        {
-            <div class="mx-4 mt-4 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                @ErrorMessage
-            </div>
-        }
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <AppHeader />
 
-        <div class="grid h-full min-h-0 grid-cols-1 md:grid-cols-[320px_1fr]">
-            <aside class="flex min-h-0 flex-col border-r border-slate-200 bg-slate-50/60">
+        <main class="flex-1 overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-2.5">
+                <div class="flex items-center gap-3">
+                    <h1 class="text-xl font-bold text-gray-900">Messages</h1>
+                    <div class="hidden h-4 w-px bg-gray-300 sm:block"></div>
+                    <p class="hidden text-sm text-gray-500 sm:block"><span class="font-semibold text-blue-600">@FilteredContacts.Count()</span><span class="ml-1">Conversations</span></p>
+                </div>
+            </div>
+
+            <div class="mx-auto h-[calc(100vh-178px)] w-full max-w-7xl p-4 md:p-6">
+                <div class="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+                    {
+                        <div class="mx-4 mt-4 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                            @ErrorMessage
+                        </div>
+                    }
+
+                    <div class="grid h-full min-h-0 grid-cols-1 md:grid-cols-[320px_1fr]">
+                        <aside class="flex min-h-0 flex-col border-r border-slate-200 bg-slate-50/60">
                 <div class="p-4">
                     <label for="contact-search" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Search</label>
                     <input id="contact-search"
@@ -163,8 +172,13 @@
                         </div>
                     </EditForm>
                 }
-            </section>
-        </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <Footer />
+        </main>
     </div>
 </div>
 

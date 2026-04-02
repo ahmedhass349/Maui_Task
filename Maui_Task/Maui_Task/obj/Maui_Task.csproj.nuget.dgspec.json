@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task\\Maui_Task.csproj": {}
+    "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task\\Maui_Task.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj": {
+    "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj",
+        "projectUniqueName": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj",
         "projectName": "Maui_Task.Shared",
-        "projectPath": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj",
+        "projectPath": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj",
         "packagesPath": "C:\\Users\\Ahmed Abdelbarr\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\obj\\",
+        "outputPath": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -372,14 +372,14 @@
         }
       }
     },
-    "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task\\Maui_Task.csproj": {
+    "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task\\Maui_Task.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task\\Maui_Task.csproj",
+        "projectUniqueName": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task\\Maui_Task.csproj",
         "projectName": "Maui_Task",
-        "projectPath": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task\\Maui_Task.csproj",
+        "projectPath": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task\\Maui_Task.csproj",
         "packagesPath": "C:\\Users\\Ahmed Abdelbarr\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task\\obj\\",
+        "outputPath": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "fallbackFolders": [
@@ -405,32 +405,32 @@
           "net10.0-android36.0": {
             "targetAlias": "net10.0-android",
             "projectReferences": {
-              "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj": {
-                "projectPath": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj"
+              "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj": {
+                "projectPath": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj"
               }
             }
           },
           "net10.0-ios26.2": {
             "targetAlias": "net10.0-ios",
             "projectReferences": {
-              "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj": {
-                "projectPath": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj"
+              "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj": {
+                "projectPath": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj"
               }
             }
           },
           "net10.0-maccatalyst26.2": {
             "targetAlias": "net10.0-maccatalyst",
             "projectReferences": {
-              "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj": {
-                "projectPath": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj"
+              "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj": {
+                "projectPath": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj"
               }
             }
           },
           "net10.0-windows10.0.19041": {
             "targetAlias": "net10.0-windows10.0.19041.0",
             "projectReferences": {
-              "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj": {
-                "projectPath": "C:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj"
+              "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj": {
+                "projectPath": "c:\\Users\\Ahmed Abdelbarr\\OneDrive\\Documents\\GitHub\\Maui_Task\\Maui_Task\\Maui_Task.Shared\\Maui_Task.Shared.csproj"
               }
             }
           }

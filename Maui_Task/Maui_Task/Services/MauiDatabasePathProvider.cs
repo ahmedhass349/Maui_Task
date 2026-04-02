@@ -8,6 +8,7 @@ namespace Maui_Task.Services
     {
         public string GetDatabasePath()
         {
+            Directory.CreateDirectory(FileSystem.AppDataDirectory);
             var dbName = "taskflow.db";
             return Path.Combine(FileSystem.AppDataDirectory, dbName);
         }

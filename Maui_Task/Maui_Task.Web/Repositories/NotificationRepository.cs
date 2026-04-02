@@ -18,6 +18,7 @@ namespace Maui_Task.Web.Repositories
         public async Task<IEnumerable<Notification>> GetUserNotificationsAsync(int userId)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Where(n => n.UserId == userId)
                 .OrderByDescending(n => n.CreatedAt)
                 .ToListAsync();
@@ -26,6 +27,7 @@ namespace Maui_Task.Web.Repositories
         public async Task<IEnumerable<Notification>> GetByUserIdAsync(int userId, int page, int pageSize)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Where(n => n.UserId == userId)
                 .OrderByDescending(n => n.CreatedAt)
                 .Skip((page - 1) * pageSize)
@@ -42,6 +44,7 @@ namespace Maui_Task.Web.Repositories
         public async Task<IEnumerable<Notification>> GetUnreadAsync(int userId)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Where(n => n.UserId == userId && !n.IsRead)
                 .OrderByDescending(n => n.CreatedAt)
                 .ToListAsync();

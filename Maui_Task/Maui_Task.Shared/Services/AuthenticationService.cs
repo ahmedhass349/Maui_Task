@@ -43,7 +43,7 @@ namespace Maui_Task.Shared.Services
             }
         }
 
-        public async Task InitializeAsync()
+        public async Task InitializeAsync(bool allowOnlineRefresh = true)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace Maui_Task.Shared.Services
                 {
                     // try to refresh using a stored refresh token
                     var refresh = await _storage.GetRefreshTokenAsync();
-                    if (!string.IsNullOrEmpty(refresh))
+                    if (allowOnlineRefresh && !string.IsNullOrEmpty(refresh))
                     {
                         await TryRefreshTokenAsync();
                     }

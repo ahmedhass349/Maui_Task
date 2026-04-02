@@ -14,12 +14,12 @@ namespace Maui_Task.Web.Repositories
 
         public async Task<AppUser?> GetByEmailAsync(string email)
         {
-            return await _dbSet.FirstOrDefaultAsync(u => u.Email == email);
+            return await _dbSet.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<AppUser?> GetByRefreshTokenAsync(string refreshToken)
         {
-            return await _dbSet.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+            return await _dbSet.AsNoTracking().FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
         }
     }
 }

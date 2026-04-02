@@ -17,6 +17,7 @@ namespace Maui_Task.Web.Repositories
         public async Task<IEnumerable<ChatbotConversation>> GetUserConversationsAsync(int userId)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Where(c => c.UserId == userId)
                 .OrderByDescending(c => c.UpdatedAt)
                 .ToListAsync();
@@ -25,6 +26,7 @@ namespace Maui_Task.Web.Repositories
         public async Task<ChatbotConversation?> GetConversationWithMessagesAsync(int conversationId)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Include(c => c.Messages.OrderBy(m => m.CreatedAt))
                 .FirstOrDefaultAsync(c => c.Id == conversationId);
         }

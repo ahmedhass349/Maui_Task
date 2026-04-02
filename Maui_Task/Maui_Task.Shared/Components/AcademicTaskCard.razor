@@ -2,23 +2,85 @@
 @using Maui_Task.Shared.Helpers
 @inject Maui_Task.Shared.Services.HttpApiService Api
 
-<div class="bg-white rounded-lg border p-4 grid gap-3">
-    <h3 class="text-lg font-semibold">@(initialData is null ? "Create task" : "Edit task")</h3>
+<div class="w-full max-w-2xl max-h-[92vh] rounded-2xl border border-slate-200 bg-white shadow-sm flex flex-col overflow-hidden mx-auto">
+    <div class="px-8 pt-8 pb-5 border-b border-slate-200">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0 text-blue-700 text-sm font-semibold">T</div>
+            <div>
+                <h3 class="text-2xl font-semibold text-slate-950">@(initialData is null ? "New academic task" : "Edit task")</h3>
+                <p class="text-sm text-slate-500 mt-1">@(initialData is null ? "Create and schedule your task" : "Update your task details")</p>
+            </div>
+        </div>
+    </div>
 
-    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
-    {
-        <p class="text-sm text-red-700">@ErrorMessage</p>
-    }
-
-    <EditForm Model="@Model" OnValidSubmit="Save" class="grid gap-2">
+    <EditForm Model="@Model" OnValidSubmit="Save" class="grid gap-6 p-8 overflow-y-auto">
         <DataAnnotationsValidator />
-        <InputText @bind-Value="Model.Title" class="border rounded px-3 py-2" placeholder="Title" />
-        <InputTextArea @bind-Value="Model.Description" class="border rounded px-3 py-2" placeholder="Description" />
 
-        <div class="flex gap-2 justify-end mt-2">
-            <button type="button" class="border rounded px-3 py-2" @onclick="onClose">Cancel</button>
-            <button type="submit" class="bg-black text-white rounded px-3 py-2" disabled="@Saving">
-                @(Saving ? "Saving..." : "Save")
+        @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+        {
+            <div class="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">@ErrorMessage</div>
+        }
+
+        <section class="grid gap-4">
+            <h4 class="text-sm font-semibold text-slate-900">Task details</h4>
+            <div class="grid gap-1.5">
+                <label class="text-xs font-medium text-slate-500" for="task-title">Title</label>
+                <InputText id="task-title" @bind-Value="Model.Title" class="w-full h-11 rounded-lg border border-slate-200 px-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="Enter task title" />
+            </div>
+
+            <div class="grid gap-1.5">
+                <label class="text-xs font-medium text-slate-500" for="task-description">Notes</label>
+                <InputTextArea id="task-description" @bind-Value="Model.Description" class="w-full min-h-[100px] rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="Add notes" />
+            </div>
+        </section>
+
+        <section class="grid gap-4 sm:grid-cols-2">
+            <div class="grid gap-1.5">
+                <label class="text-xs font-medium text-slate-500" for="task-priority">Priority</label>
+                <InputSelect id="task-priority" @bind-Value="Model.Priority" class="w-full h-11 rounded-lg border border-slate-200 px-3 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Critical">Critical</option>
+                </InputSelect>
+            </div>
+
+            <div class="grid gap-1.5">
+                <label class="text-xs font-medium text-slate-500" for="task-status">Status</label>
+                <InputSelect id="task-status" @bind-Value="Model.Status" class="w-full h-11 rounded-lg border border-slate-200 px-3 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                    <option value="Todo">To do</option>
+                    <option value="InProgress">In progress</option>
+                    <option value="Review">Review</option>
+                    <option value="Completed">Completed</option>
+                </InputSelect>
+            </div>
+        </section>
+
+        <section class="grid gap-4 sm:grid-cols-2">
+            <div class="grid gap-1.5">
+                <label class="text-xs font-medium text-slate-500" for="task-due-date">Due date</label>
+                <input id="task-due-date" type="datetime-local" class="w-full h-11 rounded-lg border border-slate-200 px-3 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20" value="@DueDateInput" @onchange="OnDueDateChanged" />
+            </div>
+
+            <div class="grid gap-1.5">
+                <label class="text-xs font-medium text-slate-500">Notification channels</label>
+                <div class="h-11 rounded-lg border border-slate-200 px-3 flex items-center justify-between text-sm text-slate-700">
+                    <label class="inline-flex items-center gap-2">
+                        <InputCheckbox @bind-Value="Model.NotifyEmail" class="rounded border-slate-300" />
+                        <span>Email</span>
+                    </label>
+                    <label class="inline-flex items-center gap-2">
+                        <InputCheckbox @bind-Value="Model.NotifyInApp" class="rounded border-slate-300" />
+                        <span>In app</span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <div class="flex gap-2 justify-end pt-2 border-t border-slate-200">
+            <button type="button" class="h-10 px-4 rounded-lg border border-slate-200 text-sm text-slate-700 hover:bg-slate-50" @onclick="onClose">Cancel</button>
+            <button type="submit" class="h-10 px-4 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-60" disabled="@Saving">
+                @(Saving ? "Saving..." : "Save task")
             </button>
         </div>
     </EditForm>
@@ -31,6 +93,7 @@
 
     private bool Saving;
     private string? ErrorMessage;
+    private string DueDateInput = string.Empty;
     private CreateTaskRequest Model = new();
 
     protected override void OnParametersSet()
@@ -40,8 +103,15 @@
             Title = initialData?.Title ?? string.Empty,
             Description = initialData?.Description,
             Priority = ParsePriority(initialData?.Priority),
-            Status = ParseStatus(initialData?.Status)
+            Status = ParseStatus(initialData?.Status),
+            DueDate = initialData?.DueDate,
+            NotifyEmail = true,
+            NotifyInApp = true
         };
+
+        DueDateInput = Model.DueDate.HasValue
+            ? DateTime.SpecifyKind(Model.DueDate.Value, DateTimeKind.Local).ToString("yyyy-MM-ddTHH:mm")
+            : string.Empty;
     }
 
     private static Maui_Task.Shared.Data.Entities.TaskPriority ParsePriority(string? value)
@@ -81,6 +151,23 @@
         finally
         {
             Saving = false;
+        }
+    }
+
+    private void OnDueDateChanged(ChangeEventArgs args)
+    {
+        var value = args.Value?.ToString();
+        DueDateInput = value ?? string.Empty;
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            Model.DueDate = null;
+            return;
+        }
+
+        if (DateTime.TryParse(value, out var parsed))
+        {
+            Model.DueDate = parsed;
         }
     }
 }
