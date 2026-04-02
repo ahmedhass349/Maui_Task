@@ -35,17 +35,70 @@
 
     <div id="app"></div>
 
+    <!-- Error fallback shown if Blazor fails to initialize -->
+    <div id="blazor-error-fallback" style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: white;
+        color: #333;
+        font-family: monospace;
+        font-size: 13px;
+        padding: 2rem;
+        overflow: auto;
+        z-index: 99999;
+    ">
+        <h2 style="color: #dc2626; margin-top: 0;">Blazor Failed to Start</h2>
+        <p id="blazor-error-message" style="
+            background: #f3f4f6;
+            padding: 1rem;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 12px;
+        "></p>
+    </div>
+
     <style>
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
     </style>
 
+    <script>
+        window.onerror = function(msg, url, line, col, error) {
+            var el = document.getElementById('blazor-error-fallback');
+            var msg_el = document.getElementById('blazor-error-message');
+            if (el) el.style.display = 'block';
+            if (msg_el) msg_el.textContent =
+                'Error: ' + msg + '\nLine: ' + line +
+                '\nFile: ' + url + '\n' + (error ? error.stack : '');
+            return false;
+        };
+
+        window.addEventListener('unhandledrejection', function(event) {
+            var reasonText = event.reason ? event.reason.toString() : '';
+            if (reasonText.indexOf('Blazor has already started') >= 0) {
+                return;
+            }
+            var el = document.getElementById('blazor-error-fallback');
+            var msg_el = document.getElementById('blazor-error-message');
+            if (el) el.style.display = 'block';
+            if (msg_el) msg_el.textContent =
+                'Unhandled Promise Rejection:\n' +
+                (event.reason ? event.reason.toString() : 'Unknown reason');
+        });
+    </script>
+
     <script src="_framework/blazor.webview.js" autostart="false"></script>
     <script src="_content/Maui_Task.Shared/js/app.js"></script>
+
     <script>
-        Blazor.start().then(function () {
-            const loader = document.getElementById('app-loading');
+        Blazor.start({
+            logLevel: 1
+        }).then(function() {
+            console.log('=== Blazor started successfully ===');
+            var loader = document.getElementById('app-loading');
             if (loader) {
                 loader.style.opacity = '0';
                 loader.style.transition = 'opacity 0.3s ease';
@@ -53,7 +106,49 @@
                     loader.style.display = 'none';
                 }, 300);
             }
+        }).catch(function(err) {
+            console.error('=== Blazor FAILED TO START:', err);
+            var el = document.getElementById('blazor-error-fallback');
+            var msg_el = document.getElementById('blazor-error-message');
+            if (el) el.style.display = 'block';
+            if (msg_el) {
+                msg_el.textContent =
+                    'Blazor.start() failed:\n' + err.toString()
+                    + '\n\nStack:\n' + (err.stack || 'No stack');
+            }
+
+            var loader = document.getElementById('app-loading');
+            if (loader) {
+                loader.style.display = 'none';
+            }
         });
+    </script>
+    
+    <script>
+        var appRoot = document.getElementById('app');
+        if (appRoot) {
+            var observer = new MutationObserver(function() {
+                if (appRoot.childNodes && appRoot.childNodes.length > 0) {
+                    var loader = document.getElementById('app-loading');
+                    if (loader) {
+                        loader.style.opacity = '0';
+                        loader.style.transition = 'opacity 0.3s ease';
+                        setTimeout(function () {
+                            loader.style.display = 'none';
+                        }, 300);
+                    }
+                    observer.disconnect();
+                }
+            });
+            observer.observe(appRoot, { childList: true, subtree: true });
+        }
+
+        setTimeout(function() {
+            var loader = document.getElementById('app-loading');
+            if (loader && loader.style.display !== 'none') {
+                loader.style.display = 'none';
+            }
+        }, 3000);
     </script>
 </body>
 </html>

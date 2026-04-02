@@ -242,7 +242,6 @@ C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task
 C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Web\obj\Debug\net10.0\scopedcss\bundle\Maui_Task.Web.styles.css
 C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Web\obj\Debug\net10.0\compressed\r3zf2y6qxb-{0}-b9228eflpl-b9228eflpl.gz
 C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Web\obj\Debug\net10.0\compressed\6nd2cu26f3-{0}-2tj1sjhksk-2tj1sjhksk.gz
-C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Web\obj\Debug\net10.0\compressed\ncwz3bv7b7-{0}-uv42kjvvk0-uv42kjvvk0.gz
 C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Web\obj\Debug\net10.0\staticwebassets.build.json
 C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Web\obj\Debug\net10.0\staticwebassets.build.json.cache
 C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Web\obj\Debug\net10.0\staticwebassets.development.json
@@ -254,3 +253,4 @@ C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task
 C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Web\obj\Debug\net10.0\Maui_Task.Web.pdb
 C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Web\obj\Debug\net10.0\Maui_Task.Web.genruntimeconfig.cache
 C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Web\obj\Debug\net10.0\ref\Maui_Task.Web.dll
+c:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Web\obj\Debug\net10.0\compressed\ncwz3bv7b7-{0}-eawojkw9xt-eawojkw9xt.gz

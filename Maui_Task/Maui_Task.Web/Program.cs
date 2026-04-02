@@ -54,6 +54,15 @@ builder.Services.AddScoped<Maui_Task.Shared.Services.ITokenStorage, Maui_Task.We
 builder.Services.AddScoped<Maui_Task.Shared.Services.AuthenticationService>();
 builder.Services.AddScoped<Maui_Task.Shared.Services.SignalRService>();
 builder.Services.AddScoped<Maui_Task.Shared.Services.NotificationContext>();
+builder.Services.AddScoped<Maui_Task.Shared.Services.ITaskDataService, Maui_Task.Shared.Services.TaskDataService>();
+builder.Services.AddScoped<Maui_Task.Shared.Services.IProjectDataService, Maui_Task.Shared.Services.ProjectDataService>();
+builder.Services.AddScoped<Maui_Task.Shared.Services.IDashboardDataService, Maui_Task.Shared.Services.DashboardDataService>();
+builder.Services.AddScoped<Maui_Task.Shared.Services.ISettingsDataService, Maui_Task.Shared.Services.SettingsDataService>();
+builder.Services.AddScoped<Maui_Task.Shared.Services.INotificationDataService, Maui_Task.Shared.Services.NotificationDataService>();
+builder.Services.AddScoped<Maui_Task.Shared.Services.IMessageDataService, Maui_Task.Shared.Services.MessageDataService>();
+builder.Services.AddScoped<Maui_Task.Shared.Services.IChatbotDataService, Maui_Task.Shared.Services.ChatbotDataService>();
+builder.Services.AddScoped<Maui_Task.Shared.Services.ITeamDataService, Maui_Task.Shared.Services.TeamDataService>();
+builder.Services.AddScoped<Maui_Task.Shared.Services.ISyncQueueService, Maui_Task.Shared.Services.SyncQueueService>();
 
 // Blazor auth
 builder.Services.AddAuthorizationCore();

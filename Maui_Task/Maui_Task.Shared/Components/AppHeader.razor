@@ -1,7 +1,9 @@
 @inject NavigationManager Nav
 @inject TaskFlowAuthStateProvider AuthState
-@inject Maui_Task.Shared.Services.AuthenticationService AuthService
-@inject Maui_Task.Shared.Services.HttpApiService Api
+@inject Maui_Task.Shared.Services.IAuthService AuthService
+@inject Maui_Task.Shared.Services.IMessageDataService MessageData
+@inject Maui_Task.Shared.Services.INotificationDataService NotificationData
+@inject HttpClient Http
 @implements IDisposable
 
 <!-- REPLICATION-ANNOTATION: Replicated from Task_Flow/ReactApp/Components/Header.tsx -->
@@ -21,6 +23,10 @@
     </div>
 
     <div class="app-header__actions flex-1 flex items-center justify-end gap-6">
+        <span class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium @(IsOnline ? "border-emerald-300 bg-emerald-50 text-emerald-700" : "border-amber-300 bg-amber-50 text-amber-700")">
+            <span class="size-2 rounded-full @(IsOnline ? "bg-emerald-500" : "bg-amber-500")"></span>
+            @(IsOnline ? "Online" : "Offline")
+        </span>
 
         <div class="header-dropdown" id="notif-dropdown">
             <button class="header-icon-btn relative p-2 outline-none rounded-lg transition-colors hover:bg-white/10" aria-label="Notifications" @onclick="ToggleNotifications">
@@ -155,12 +161,14 @@
 
 @code {
     [CascadingParameter]
-    public NotificationContext? NotificationContext { get; set; }
+    public INotificationClientService? NotificationContext { get; set; }
 
     private string SearchQuery = "";
     private bool ShowNotifications;
     private bool ShowMessages;
     private bool ShowUser;
+    private bool IsOnline = true;
+    private CancellationTokenSource? _connectivityCts;
 
     private List<Maui_Task.Shared.DTOs.Messages.ContactDto> RecentContacts = new();
     private int UnreadMsgCount;
@@ -176,6 +184,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        StartConnectivityProbe();
+
         if (NotificationContext != null)
         {
             NotificationContext.OnUnreadCountChanged += HandleUnreadCountChanged;
@@ -185,14 +195,58 @@
 
         try
         {
-            var msgResp = await Api.GetAsync<Maui_Task.Shared.Helpers.ApiResponse<IEnumerable<Maui_Task.Shared.DTOs.Messages.ContactDto>>>("/api/messages/contacts");
-            if (msgResp?.Data != null)
-            {
-                RecentContacts = msgResp.Data.ToList();
-                UnreadMsgCount = RecentContacts.Sum(c => c.UnreadCount);
-            }
+            RecentContacts = await MessageData.GetContactsAsync();
+            UnreadMsgCount = RecentContacts.Sum(c => c.UnreadCount);
+
+            IsOnline = true;
         }
-        catch { }
+        catch
+        {
+            // Keep badge state driven by background probe.
+        }
+    }
+
+    private void StartConnectivityProbe()
+    {
+        _connectivityCts?.Cancel();
+        _connectivityCts = new CancellationTokenSource();
+        var token = _connectivityCts.Token;
+
+        _ = Task.Run(async () =>
+        {
+            while (!token.IsCancellationRequested)
+            {
+                await ProbeConnectivityAsync();
+                await InvokeAsync(StateHasChanged);
+
+                try
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(25), token);
+                }
+                catch (TaskCanceledException)
+                {
+                    break;
+                }
+            }
+        }, token);
+    }
+
+    private async Task ProbeConnectivityAsync()
+    {
+        try
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Get, "/");
+            using var response = await Http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            IsOnline = true;
+        }
+        catch (HttpRequestException)
+        {
+            IsOnline = false;
+        }
+        catch
+        {
+            IsOnline = true;
+        }
     }
 
     private void HandleUnreadCountChanged(int unreadCount)
@@ -217,7 +271,7 @@
         }
         else
         {
-            try { await Api.PatchAsync<object>("/api/notifications/read-all", null); }
+            try { await NotificationData.MarkAllAsReadAsync(); }
             catch { }
         }
 
@@ -247,6 +301,9 @@
 
     public void Dispose()
     {
+        _connectivityCts?.Cancel();
+        _connectivityCts?.Dispose();
+
         if (NotificationContext == null)
         {
             return;

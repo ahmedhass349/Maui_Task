@@ -17,7 +17,7 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <FileLength>14579</FileLength>
-      <LastWriteTime>Thu, 02 Apr 2026 00:13:15 GMT</LastWriteTime>
+      <LastWriteTime>Thu, 02 Apr 2026 00:31:09 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\app.css'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\app.css'))">
@@ -32,13 +32,33 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>6noyuapqne</Fingerprint>
-      <Integrity>QgcOC0W7IBsrg4pSqqpull+WTgtULZfx/lF/5ZxLdag=</Integrity>
+      <Fingerprint>ujzciy22n6</Fingerprint>
+      <Integrity>BgemtKRt3/6b3WBHBlnk0a2/vMP+fwxiQKNgrNkaYiA=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <FileLength>23</FileLength>
-      <LastWriteTime>Tue, 31 Mar 2026 20:28:48 GMT</LastWriteTime>
+      <FileLength>5734</FileLength>
+      <LastWriteTime>Thu, 02 Apr 2026 01:39:07 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\app.css'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\tailwind.css'))">
+      <SourceType>Package</SourceType>
+      <SourceId>Maui_Task.Shared</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Maui_Task.Shared</BasePath>
+      <RelativePath>css/tailwind.css</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>8c4yzxplox</Fingerprint>
+      <Integrity>iL63XNkyG6eb/0VW+jFsZnor2CydeJebYzVFhS2iHmU=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <FileLength>66381</FileLength>
+      <LastWriteTime>Thu, 02 Apr 2026 01:39:07 GMT</LastWriteTime>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\tailwind.css'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\tailwind.min.css'))">
       <SourceType>Package</SourceType>
@@ -52,12 +72,12 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>03g0vz9qq0</Fingerprint>
-      <Integrity>lLMc28oQ6z/V1Yna7EsWJF1O/5N8KuPBt4wVz/X4XsY=</Integrity>
+      <Fingerprint>jndjqg79u9</Fingerprint>
+      <Integrity>Iepxtokqt9OA6j1wbDtWwyVsw9XDR88VGjqU2g+I3gQ=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <FileLength>45942</FileLength>
-      <LastWriteTime>Thu, 02 Apr 2026 00:07:16 GMT</LastWriteTime>
+      <FileLength>4691</FileLength>
+      <LastWriteTime>Thu, 02 Apr 2026 03:00:41 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\tailwind.min.css'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\favicon.png'))">
@@ -80,6 +100,146 @@
       <LastWriteTime>Mon, 30 Mar 2026 22:42:07 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\favicon.png'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\fonts\poppins\400.woff2'))">
+      <SourceType>Package</SourceType>
+      <SourceId>Maui_Task.Shared</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Maui_Task.Shared</BasePath>
+      <RelativePath>fonts/poppins/400.woff2</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>3c1fk9q7wt</Fingerprint>
+      <Integrity>fZNFnYZYW/zbt+A3YFYiatslgh7lS5Yjb+ISPpVgkp8=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <FileLength>7884</FileLength>
+      <LastWriteTime>Thu, 02 Apr 2026 01:36:18 GMT</LastWriteTime>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\fonts\poppins\400.woff2'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\fonts\poppins\500.woff2'))">
+      <SourceType>Package</SourceType>
+      <SourceId>Maui_Task.Shared</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Maui_Task.Shared</BasePath>
+      <RelativePath>fonts/poppins/500.woff2</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>z0tl3czyis</Fingerprint>
+      <Integrity>zTbeIErKLV+iY6cx98IACbXj11S6Hx4Dwz6TpI8+dEY=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <FileLength>7748</FileLength>
+      <LastWriteTime>Thu, 02 Apr 2026 01:36:18 GMT</LastWriteTime>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\fonts\poppins\500.woff2'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\fonts\poppins\700.woff2'))">
+      <SourceType>Package</SourceType>
+      <SourceId>Maui_Task.Shared</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Maui_Task.Shared</BasePath>
+      <RelativePath>fonts/poppins/700.woff2</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>bq2f568keu</Fingerprint>
+      <Integrity>kzjmX8B3NVx6h64NZMwQHiO5v4rXiuZfDzGchXMRtSY=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <FileLength>7816</FileLength>
+      <LastWriteTime>Thu, 02 Apr 2026 01:36:18 GMT</LastWriteTime>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\fonts\poppins\700.woff2'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\fonts\press-start-2p\400.woff2'))">
+      <SourceType>Package</SourceType>
+      <SourceId>Maui_Task.Shared</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Maui_Task.Shared</BasePath>
+      <RelativePath>fonts/press-start-2p/400.woff2</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>96nkpqoegh</Fingerprint>
+      <Integrity>r+yGmX/a9Urx9ZNY+iweKg8dBBRu2tGOXNFB0DhKdUg=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <FileLength>12512</FileLength>
+      <LastWriteTime>Thu, 02 Apr 2026 01:36:18 GMT</LastWriteTime>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\fonts\press-start-2p\400.woff2'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\fonts\roboto\400.woff2'))">
+      <SourceType>Package</SourceType>
+      <SourceId>Maui_Task.Shared</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Maui_Task.Shared</BasePath>
+      <RelativePath>fonts/roboto/400.woff2</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>w5whjph5d2</Fingerprint>
+      <Integrity>FATKNIvXXvg29N2LbyzHGUWGQtEjfDaClrL8ZS3KR9w=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <FileLength>43136</FileLength>
+      <LastWriteTime>Thu, 02 Apr 2026 01:36:17 GMT</LastWriteTime>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\fonts\roboto\400.woff2'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\fonts\roboto\500.woff2'))">
+      <SourceType>Package</SourceType>
+      <SourceId>Maui_Task.Shared</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Maui_Task.Shared</BasePath>
+      <RelativePath>fonts/roboto/500.woff2</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>w5whjph5d2</Fingerprint>
+      <Integrity>FATKNIvXXvg29N2LbyzHGUWGQtEjfDaClrL8ZS3KR9w=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <FileLength>43136</FileLength>
+      <LastWriteTime>Thu, 02 Apr 2026 01:36:18 GMT</LastWriteTime>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\fonts\roboto\500.woff2'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\fonts\roboto\700.woff2'))">
+      <SourceType>Package</SourceType>
+      <SourceId>Maui_Task.Shared</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Maui_Task.Shared</BasePath>
+      <RelativePath>fonts/roboto/700.woff2</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>w5whjph5d2</Fingerprint>
+      <Integrity>FATKNIvXXvg29N2LbyzHGUWGQtEjfDaClrL8ZS3KR9w=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <FileLength>43136</FileLength>
+      <LastWriteTime>Thu, 02 Apr 2026 01:36:18 GMT</LastWriteTime>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\fonts\roboto\700.woff2'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\icons.svg'))">
       <SourceType>Package</SourceType>
       <SourceId>Maui_Task.Shared</SourceId>
@@ -99,6 +259,26 @@
       <FileLength>966</FileLength>
       <LastWriteTime>Tue, 31 Mar 2026 14:11:57 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\icons.svg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\app.js'))">
+      <SourceType>Package</SourceType>
+      <SourceId>Maui_Task.Shared</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Maui_Task.Shared</BasePath>
+      <RelativePath>js/app.js</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>5zqsbyp9qg</Fingerprint>
+      <Integrity>bwUly3HwCSKEEzWCsSQIh5ZwowfCCxCO+olI6//t94U=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <FileLength>1826</FileLength>
+      <LastWriteTime>Thu, 02 Apr 2026 01:39:07 GMT</LastWriteTime>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\app.js'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\lib\bootstrap\dist\css\bootstrap.min.css'))">
       <SourceType>Package</SourceType>
@@ -140,25 +320,25 @@
       <LastWriteTime>Mon, 30 Mar 2026 22:42:07 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\lib\bootstrap\dist\css\bootstrap.min.css.map'))</OriginalItemSpec>
     </StaticWebAsset>
-    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Maui_Task.Shared.7yw729yx1h.bundle.scp.css'))">
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Maui_Task.Shared.k7ztj7pr4p.bundle.scp.css'))">
       <SourceType>Package</SourceType>
       <SourceId>Maui_Task.Shared</SourceId>
       <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
       <BasePath>_content/Maui_Task.Shared</BasePath>
-      <RelativePath>Maui_Task.Shared.7yw729yx1h.bundle.scp.css</RelativePath>
+      <RelativePath>Maui_Task.Shared.k7ztj7pr4p.bundle.scp.css</RelativePath>
       <AssetKind>All</AssetKind>
       <AssetMode>Reference</AssetMode>
       <AssetRole>Primary</AssetRole>
       <RelatedAsset></RelatedAsset>
       <AssetTraitName>ScopedCss</AssetTraitName>
       <AssetTraitValue>ProjectBundle</AssetTraitValue>
-      <Fingerprint>7yw729yx1h</Fingerprint>
-      <Integrity>jwh03VZ2QqckWdZFBHp7tw3dBCcVS86fCAbsQuvLIUM=</Integrity>
+      <Fingerprint>k7ztj7pr4p</Fingerprint>
+      <Integrity>gOnHgsSO+QvQ0HnHBZ600IMRrsH9tCfRHOw2wpx/rTg=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <FileLength>5957</FileLength>
-      <LastWriteTime>Wed, 01 Apr 2026 21:26:04 GMT</LastWriteTime>
-      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Maui_Task.Shared.7yw729yx1h.bundle.scp.css'))</OriginalItemSpec>
+      <FileLength>884</FileLength>
+      <LastWriteTime>Thu, 02 Apr 2026 04:42:01 GMT</LastWriteTime>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Maui_Task.Shared.k7ztj7pr4p.bundle.scp.css'))</OriginalItemSpec>
     </StaticWebAsset>
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 @page "/teams-legacy"
 @using Maui_Task.Shared.DTOs.Teams
 @using Maui_Task.Shared.DTOs.Auth
-@inject HttpClient Http
+@inject Maui_Task.Shared.Services.ITeamDataService TeamData
 @inject NavigationManager Nav
 
 <h3>Teams</h3>
@@ -75,12 +75,12 @@ else
         if (expandedTeam == teamId) { expandedTeam = 0; members.Clear(); return; }
         expandedTeam = teamId;
         membersLoading = true;
-        try { members = await Http.GetFromJsonAsync<List<Maui_Task.Shared.DTOs.Auth.UserDto>>($"api/teams/{teamId}/members") ?? new(); }
+        try { members = await TeamData.GetUsersAsync(); }
         catch { members = new(); }
         membersLoading = false;
     }
 
     private void Edit(int id) => Nav.NavigateTo($"/teams/edit/{id}");
     private void Create() => Nav.NavigateTo("/teams/edit/0");
-    private async Task Load() { loading = true; try { teams = await Http.GetFromJsonAsync<List<TeamDto>>("api/teams") ?? new(); } catch { teams = new(); } loading = false; }
+    private async Task Load() { loading = true; try { teams = await TeamData.GetTeamsAsync(); } catch { teams = new(); } loading = false; }
 }

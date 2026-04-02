@@ -2,7 +2,7 @@
 @attribute [Authorize]
 @using Maui_Task.Shared.DTOs.Teams
 @using Maui_Task.Shared.DTOs.Auth
-@inject Maui_Task.Shared.Services.HttpApiService Api
+@inject Maui_Task.Shared.Services.ITeamDataService TeamData
 @inject NavigationManager Nav
 
 <h3>@(id == 0 ? "Create Team" : "Edit Team")</h3>
@@ -52,10 +52,10 @@ else
         loading = true;
         try
         {
-            users = await Api.GetAsync<List<UserDto>>("api/users") ?? new();
+            users = await TeamData.GetUsersAsync();
             if (id > 0)
             {
-                var loaded = await Api.GetAsync<TeamDto>($"api/teams/{id}");
+                var loaded = await TeamData.GetTeamAsync(id);
                 if (loaded != null) team = loaded;
             }
         }
@@ -67,14 +67,7 @@ else
     {
         try
         {
-            if (id == 0)
-            {
-                await Api.PostAsync<TeamDto>("api/teams", team);
-            }
-            else
-            {
-                await Api.PutAsync<TeamDto>($"api/teams/{id}", team);
-            }
+            await TeamData.SaveTeamAsync(id, team);
             Nav.NavigateTo("/teams");
         }
         catch { }

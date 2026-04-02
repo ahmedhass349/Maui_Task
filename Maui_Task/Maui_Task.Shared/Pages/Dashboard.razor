@@ -4,10 +4,9 @@
 @using System.Text.Json
 @using Maui_Task.Shared.DTOs.Dashboard
 @using Maui_Task.Shared.DTOs.Tasks
-@using Maui_Task.Shared.DTOs.Auth
 @using Maui_Task.Shared.Helpers
 @using Maui_Task.Shared.Components
-@inject Maui_Task.Shared.Services.HttpApiService Api
+@inject Maui_Task.Shared.Services.IDashboardDataService DashboardData
 
 <!-- REPLICATION-ANNOTATION: Replicated from Task_Flow/ReactApp/pages/Dashboard.tsx -->
 <div class="flex h-screen overflow-hidden bg-gray-50">
@@ -292,7 +291,7 @@
     private bool loading = true;
     private string? error;
     private DashboardStatsDto? Stats;
-     private List<Maui_Task.Shared.DTOs.Tasks.TaskDto>? ActiveTasks;
+    private List<TaskDto>? ActiveTasks;
     private List<ActivityItemDto>? RecentActivity;
     private string? UserName;
     private int calYear = DateTime.Today.Year;
@@ -363,36 +362,11 @@
         error = null;
         try
         {
-            var statsTask = SafeGetAsync<ApiResponse<DashboardStatsDto>>("api/dashboard/stats");
-            var tasksTask = SafeGetAsync<ApiResponse<List<TaskDto>>>("api/tasks");
-            var activityTask = SafeGetAsync<ApiResponse<List<ActivityItemDto>>>("api/dashboard/activity");
-            var userTask = SafeGetAsync<ApiResponse<UserDto>>("api/auth/me");
-
-            await Task.WhenAll(statsTask, tasksTask, activityTask, userTask);
-
-            var statsResponse = await statsTask;
-            if (statsResponse?.Success == true)
-            {
-                Stats = statsResponse.Data;
-            }
-
-            var tasksResponse = await tasksTask;
-            if (tasksResponse?.Success == true)
-            {
-                ActiveTasks = tasksResponse.Data?.Where(t => t.Status != "Completed").ToList();
-            }
-
-            var activityResponse = await activityTask;
-            if (activityResponse?.Success == true)
-            {
-                RecentActivity = activityResponse.Data;
-            }
-
-            var userResponse = await userTask;
-            if (userResponse?.Success == true)
-            {
-                UserName = userResponse.Data?.FullName;
-            }
+            var data = await DashboardData.LoadDashboardAsync();
+            Stats = data.Stats;
+            ActiveTasks = data.ActiveTasks;
+            RecentActivity = data.RecentActivity;
+            UserName = data.UserName;
         }
         catch (Exception ex)
         {
@@ -401,18 +375,6 @@
         finally
         {
             loading = false;
-        }
-    }
-
-    private async Task<T?> SafeGetAsync<T>(string uri)
-    {
-        try
-        {
-            return await Api.GetAsync<T>(uri);
-        }
-        catch
-        {
-            return default;
         }
     }
 

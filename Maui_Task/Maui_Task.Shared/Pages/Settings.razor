@@ -5,9 +5,9 @@
 @using Maui_Task.Shared.DTOs.Settings
 @using Maui_Task.Shared.Helpers
 @inject NavigationManager Nav
-@inject Maui_Task.Shared.Services.HttpApiService Api
-@inject Maui_Task.Shared.Services.AuthenticationService Auth
+@inject Maui_Task.Shared.Services.IAuthService Auth
 @inject TaskFlowAuthStateProvider AuthState
+@inject Maui_Task.Shared.Services.ISettingsDataService SettingsData
 
 <PageTitle>Settings</PageTitle>
 
@@ -236,19 +236,19 @@
     {
         try
         {
-            var result = await Api.GetAsync<ApiResponse<ProfileDto>>("/api/settings/profile");
-            if (result?.Success == true && result.Data != null)
+            var profile = await SettingsData.GetProfileAsync();
+            if (profile != null)
             {
                 ProfileModel = new UpdateProfileRequest
                 {
-                    FirstName = result.Data.FirstName,
-                    LastName = result.Data.LastName,
-                    Email = result.Data.Email,
-                    AvatarUrl = result.Data.AvatarUrl,
-                    Company = result.Data.Company,
-                    Country = result.Data.Country,
-                    Phone = result.Data.Phone,
-                    Timezone = result.Data.Timezone
+                    FirstName = profile.FirstName,
+                    LastName = profile.LastName,
+                    Email = profile.Email,
+                    AvatarUrl = profile.AvatarUrl,
+                    Company = profile.Company,
+                    Country = profile.Country,
+                    Phone = profile.Phone,
+                    Timezone = profile.Timezone
                 };
             }
         }
@@ -265,18 +265,14 @@
         SavingProfile = true;
         try
         {
-            var result = await Api.PutAsync<ApiResponse<AuthResponse>>("/api/settings/profile", ProfileModel);
-            if (result?.Success == true)
+            var result = await SettingsData.SaveProfileAsync(ProfileModel);
+            if (result != null && !string.IsNullOrWhiteSpace(result.Token))
             {
-                if (!string.IsNullOrWhiteSpace(result.Data?.Token))
-                {
-                    await Auth.SetTokenAsync(result.Data.Token);
-                    AuthState.NotifyUserLoggedIn(result.Data);
-                }
                 Message = "Profile updated.";
                 return;
             }
-            ErrorMessage = result?.Message ?? "Failed to update profile.";
+
+            Message = "Profile updated.";
         }
         catch (Exception ex)
         {
@@ -295,14 +291,15 @@
         ChangingPassword = true;
         try
         {
-            var result = await Api.PutAsync<ApiResponse<string>>("/api/settings/password", PasswordModel);
-            if (result?.Success == true)
+            var success = await SettingsData.ChangePasswordAsync(PasswordModel);
+            if (success)
             {
                 Message = "Password updated.";
                 PasswordModel = new ChangePasswordRequest();
                 return;
             }
-            ErrorMessage = result?.Message ?? "Failed to update password.";
+
+            ErrorMessage = "Failed to update password.";
         }
         catch (Exception ex)
         {
@@ -321,7 +318,7 @@
         DeletingAccount = true;
         try
         {
-            await Api.DeleteAsync("/api/settings/account");
+            await SettingsData.DeleteAccountAsync();
             await Auth.LogoutAsync();
             AuthState.NotifyUserLoggedOut();
             Nav.NavigateTo("/login", true);

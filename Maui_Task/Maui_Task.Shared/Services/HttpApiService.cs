@@ -9,9 +9,9 @@ namespace Maui_Task.Shared.Services
     public class HttpApiService
     {
         private readonly HttpClient _client;
-        private readonly AuthenticationService _auth;
+        private readonly IAuthService _auth;
 
-        public HttpApiService(HttpClient client, AuthenticationService auth)
+        public HttpApiService(HttpClient client, IAuthService auth)
         {
             _client = client;
             _auth = auth;

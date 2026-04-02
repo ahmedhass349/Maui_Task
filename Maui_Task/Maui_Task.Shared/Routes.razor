@@ -1,20 +1,75 @@
-﻿@using System.Reflection
+@using System.Reflection
 @using Microsoft.AspNetCore.Components.Routing
 
-<CascadingAuthenticationState>
-    <Router AppAssembly="typeof(Layout.MainLayout).Assembly" NotFoundPage="typeof(Pages.NotFound)">
-        <Found Context="routeData">
-            <AuthorizeRouteView RouteData="routeData" DefaultLayout="@ResolveLayout(routeData.PageType)">
-                <NotAuthorized>
-                    <RedirectToLogin />
-                </NotAuthorized>
-            </AuthorizeRouteView>
-            <FocusOnNavigate RouteData="routeData" Selector="h1" />
-        </Found>
-    </Router>
-</CascadingAuthenticationState>
+<ErrorBoundary @ref="errorBoundary">
+    <ChildContent>
+        <CascadingAuthenticationState>
+            <Router AppAssembly="typeof(Layout.MainLayout).Assembly"
+                    AdditionalAssemblies="new[] { typeof(Routes).Assembly }"
+                    NotFoundPage="typeof(Pages.NotFound)">
+                <Found Context="routeData">
+                    <AuthorizeRouteView RouteData="routeData" DefaultLayout="@ResolveLayout(routeData.PageType)">
+                        <NotAuthorized>
+                            <RedirectToLogin />
+                        </NotAuthorized>
+                    </AuthorizeRouteView>
+                    <FocusOnNavigate RouteData="routeData" Selector="h1" />
+                </Found>
+                <NotFound>
+                    <LayoutView Layout="typeof(Layout.MainLayout)">
+                        <p>Page not found.</p>
+                    </LayoutView>
+                </NotFound>
+            </Router>
+        </CascadingAuthenticationState>
+    </ChildContent>
+    <ErrorContent Context="exception">
+        <div style="
+            padding: 2rem;
+            font-family: monospace;
+            background: #fff;
+            color: #333;
+            min-height: 100vh;
+            overflow: auto;
+        ">
+            <h2 style="color: #dc2626;">Application Error</h2>
+            <p style="color: #6b7280; margin-bottom: 1rem;">
+                The application encountered an error during rendering.
+            </p>
+            <details style="margin-bottom: 1rem;">
+                <summary style="cursor: pointer; color: #185FA5; font-weight: bold;">
+                    Technical Details
+                </summary>
+                <pre style="
+                    background: #f3f4f6;
+                    padding: 1rem;
+                    overflow: auto;
+                    font-size: 12px;
+                    border-radius: 4px;
+                    margin-top: 0.5rem;
+                    border: 1px solid #e5e7eb;
+                ">@exception.ToString()</pre>
+            </details>
+            <button
+                style="
+                    padding: 8px 16px;
+                    background: #185FA5;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 14px;
+                "
+                @onclick="() => errorBoundary?.Recover()">
+                Try to Recover
+            </button>
+        </div>
+    </ErrorContent>
+</ErrorBoundary>
 
 @code {
+    private ErrorBoundary? errorBoundary;
+
     private static readonly HashSet<string> AuthRoutes =
     [
         "login",

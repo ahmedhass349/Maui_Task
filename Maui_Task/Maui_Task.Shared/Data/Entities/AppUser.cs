@@ -14,7 +14,12 @@ namespace Maui_Task.Shared.Data.Entities
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public string Username { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
+        public string? Department { get; set; }
+        public string? Institution { get; set; }
         public string PasswordHash { get; set; } = string.Empty;
+        public string PasswordSalt { get; set; } = string.Empty;
         public string? AvatarUrl { get; set; }
         public string? Company { get; set; }
         public string? Country { get; set; }

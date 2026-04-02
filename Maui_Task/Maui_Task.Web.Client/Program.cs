@@ -15,15 +15,19 @@ builder.Services.AddSingleton<System.Net.Http.HttpClient>(httpClient);
 builder.Services.AddScoped<Maui_Task.Shared.Services.HttpApiService>(sp =>
 {
 	var client = sp.GetRequiredService<System.Net.Http.HttpClient>();
-	var auth = sp.GetRequiredService<Maui_Task.Shared.Services.AuthenticationService>();
+	var auth = sp.GetRequiredService<Maui_Task.Shared.Services.IAuthService>();
 	return new Maui_Task.Shared.Services.HttpApiService(client, auth);
 });
 
 // WASM requires JS runtime for storage; use scoped services
 builder.Services.AddScoped<Maui_Task.Shared.Services.ITokenStorage, Maui_Task.Web.Client.Services.WasmTokenStorage>();
-builder.Services.AddScoped<Maui_Task.Shared.Services.AuthenticationService>();
+builder.Services.AddScoped<Maui_Task.Shared.Services.IAuthService, Maui_Task.Shared.Services.AuthenticationService>();
+builder.Services.AddScoped<Maui_Task.Shared.Services.AuthenticationService>(sp =>
+	(Maui_Task.Shared.Services.AuthenticationService)sp.GetRequiredService<Maui_Task.Shared.Services.IAuthService>());
 builder.Services.AddScoped<Maui_Task.Shared.Services.SignalRService>();
 builder.Services.AddScoped<Maui_Task.Shared.Services.NotificationContext>();
+builder.Services.AddScoped<Maui_Task.Shared.Services.INotificationClientService>(sp =>
+	sp.GetRequiredService<Maui_Task.Shared.Services.NotificationContext>());
 builder.Services.AddAuthorizationCore();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<TaskFlowAuthStateProvider>();

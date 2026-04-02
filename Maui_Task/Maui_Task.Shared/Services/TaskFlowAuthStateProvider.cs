@@ -20,14 +20,14 @@ namespace Maui_Task.Shared.Services
     /// </summary>
     public class TaskFlowAuthStateProvider : AuthenticationStateProvider, IDisposable
     {
-        private readonly AuthenticationService _auth;
+        private readonly IAuthService _auth;
         private readonly ClaimsPrincipal _anonymous = new(new ClaimsIdentity());
         private readonly Action _tokenRefreshedHandler;
 
         /// <summary>Currently authenticated user DTO (null when anonymous).</summary>
         public UserDto? CurrentUser { get; private set; }
 
-        public TaskFlowAuthStateProvider(AuthenticationService auth)
+        public TaskFlowAuthStateProvider(IAuthService auth)
         {
             _auth = auth;
             // Re-notify Blazor whenever the token is refreshed silently

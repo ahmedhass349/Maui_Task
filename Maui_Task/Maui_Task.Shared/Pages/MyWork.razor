@@ -5,7 +5,7 @@
 @using Maui_Task.Shared.Components
 @using Maui_Task.Shared.DTOs.Tasks
 @using Maui_Task.Shared.Helpers
-@inject Maui_Task.Shared.Services.HttpApiService Api
+@inject Maui_Task.Shared.Services.ITaskDataService TaskData
 
 <div class="flex h-screen overflow-hidden bg-gray-50">
     <AppSidebar />
@@ -112,7 +112,7 @@
                                     class="@(isActive ? GetPriorityButtonClass(priority) : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50") border rounded-lg px-3 py-1.5 text-sm transition-colors">
                                     @char.ToUpperInvariant(priority[0])@priority[1..]
                                 </button>
-                            </div>
+                            }
 
                             <button class="p-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50" aria-label="More filters">
                                 <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -165,6 +165,18 @@
                                                     @onclick="() => ToggleStar(task)"
                                                     class="text-xs px-2 py-1 rounded-md border border-gray-200 text-gray-700 hover:bg-gray-50">
                                                     @(task.IsStarred ? "Unstar" : "Star")
+                                                </button>
+
+                                                <button
+                                                    @onclick="() => BeginEditTask(task)"
+                                                    class="text-xs px-2 py-1 rounded-md border border-blue-200 text-blue-700 hover:bg-blue-50">
+                                                    Edit
+                                                </button>
+
+                                                <button
+                                                    @onclick="() => DeleteTask(task)"
+                                                    class="text-xs px-2 py-1 rounded-md border border-red-200 text-red-700 hover:bg-red-50">
+                                                    Delete
                                                 </button>
 
                                                 @if (!IsStatus(task.Status, "Review"))
@@ -252,6 +264,7 @@
                                             <th class="text-left px-4 py-3 font-semibold">
                                                 <button @onclick="() => SortBy(SortColumn.DueDate)" class="hover:text-gray-900">Due Date</button>
                                             </th>
+                                            <th class="text-left px-4 py-3 font-semibold">Actions</th>
                                         </tr>
                                     </thead>
 
@@ -282,13 +295,19 @@
                                                 </td>
                                                 <td class="px-4 py-3 align-top"><span class="text-xs px-2 py-1 rounded-full @GetStatusChipClass(task.Status)">@ToDisplayStatus(task.Status)</span></td>
                                                 <td class="px-4 py-3 align-top">@FormatDueDate(task)</td>
+                                                <td class="px-4 py-3 align-top">
+                                                    <div class="flex items-center gap-2">
+                                                        <button @onclick="() => BeginEditTask(task)" class="text-xs px-2 py-1 rounded-md border border-blue-200 text-blue-700 hover:bg-blue-50">Edit</button>
+                                                        <button @onclick="() => DeleteTask(task)" class="text-xs px-2 py-1 rounded-md border border-red-200 text-red-700 hover:bg-red-50">Delete</button>
+                                                    </div>
+                                                </td>
                                             </tr>
 
                                             @if (expanded)
                                             {
                                                 <tr class="bg-gray-50">
                                                     <td></td>
-                                                    <td colspan="6" class="px-4 py-3">
+                                                    <td colspan="7" class="px-4 py-3">
                                                         <p class="text-xs font-semibold text-gray-600 mb-2">Sub-tasks</p>
                                                         <ul class="space-y-1">
                                                             @foreach (var sub in subtasks)
@@ -415,12 +434,27 @@
             </div>
         </div>
     }
+
+    @if (showEditTaskCard && editingTask is not null)
+    {
+        <div class="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-slate-900/30 backdrop-blur-sm px-4" @onclick="CloseEditTask">
+            <div class="w-full max-w-2xl" @onclick:stopPropagation>
+                <AcademicTaskCard
+                    initialData="editingTask"
+                    onClose="CloseEditTask"
+                    onSuccess="HandleUpdateTask"
+                    onDeleted="HandleDeleteTask" />
+            </div>
+        </div>
+    }
 </div>
 
 @code {
     private bool initialized;
     private string? error;
     private bool showNewTaskCard;
+    private bool showEditTaskCard;
+    private TaskDto? editingTask;
 
     private string selectedView = "default";
     private string activeTab = "assigned";
@@ -576,8 +610,7 @@
         error = null;
         try
         {
-            var response = await Api.GetAsync<ApiResponse<IEnumerable<TaskDto>>>("/api/tasks");
-            allTasks = response?.Data?.ToList() ?? new List<TaskDto>();
+            allTasks = await TaskData.GetTasksAsync();
             ApplyFilters();
         }
         catch (Exception ex)
@@ -644,8 +677,14 @@
     {
         try
         {
-            await Api.PatchAsync<ApiResponse<TaskDto>>($"/api/tasks/{task.Id}/star", null);
-            task.IsStarred = !task.IsStarred;
+            var updated = await TaskData.ToggleStarAsync(task.Id);
+            if (updated is null)
+            {
+                return;
+            }
+
+            ReplaceTask(updated);
+            ApplyFilters();
         }
         catch
         {
@@ -657,25 +696,44 @@
     {
         try
         {
-            var response = await Api.PatchAsync<ApiResponse<TaskDto>>($"/api/tasks/{task.Id}/status", new UpdateStatusRequest { Status = targetStatus });
-            var updated = response?.Data;
+            var updated = await TaskData.UpdateStatusAsync(task.Id, targetStatus);
             if (updated is null)
             {
                 return;
             }
 
-            var index = allTasks.FindIndex(t => t.Id == task.Id);
-            if (index >= 0)
-            {
-                allTasks[index] = updated;
-            }
-
+            ReplaceTask(updated);
             ApplyFilters();
         }
         catch
         {
             // Ignore transient update errors and keep current state.
         }
+    }
+
+    private async Task DeleteTask(TaskDto task)
+    {
+        try
+        {
+            await TaskData.DeleteTaskAsync(task.Id);
+            allTasks.RemoveAll(t => t.Id == task.Id);
+            ApplyFilters();
+        }
+        catch
+        {
+            // Ignore transient delete errors and keep current state.
+        }
+    }
+    private void ReplaceTask(TaskDto updated)
+    {
+        var index = allTasks.FindIndex(t => t.Id == updated.Id);
+        if (index >= 0)
+        {
+            allTasks[index] = updated;
+            return;
+        }
+
+        allTasks.Add(updated);
     }
 
     private void DragStart(int taskId)
@@ -692,6 +750,7 @@
 
         var task = allTasks.FirstOrDefault(t => t.Id == draggingTaskId.Value);
         draggingTaskId = null;
+
         if (task is null || IsStatus(task.Status, targetStatus))
         {
             return;
@@ -714,6 +773,7 @@
         {
             return DateTime.Today.Month - 1;
         }
+
         return Math.Clamp(task.DueDate.Value.Month - 1, 0, 11);
     }
 
@@ -909,10 +969,36 @@
         showNewTaskCard = false;
     }
 
+    private void BeginEditTask(TaskDto task)
+    {
+        editingTask = task.Clone();
+        showEditTaskCard = true;
+    }
+
+    private void CloseEditTask()
+    {
+        showEditTaskCard = false;
+        editingTask = null;
+    }
+
     private async Task HandleCreateTask(TaskDto _)
     {
         showNewTaskCard = false;
         await LoadData();
+    }
+
+    private async Task HandleUpdateTask(TaskDto _)
+    {
+        CloseEditTask();
+        await LoadData();
+    }
+
+    private async Task HandleDeleteTask(int id)
+    {
+        allTasks.RemoveAll(t => t.Id == id);
+        ApplyFilters();
+        CloseEditTask();
+        await Task.CompletedTask;
     }
 
     private sealed record FilterTab(string Key, string Label, int Count);

@@ -17,7 +17,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Maui_Task")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+f87943270a73d7b9b032b9a1e18df9c1b3eb2f4e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+f79f4761deebdb09f1ff99c1532a7b6c0318cc61")]
 [assembly: System.Reflection.AssemblyProductAttribute("Maui_Task")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Maui_Task")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

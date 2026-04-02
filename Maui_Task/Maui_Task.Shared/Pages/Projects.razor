@@ -1,10 +1,8 @@
 @page "/projects"
 @attribute [Authorize]
 @using Microsoft.AspNetCore.Authorization
-@using Maui_Task.Shared.Components
 @using Maui_Task.Shared.DTOs.Projects
-@using Maui_Task.Shared.Helpers
-@inject Maui_Task.Shared.Services.HttpApiService Api
+@inject Maui_Task.Shared.Services.IProjectDataService ProjectData
 @inject NavigationManager Nav
 
 <div class="max-w-7xl mx-auto p-6 space-y-6">
@@ -180,8 +178,7 @@
         error = null;
         try
         {
-            var response = await Api.GetAsync<ApiResponse<IEnumerable<ProjectDto>>>("/api/projects");
-            projects = response?.Data?.ToList() ?? new();
+            projects = await ProjectData.GetProjectsAsync();
         }
         catch (Exception ex)
         {

@@ -1,26 +1,154 @@
+<!--
+  UI REPLICATION [HostIndexFoundation]:
+  SOURCE: Task_Flow/wwwroot/index.html and Task_Flow global loading expectations
+  TARGET: Maui_Task/wwwroot/index.html
+  REPLICATED:
+    - Local-only stylesheet/font/script bootstrapping
+    - Blazor translation note: kept _framework/blazor.webview.js with autostart="false"
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>Maui_Task</title>
+    <title>Task Flow</title>
     <base href="/" />
-    <link rel="stylesheet" href="_content/Maui_Task.Shared/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="_content/Maui_Task.Shared/css/tailwind.min.css" />
-    <link rel="stylesheet" href="_content/Maui_Task.Shared/app.css" />
-    <link rel="stylesheet" href="app.css" />
+
+    <link rel="preload" href="_content/Maui_Task.Shared/fonts/roboto/400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="_content/Maui_Task.Shared/fonts/roboto/500.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="_content/Maui_Task.Shared/fonts/roboto/700.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="_content/Maui_Task.Shared/fonts/poppins/400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="_content/Maui_Task.Shared/fonts/poppins/500.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="_content/Maui_Task.Shared/fonts/poppins/700.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="_content/Maui_Task.Shared/fonts/press-start-2p/400.woff2" as="font" type="font/woff2" crossorigin />
+
+    <link rel="stylesheet" href="_content/Maui_Task.Shared/css/tailwind.css" />
+    <link rel="stylesheet" href="_content/Maui_Task.Shared/css/app.css" />
     <link rel="stylesheet" href="Maui_Task.styles.css" />
-    <link rel="icon" href="data:,">
+    <link rel="icon" href="data:," />
 </head>
-
 <body>
+    <div id="app-loading" style="position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--color-background-primary, #ffffff); z-index: 9999; flex-direction: column; gap: 16px;">
+        <div style="width: 32px; height: 32px; border: 3px solid #e5e7eb; border-top-color: #185FA5; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+        <p style="font-family: 'Roboto', sans-serif; font-size: 14px; color: #6b7280; margin: 0;">Loading Task Flow...</p>
+    </div>
 
-    <div class="status-bar-safe-area"></div>
+    <div id="app"></div>
 
-    <div id="app">Loading...</div>
+    <!-- Error fallback shown if Blazor fails to initialize -->
+    <div id="blazor-error-fallback" style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: white;
+        color: #333;
+        font-family: monospace;
+        font-size: 13px;
+        padding: 2rem;
+        overflow: auto;
+        z-index: 99999;
+    ">
+        <h2 style="color: #dc2626; margin-top: 0;">Blazor Failed to Start</h2>
+        <p id="blazor-error-message" style="
+            background: #f3f4f6;
+            padding: 1rem;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 12px;
+        "></p>
+    </div>
+
+    <style>
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+
+    <script>
+        window.onerror = function(msg, url, line, col, error) {
+            var el = document.getElementById('blazor-error-fallback');
+            var msg_el = document.getElementById('blazor-error-message');
+            if (el) el.style.display = 'block';
+            if (msg_el) msg_el.textContent =
+                'Error: ' + msg + '\nLine: ' + line +
+                '\nFile: ' + url + '\n' + (error ? error.stack : '');
+            return false;
+        };
+
+        window.addEventListener('unhandledrejection', function(event) {
+            var reasonText = event.reason ? event.reason.toString() : '';
+            if (reasonText.indexOf('Blazor has already started') >= 0) {
+                return;
+            }
+            var el = document.getElementById('blazor-error-fallback');
+            var msg_el = document.getElementById('blazor-error-message');
+            if (el) el.style.display = 'block';
+            if (msg_el) msg_el.textContent =
+                'Unhandled Promise Rejection:\n' +
+                (event.reason ? event.reason.toString() : 'Unknown reason');
+        });
+    </script>
 
     <script src="_framework/blazor.webview.js" autostart="false"></script>
+    <script src="_content/Maui_Task.Shared/js/app.js"></script>
 
+    <script>
+        Blazor.start({
+            logLevel: 1
+        }).then(function() {
+            console.log('=== Blazor started successfully ===');
+            var loader = document.getElementById('app-loading');
+            if (loader) {
+                loader.style.opacity = '0';
+                loader.style.transition = 'opacity 0.3s ease';
+                setTimeout(function () {
+                    loader.style.display = 'none';
+                }, 300);
+            }
+        }).catch(function(err) {
+            console.error('=== Blazor FAILED TO START:', err);
+            var el = document.getElementById('blazor-error-fallback');
+            var msg_el = document.getElementById('blazor-error-message');
+            if (el) el.style.display = 'block';
+            if (msg_el) {
+                msg_el.textContent =
+                    'Blazor.start() failed:\n' + err.toString()
+                    + '\n\nStack:\n' + (err.stack || 'No stack');
+            }
+
+            var loader = document.getElementById('app-loading');
+            if (loader) {
+                loader.style.display = 'none';
+            }
+        });
+    </script>
+    
+    <script>
+        var appRoot = document.getElementById('app');
+        if (appRoot) {
+            var observer = new MutationObserver(function() {
+                if (appRoot.childNodes && appRoot.childNodes.length > 0) {
+                    var loader = document.getElementById('app-loading');
+                    if (loader) {
+                        loader.style.opacity = '0';
+                        loader.style.transition = 'opacity 0.3s ease';
+                        setTimeout(function () {
+                            loader.style.display = 'none';
+                        }, 300);
+                    }
+                    observer.disconnect();
+                }
+            });
+            observer.observe(appRoot, { childList: true, subtree: true });
+        }
+
+        setTimeout(function() {
+            var loader = document.getElementById('app-loading');
+            if (loader && loader.style.display !== 'none') {
+                loader.style.display = 'none';
+            }
+        }, 3000);
+    </script>
 </body>
-
 </html>

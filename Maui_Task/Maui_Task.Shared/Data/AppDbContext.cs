@@ -21,6 +21,7 @@ namespace Maui_Task.Shared.Data
         public DbSet<CalendarEvent> CalendarEvents => Set<CalendarEvent>();
         public DbSet<ChatbotConversation> ChatbotConversations => Set<ChatbotConversation>();
         public DbSet<ChatbotMessage> ChatbotMessages => Set<ChatbotMessage>();
+      public DbSet<SyncQueueItem> SyncQueueItems => Set<SyncQueueItem>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,7 +36,12 @@ namespace Maui_Task.Shared.Data
                 entity.Property(e => e.FirstName).HasMaxLength(100).IsRequired();
                 entity.Property(e => e.LastName).HasMaxLength(100).IsRequired();
                 entity.Property(e => e.Email).HasMaxLength(320).IsRequired();
+                entity.Property(e => e.Username).HasMaxLength(100);
+                entity.Property(e => e.Role).HasMaxLength(50);
+                entity.Property(e => e.Department).HasMaxLength(150);
+                entity.Property(e => e.Institution).HasMaxLength(150);
                 entity.Property(e => e.PasswordHash).IsRequired();
+                entity.Property(e => e.PasswordSalt).IsRequired();
                 entity.Property(e => e.Company).HasMaxLength(200);
                 entity.Property(e => e.Country).HasMaxLength(100);
                 entity.Property(e => e.Phone).HasMaxLength(30);
@@ -249,6 +255,17 @@ namespace Maui_Task.Shared.Data
                       .HasForeignKey(m => m.ConversationId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
+
+                  // ── SyncQueueItem ───────────────────────────────────────────────
+                  modelBuilder.Entity<SyncQueueItem>(entity =>
+                  {
+                        entity.HasKey(e => e.Id);
+                        entity.Property(e => e.EntityName).HasMaxLength(50).IsRequired();
+                        entity.Property(e => e.Operation).HasMaxLength(50).IsRequired();
+                        entity.Property(e => e.PayloadJson).IsRequired();
+                        entity.Property(e => e.LastError).HasMaxLength(2000);
+                        entity.HasIndex(e => new { e.EntityName, e.CreatedAt });
+                  });
         }
     }
 }

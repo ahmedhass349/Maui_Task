@@ -32,12 +32,12 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>bl8vyedmot</Fingerprint>
-      <Integrity>P+dbxCgpGK4Mv9IzUuvfC7aM5VdOtEOlKPQ3saEvNcU=</Integrity>
+      <Fingerprint>pq829x03je</Fingerprint>
+      <Integrity>wSWtL2aRWZgmu3zxj2W3PZXSVyoFLFVd4LCrmgTpX3Q=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <FileLength>868</FileLength>
-      <LastWriteTime>Wed, 01 Apr 2026 12:16:00 GMT</LastWriteTime>
+      <FileLength>6707</FileLength>
+      <LastWriteTime>Thu, 02 Apr 2026 05:29:16 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\index.html'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Maui_Task.styles.css'))">
@@ -52,12 +52,12 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName>ScopedCss</AssetTraitName>
       <AssetTraitValue>ApplicationBundle</AssetTraitValue>
-      <Fingerprint>uv42kjvvk0</Fingerprint>
-      <Integrity>OvWc2fzuYo5PTtAcn5xPmapQp9n/7dQBE/F9xhPQMN4=</Integrity>
+      <Fingerprint>eawojkw9xt</Fingerprint>
+      <Integrity>ikMb08viDprPaKDQrJ/Nfu5uVnGQKLI9ESPNqRlSqHQ=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <FileLength>83</FileLength>
-      <LastWriteTime>Wed, 01 Apr 2026 21:27:37 GMT</LastWriteTime>
+      <LastWriteTime>Thu, 02 Apr 2026 05:11:02 GMT</LastWriteTime>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Maui_Task.styles.css'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\_framework\blazor.modules.json'))">

@@ -11,7 +11,7 @@
 
 @code {
 	[CascadingParameter]
-	public NotificationContext? NotificationContext { get; set; }
+	public INotificationClientService? NotificationContext { get; set; }
 
 	private bool _showToast;
 	private string _toastTitle = string.Empty;

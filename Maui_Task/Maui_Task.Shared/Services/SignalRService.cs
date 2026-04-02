@@ -14,12 +14,12 @@ namespace Maui_Task.Shared.Services
     public class SignalRService
     {
         private readonly string _hubUrl = "/hubs/notifications";
-        private readonly AuthenticationService _auth;
+        private readonly IAuthService _auth;
         private HubConnection? _connection;
 
         public event Action<string>? OnNotificationReceived;
 
-        public SignalRService(AuthenticationService auth)
+        public SignalRService(IAuthService auth)
         {
             _auth = auth;
             // refresh SignalR connection when auth token is rotated

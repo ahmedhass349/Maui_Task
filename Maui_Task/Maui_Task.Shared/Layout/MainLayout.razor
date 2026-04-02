@@ -8,21 +8,34 @@
 *@
 @inherits LayoutComponentBase
 @implements IAsyncDisposable
-@inject NotificationContext NotificationContext
+@inject INotificationClientService NotificationContext
 
 <CascadingValue Value="NotificationContext">
     @Body
 </CascadingValue>
 
 @code {
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        _ = NotificationContext.InitializeAsync();
-        return Task.CompletedTask;
+        try
+        {
+            await NotificationContext.InitializeAsync();
+        }
+        catch
+        {
+            // Do NOT rethrow — continue rendering
+        }
     }
 
     public async ValueTask DisposeAsync()
     {
-        await NotificationContext.DisposeAsync();
+        try
+        {
+            await NotificationContext.DisposeAsync();
+        }
+        catch
+        {
+            // No-op on dispose failures.
+        }
     }
 }

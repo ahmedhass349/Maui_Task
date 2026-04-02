@@ -1,0 +1,142 @@
+@page "/projects/edit/{Id:int}"
+@page "/projects/{Id:int}"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
+@using Maui_Task.Shared.DTOs.Projects
+@inject Maui_Task.Shared.Services.IProjectDataService ProjectData
+@inject NavigationManager Nav
+
+<div class="min-h-screen bg-gray-50">
+    <main class="max-w-4xl mx-auto p-6 space-y-6">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">@(IsEditMode ? "Edit Project" : "Create Project")</h1>
+            <p class="text-gray-600 mt-1">@(IsEditMode ? "Update project details and settings" : "Create a new project workspace")</p>
+        </div>
+
+        @if (loading)
+        {
+            <div class="bg-white border border-gray-200 rounded-xl p-5 text-gray-600">Loading project...</div>
+        }
+        else
+        {
+            <form @onsubmit="HandleSubmit" @onsubmit:preventDefault class="bg-white border border-gray-200 rounded-xl p-6 space-y-5">
+                @if (!string.IsNullOrWhiteSpace(error))
+                {
+                    <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">@error</div>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(notice))
+                {
+                    <div class="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">@notice</div>
+                }
+
+                <div class="grid gap-1.5">
+                    <label class="text-sm font-medium text-gray-700" for="project-name">Project Name</label>
+                    <input id="project-name" @bind="Model.Name" class="w-full h-11 rounded-lg border border-gray-200 px-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                </div>
+
+                <div class="grid gap-1.5">
+                    <label class="text-sm font-medium text-gray-700" for="project-description">Description</label>
+                    <textarea id="project-description" @bind="Model.Description" class="w-full min-h-[120px] rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-200"></textarea>
+                </div>
+
+                <div class="grid gap-1.5 sm:max-w-xs">
+                    <label class="text-sm font-medium text-gray-700" for="project-color">Color</label>
+                    <input id="project-color" @bind="Model.Color" placeholder="#3B82F6" class="w-full h-11 rounded-lg border border-gray-200 px-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-gray-100">
+                    <button type="button" class="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50" @onclick="Back">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-60" disabled="@saving">
+                        @(saving ? "Saving..." : (IsEditMode ? "Update Project" : "Create Project"))
+                    </button>
+                </div>
+            </form>
+        }
+    </main>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private readonly CreateProjectRequest Model = new();
+    private bool loading;
+    private bool saving;
+    private string? error;
+    private string? notice;
+    private bool IsEditMode => Id > 0;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        loading = false;
+        saving = false;
+        error = null;
+        notice = null;
+
+        if (!IsEditMode)
+        {
+            Model.Name = string.Empty;
+            Model.Description = null;
+            Model.Color = "#3B82F6";
+            return;
+        }
+
+        loading = true;
+        try
+        {
+            var dto = await ProjectData.GetProjectAsync(Id);
+            if (dto is null)
+            {
+                error = "Project not found.";
+                return;
+            }
+
+            Model.Name = dto.Name;
+            Model.Description = dto.Description;
+            Model.Color = dto.Color;
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (string.IsNullOrWhiteSpace(Model.Name))
+        {
+            error = "Project name is required.";
+            return;
+        }
+
+        if (Model.Name.Length > 150)
+        {
+            error = "Project name must be 150 characters or fewer.";
+            return;
+        }
+
+        saving = true;
+        error = null;
+        notice = null;
+
+        try
+        {
+            await ProjectData.SaveProjectAsync(Model, IsEditMode ? Id : null);
+            Nav.NavigateTo("/projects", true);
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+        finally
+        {
+            saving = false;
+        }
+    }
+
+    private void Back() => Nav.NavigateTo("/projects");
+}

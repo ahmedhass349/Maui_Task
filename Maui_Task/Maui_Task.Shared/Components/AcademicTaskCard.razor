@@ -1,6 +1,6 @@
 @using Maui_Task.Shared.DTOs.Tasks
 @using Maui_Task.Shared.Helpers
-@inject Maui_Task.Shared.Services.HttpApiService Api
+@inject Maui_Task.Shared.Services.ITaskDataService TaskData
 
 <div class="w-full max-w-2xl max-h-[92vh] rounded-2xl border border-slate-200 bg-white shadow-sm flex flex-col overflow-hidden mx-auto">
     <div class="px-8 pt-8 pb-5 border-b border-slate-200">
@@ -78,9 +78,15 @@
         </section>
 
         <div class="flex gap-2 justify-end pt-2 border-t border-slate-200">
+            @if (IsEditMode)
+            {
+                <button type="button" class="h-10 px-4 rounded-lg border border-red-200 text-sm text-red-700 hover:bg-red-50 disabled:opacity-60" @onclick="DeleteTask" disabled="@(Saving || Deleting)">
+                    @(Deleting ? "Deleting..." : "Delete")
+                </button>
+            }
             <button type="button" class="h-10 px-4 rounded-lg border border-slate-200 text-sm text-slate-700 hover:bg-slate-50" @onclick="onClose">Cancel</button>
-            <button type="submit" class="h-10 px-4 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-60" disabled="@Saving">
-                @(Saving ? "Saving..." : "Save task")
+            <button type="submit" class="h-10 px-4 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-60" disabled="@(Saving || Deleting)">
+                @(Saving ? "Saving..." : (IsEditMode ? "Update task" : "Save task"))
             </button>
         </div>
     </EditForm>
@@ -90,11 +96,14 @@
     [Parameter] public TaskDto? initialData { get; set; }
     [Parameter] public EventCallback onClose { get; set; }
     [Parameter] public EventCallback<TaskDto> onSuccess { get; set; }
+    [Parameter] public EventCallback<int> onDeleted { get; set; }
 
     private bool Saving;
+    private bool Deleting;
     private string? ErrorMessage;
     private string DueDateInput = string.Empty;
     private CreateTaskRequest Model = new();
+    private bool IsEditMode => initialData is not null;
 
     protected override void OnParametersSet()
     {
@@ -134,15 +143,15 @@
         ErrorMessage = null;
         try
         {
-            var result = await Api.PostAsync<ApiResponse<TaskDto>>("/api/tasks", Model);
-            if (result?.Success == true && result.Data != null)
+            var result = await TaskData.SaveTaskAsync(Model, IsEditMode ? initialData!.Id : null);
+            if (result != null)
             {
-                await onSuccess.InvokeAsync(result.Data);
+                await onSuccess.InvokeAsync(result);
                 await onClose.InvokeAsync();
                 return;
             }
 
-            ErrorMessage = result?.Message ?? "Failed to save task.";
+            ErrorMessage = "Failed to save task.";
         }
         catch (Exception ex)
         {
@@ -151,6 +160,31 @@
         finally
         {
             Saving = false;
+        }
+    }
+
+    private async Task DeleteTask()
+    {
+        if (!IsEditMode)
+        {
+            return;
+        }
+
+        Deleting = true;
+        ErrorMessage = null;
+        try
+        {
+            await TaskData.DeleteTaskAsync(initialData!.Id);
+            await onDeleted.InvokeAsync(initialData.Id);
+            await onClose.InvokeAsync();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            Deleting = false;
         }
     }
 

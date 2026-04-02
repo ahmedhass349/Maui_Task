@@ -3,7 +3,7 @@
 @using Maui_Task.Shared.DTOs.Notifications
 @using Maui_Task.Shared.Helpers
 @using System.Globalization
-@inject Maui_Task.Shared.Services.HttpApiService Api
+@inject Maui_Task.Shared.Services.INotificationDataService NotificationData
 
 <PageTitle>Notifications</PageTitle>
 
@@ -250,12 +250,9 @@
         IsBusy = true;
         try
         {
-            var result = await Api.GetAsync<ApiResponse<IEnumerable<NotificationDto>>>("/api/notifications");
+            var result = await NotificationData.GetNotificationsAsync();
             NotificationsList.Clear();
-            if (result?.Success == true && result.Data != null)
-            {
-                NotificationsList.AddRange(result.Data.OrderByDescending(n => n.CreatedAt));
-            }
+            NotificationsList.AddRange(result);
 
             SelectedIds.Clear();
             EnsureValidPage();
@@ -314,7 +311,7 @@
         ErrorMessage = null;
         try
         {
-            await Api.PatchAsync<ApiResponse<string>>($"/api/notifications/{id}/read", null);
+            await NotificationData.MarkAsReadAsync(id);
             var local = NotificationsList.FirstOrDefault(n => n.Id == id);
             if (local != null)
             {
@@ -334,7 +331,7 @@
         IsBusy = true;
         try
         {
-            await Api.PatchAsync<ApiResponse<string>>("/api/notifications/read-all", null);
+            await NotificationData.MarkAllAsReadAsync();
             foreach (var notification in NotificationsList)
             {
                 notification.IsRead = true;
@@ -356,7 +353,7 @@
         ErrorMessage = null;
         try
         {
-            await Api.DeleteAsync($"/api/notifications/{id}");
+            await NotificationData.DeleteAsync(id);
             NotificationsList.RemoveAll(n => n.Id == id);
             SelectedIds.Remove(id);
             EnsureValidPage();
@@ -381,7 +378,7 @@
             var ids = SelectedIds.ToList();
             foreach (var id in ids)
             {
-                await Api.DeleteAsync($"/api/notifications/{id}");
+                await NotificationData.DeleteAsync(id);
                 NotificationsList.RemoveAll(n => n.Id == id);
                 SelectedIds.Remove(id);
             }
@@ -404,7 +401,7 @@
         IsBusy = true;
         try
         {
-            await Api.DeleteAsync("/api/notifications");
+            await NotificationData.DeleteAllAsync();
             NotificationsList.Clear();
             SelectedIds.Clear();
             CurrentPage = 1;

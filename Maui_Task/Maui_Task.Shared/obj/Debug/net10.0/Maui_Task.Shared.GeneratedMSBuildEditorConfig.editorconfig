@@ -19,193 +19,197 @@ build_property.TargetFrameworkIdentifier = .NETCoreApp
 build_property.TargetFrameworkVersion = v10.0
 build_property.RootNamespace = Maui_Task.Shared
 build_property.RootNamespace = Maui_Task.Shared
-build_property.ProjectDir = c:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Shared\
+build_property.ProjectDir = C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Shared\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = c:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Shared
+build_property.MSBuildProjectDirectory = C:\Users\Ahmed Abdelbarr\OneDrive\Documents\GitHub\Maui_Task\Maui_Task\Maui_Task.Shared
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/AcademicTaskCard.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/AcademicTaskCard.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2FkZW1pY1Rhc2tDYXJkLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/AppHeader.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/AppHeader.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHBIZWFkZXIucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/AppSidebar.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/AppSidebar.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHBTaWRlYmFyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/AuthFooter.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/AuthFooter.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBdXRoRm9vdGVyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/DashboardCard.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/DashboardCard.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xEYXNoYm9hcmRDYXJkLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/Footer.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/Footer.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xGb290ZXIucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/Header.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/Header.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xIZWFkZXIucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/LoginPromotion.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/LoginPromotion.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMb2dpblByb21vdGlvbi5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/MyWork/CalendarView.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/MyWork/CalendarView.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNeVdvcmtcQ2FsZW5kYXJWaWV3LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/MyWork/DefaultView.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/MyWork/DefaultView.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNeVdvcmtcRGVmYXVsdFZpZXcucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/MyWork/GanttView.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/MyWork/GanttView.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNeVdvcmtcR2FudHRWaWV3LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/MyWork/KanbanView.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/MyWork/KanbanView.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNeVdvcmtcS2FuYmFuVmlldy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/MyWork/TableView.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/MyWork/TableView.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNeVdvcmtcVGFibGVWaWV3LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/NotificationToast.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/NotificationToast.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xOb3RpZmljYXRpb25Ub2FzdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/PageState.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/PageState.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlU3RhdGUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/PromotionBg.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/PromotionBg.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQcm9tb3Rpb25CZy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/Sidebar.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/Sidebar.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaWRlYmFyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/TaskFlowLogo.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/TaskFlowLogo.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xUYXNrRmxvd0xvZ28ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/TaskItem.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Components/TaskItem.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xUYXNrSXRlbS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Layout/AuthLayout.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Layout/AuthLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XEF1dGhMYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Chatbot.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Chatbot.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2hhdGJvdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Counter.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Counter.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Dashboard.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Dashboard.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGFzaGJvYXJkLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/ForgotPassword.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/ForgotPassword.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRm9yZ290UGFzc3dvcmQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Home.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Login.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Login.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Message.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Message.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWVzc2FnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/MyWork.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/MyWork.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTXlXb3JrLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/NotFound.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/NotFound.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTm90Rm91bmQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Notifications.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Notifications.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTm90aWZpY2F0aW9ucy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Projects.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Projects.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvamVjdHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/ResetPassword.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/ProjectsEdit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvamVjdHNFZGl0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/ResetPassword.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVzZXRQYXNzd29yZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/ResetPasswordEmailMessage.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/ResetPasswordEmailMessage.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVzZXRQYXNzd29yZEVtYWlsTWVzc2FnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Settings.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Settings.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2V0dGluZ3MucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Signup.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Signup.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2lnbnVwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Teams.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Teams.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVhbXMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/TeamsEdit.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/TeamsEdit.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVhbXNFZGl0LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/TeamsPage.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/TeamsPage.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVhbXNQYWdlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Weather.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Pages/Weather.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcV2VhdGhlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Routes.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Routes.razor]
 build_metadata.AdditionalFiles.TargetPath = Um91dGVzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/SharedComponents/ProtectedRoute.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/SharedComponents/ProtectedRoute.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkQ29tcG9uZW50c1xQcm90ZWN0ZWRSb3V0ZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/SharedComponents/RedirectToLogin.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/SharedComponents/RedirectToLogin.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkQ29tcG9uZW50c1xSZWRpcmVjdFRvTG9naW4ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/_Imports.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Layout/MainLayout.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Layout/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE1haW5MYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = b-8who6twpmo
 
-[c:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Layout/NavMenu.razor]
+[C:/Users/Ahmed Abdelbarr/OneDrive/Documents/GitHub/Maui_Task/Maui_Task/Maui_Task.Shared/Layout/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5hdk1lbnUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = b-0cmzq60nbu

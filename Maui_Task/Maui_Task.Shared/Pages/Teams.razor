@@ -4,7 +4,7 @@
 @using Maui_Task.Shared.DTOs.Auth
 @using Maui_Task.Shared.Helpers
 @using Maui_Task.Shared.Components
-@inject Maui_Task.Shared.Services.HttpApiService Api
+@inject Maui_Task.Shared.Services.ITeamDataService TeamData
 
 <div class="flex h-screen overflow-hidden bg-gray-50">
     <AppSidebar />
@@ -171,7 +171,7 @@
 </div>
 
 @code {
-    private List<TeamMember> teamMembers = new();
+    private List<TeamMemberCardDto> teamMembers = new();
     private bool loading = true;
     private string? error;
 
@@ -186,46 +186,7 @@
         error = null;
         try
         {
-            // Load teams
-            var teamsResponse = await Api.GetAsync<ApiResponse<List<TeamDto>>>("api/teams");
-            if (teamsResponse?.Success == true && teamsResponse.Data != null)
-            {
-                var members = new List<TeamMember>();
-                foreach (var team in teamsResponse.Data)
-                {
-                    var membersResponse = await Api.GetAsync<ApiResponse<IEnumerable<TeamMemberDto>>>($"api/teams/{team.Id}/members");
-                    var teamMembersForTeam = membersResponse?.Data?.ToList() ?? new List<TeamMemberDto>();
-
-                    if (teamMembersForTeam.Count == 0)
-                    {
-                        members.Add(new TeamMember
-                        {
-                            Id = team.Id.ToString(),
-                            Name = team.Name,
-                            Role = $"Owner: {team.OwnerName}",
-                            Email = $"{team.MemberCount} members",
-                            Status = "online",
-                            TasksCompleted = 0,
-                            TasksInProgress = 0
-                        });
-                    }
-                    else
-                    {
-                        members.AddRange(teamMembersForTeam.Select(member => new TeamMember
-                        {
-                            Id = member.UserId.ToString(),
-                            Name = member.UserName,
-                            Role = member.Role,
-                            Email = member.Email,
-                            Status = "online",
-                            TasksCompleted = member.TasksCompleted,
-                            TasksInProgress = member.TasksInProgress
-                        }));
-                    }
-                }
-
-                teamMembers = members;
-            }
+            teamMembers = await TeamData.GetTeamMembersAsync();
         }
         catch (Exception ex)
         {
@@ -262,14 +223,4 @@
         };
     }
 
-    private class TeamMember
-    {
-        public string Id { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
-        public string Role { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Status { get; set; } = "offline";
-        public int TasksCompleted { get; set; }
-        public int TasksInProgress { get; set; }
-    }
 }

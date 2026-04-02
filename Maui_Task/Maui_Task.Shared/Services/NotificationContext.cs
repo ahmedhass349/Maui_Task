@@ -13,10 +13,10 @@ namespace Maui_Task.Shared.Services
     /// <summary>
     /// Scoped notification state container for real-time updates and UI subscriptions.
     /// </summary>
-    public sealed class NotificationContext : IAsyncDisposable
+    public sealed class NotificationContext : INotificationClientService
     {
         private const int MaxCachedNotifications = 50;
-        private readonly AuthenticationService _auth;
+        private readonly IAuthService _auth;
         private readonly HttpApiService _api;
         private readonly NavigationManager _navigation;
         private readonly SemaphoreSlim _gate = new(1, 1);
@@ -36,7 +36,7 @@ namespace Maui_Task.Shared.Services
         public event Action<int>? OnUnreadCountChanged;
         public event Action? OnStateChanged;
 
-        public NotificationContext(AuthenticationService auth, HttpApiService api, NavigationManager navigation)
+        public NotificationContext(IAuthService auth, HttpApiService api, NavigationManager navigation)
         {
             _auth = auth;
             _api = api;

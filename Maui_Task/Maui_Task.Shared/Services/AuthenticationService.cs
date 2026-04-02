@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Maui_Task.Shared.Services
 {
-    public class AuthenticationService
+    public class AuthenticationService : IAuthService
     {
         private readonly HttpClient _client;
         private readonly ITokenStorage _storage;
